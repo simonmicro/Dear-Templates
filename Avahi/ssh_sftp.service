@@ -1,0 +1,10 @@
+<?xml version="1.0" standalone='no'?>
+<!-- Located under /etc/avahi/services/ssh_sftp.service -->
+<!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+<service-group>
+   <name replace-wildcards="yes">%h</name> # Display Name
+   <service>
+       <type>_sftp-ssh._tcp</type>
+       <port>22</port>
+   </service>
+</service-group>
