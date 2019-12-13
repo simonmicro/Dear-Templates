@@ -68,12 +68,12 @@ WantedBy=zfs-mount.service
 Make sure `zfs-auto-snapshot` is installed.
 Now add to the crontab (`//` stands for all pools)...
 ```
-*/5 * * * * /sbin/zfs-auto-snapshot -r -q --label=frequent --keep=30 //
-@hourly /sbin/zfs-auto-snapshot -r -q --label=hourly --keep=24 //
-@daily /sbin/zfs-auto-snapshot -r -q --label=daily --keep=14 //
-@weekly /sbin/zfs-auto-snapshot -r -q --label=weekly --keep=8 //
-@monthly /sbin/zfs-auto-snapshot -r -q --label=monthly --keep=24 //
-@yearly /sbin/zfs-auto-snapshot -r -q --label=yearly --keep=6 //
+*/5 * * * * /usr/sbin/zfs-auto-snapshot -r -q --label=frequent --keep=30 //
+@hourly /usr/sbin/zfs-auto-snapshot -r -q --label=hourly --keep=24 //
+@daily /usr/sbin/zfs-auto-snapshot -r -q --label=daily --keep=14 //
+@weekly /usr/sbin/zfs-auto-snapshot -r -q --label=weekly --keep=8 //
+@monthly /usr/sbin/zfs-auto-snapshot -r -q --label=monthly --keep=24 //
+@yearly /usr/sbin/zfs-auto-snapshot -r -q --label=yearly --keep=6 //
 ```
 ...to snapshort all pools. To exclude a pool set the `com.sun:auto-snapshot` parameter to `false`.
 
