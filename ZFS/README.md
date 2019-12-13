@@ -68,7 +68,7 @@ WantedBy=zfs-mount.service
 Make sure `zfs-auto-snapshot` is installed.
 Now add to the crontab (`//` stands for all pools)...
 ```
-*/5 * * * * /usr/sbin/zfs-auto-snapshot -r -q --label=frequent --keep=30 //
+*/10 * * * * /usr/sbin/zfs-auto-snapshot -r -q --label=frequently --keep=30 //
 @hourly /usr/sbin/zfs-auto-snapshot -r -q --label=hourly --keep=24 //
 @daily /usr/sbin/zfs-auto-snapshot -r -q --label=daily --keep=14 //
 @weekly /usr/sbin/zfs-auto-snapshot -r -q --label=weekly --keep=8 //
@@ -76,6 +76,11 @@ Now add to the crontab (`//` stands for all pools)...
 @yearly /usr/sbin/zfs-auto-snapshot -r -q --label=yearly --keep=6 //
 ```
 ...to snapshort all pools. To exclude a pool set the `com.sun:auto-snapshot` parameter to `false`.
+If you get `Error: zpool status 127: env: ‘zpool’: No such file or directory` errors - add this:
+```
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+```
+Nett2Know - how you can list specific snapshots for a specific pool: `sudo zfs list -t snapshot [ZFS_POOL] | grep frequent`
 
 # Move a pool to an other system #
 On source PC: `sudo zpool export [ZFS_POOL]`
