@@ -1,0 +1,19 @@
+[Unit]
+Description=VMFreezer - saves / restores all running machines of libvirt from / to disk
+Requires=libvirtd.service
+#libvirt-guests.service is in after, because @shutdown this order is inverse!
+#Add here the required path (maybe to save the states on external disks) from /etc/fstab (slash must be a dash)
+#MAYBE add mnt-raid01.mount to wait for a specific mount point...
+After=network.service libvirtd.service libvirt-guests.service
+#Before=
+
+[Service]
+Type=oneshot
+#infinity -> make sure we wait for ANY vm!
+TimeoutSec=infinity
+RemainAfterExit=true
+ExecStart=/root/restore.sh
+ExecStop=/root/save.sh
+
+[Install]
+WantedBy=multi-user.target
