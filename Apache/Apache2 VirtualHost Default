@@ -1,0 +1,24 @@
+###THIS NEEDS TO BE FILE 000-default.conf###
+
+<VirtualHost *:80>
+    #E.g. mail for 500 error	
+        ServerAdmin webmaster@example.com
+    #Where default site is located (HTTP)
+        DocumentRoot /var/www/default
+    #Log stuff
+        ErrorLog /var/log/apache2/default-http-error.log
+        CustomLog /var/log/apache2/default-http-access.log common
+</VirtualHost>
+<VirtualHost *:443>
+    #E.g. mail for 500 error	
+        ServerAdmin webmaster@example.com
+    #Where default site is located (HTTPS)
+        DocumentRoot /var/www/default
+    #Use SSL + stuff
+        SSLEngine on									
+        SSLCertificateFile /etc/ssl/certs/apache.crt
+        SSLCertificateKeyFile /etc/ssl/private/apache.key
+    #Log stuff
+        ErrorLog /var/log/apache2/default-https-error.log
+        CustomLog /var/log/apache2/default-https-access.log common
+</VirtualHost>
