@@ -64,6 +64,19 @@ WantedBy=zfs-mount.service
     1. `sudo zfs rename [ZFS_POOL] [ZFS_POOL_OTHER] `
     2. `sudo zfs clone [ZFS_POOL_OTHER]@[SNAPSHOT_NAME] [ZFS_POOL]`
 
+# Auto snapshotting #
+Make sure `zfs-auto-snapshot` is installed.
+Now add to the crontab (`//` stands for all pools)...
+```
+*/5 * * * * /sbin/zfs-auto-snapshot -r -q --label=frequent --keep=30 //
+@hourly /sbin/zfs-auto-snapshot -r -q --label=hourly --keep=24 //
+@daily /sbin/zfs-auto-snapshot -r -q --label=daily --keep=14 //
+@weekly /sbin/zfs-auto-snapshot -r -q --label=weekly --keep=8 //
+@monthly /sbin/zfs-auto-snapshot -r -q --label=monthly --keep=24 //
+@yearly /sbin/zfs-auto-snapshot -r -q --label=yearly --keep=6 //
+```
+...to snapshort all pools. To exclude a pool set the `com.sun:auto-snapshot` parameter to `false`.
+
 # Move a pool to an other system #
 On source PC: `sudo zpool export [ZFS_POOL]`
 On target PC: `sudo zpool import [ZFS_POOL]` - omit `[ZFS_POOL]` to see all available
