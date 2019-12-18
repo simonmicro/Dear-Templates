@@ -3,7 +3,7 @@
 # CONFIGURATION SECTION - ENTER HERE YOUR DESIRED VALUES
 # Unique - useful for multiple scripts (e.g. local and dedicated remote)
 export THIS_NAME="local_workshop"
-# Following can be e.g. ssh://USER@USER.example.com:22/./backups/$HOSTNAME or a local path
+# Following can be e.g. ssh://USER@USER.example.com:22/./$HOSTNAME or a local path
 export THIS_TARGET="ssh:///mnt/backups"
 # CONFIGURATION SECTION END
 
@@ -83,39 +83,39 @@ echo "export BORG_PASSPHRASE=\`cat ~/backup_scripts/$THIS_NAME/BORGKeyPassword.f
 cat << EOF >> ~/backup_scripts/$THIS_NAME/backup.sh
 
 # CONFIGURATION BEGIN
-BACKUP_THIS='~/backup_scripts/ '
+BACKUP_THIS="$HOME/backup_scripts/ "
 BACKUP_OPTIONS='-C lzma' # Enable strong compression by default
 CLEANUP_OPTIONS='--lock-wait 60' # Wait one minute to get the lock...
 # CONFIGURATION END
 
 # Enable the test mode if an argument is existent (enables progress info)
-if ! [[ -z "$1" ]]; then
+if ! [[ -z "\$1" ]]; then
         echo "TEST MODE IS ENABLED!"
-        BACKUP_OPTIONS="-p -v $BACKUP_OPTIONS"
-        CLEANUP_OPTIONS="-p -v $CLEANUP_OPTIONS"
+        BACKUP_OPTIONS="-p -v \$BACKUP_OPTIONS"
+        CLEANUP_OPTIONS="-p -v \$CLEANUP_OPTIONS"
 fi
 
-echo "THIS_NAME '"$THIS_NAME"';
-THIS_TARGET '"$THIS_TARGET"';
-BACKUP_THIS '"$BACKUP_THIS"';
-BACKUP_OPTIONS '"$BACKUP_OPTIONS"';
-CLEANUP_OPTIONS '"$CLEANUP_OPTIONS"';
-BORG_RSH '"$BORG_RSH"';"
+echo "THIS_NAME '"\$THIS_NAME"';
+THIS_TARGET '"\$THIS_TARGET"';
+BACKUP_THIS '"\$BACKUP_THIS"';
+BACKUP_OPTIONS '"\$BACKUP_OPTIONS"';
+CLEANUP_OPTIONS '"\$CLEANUP_OPTIONS"';
+BORG_RSH '"\$BORG_RSH"';"
 
 # Do some work here... Maybe export the SQL-databse or so...
-#echo "MYSQL-DUMP started at $(date)..."
+#echo "MYSQL-DUMP started at \$(date)..."
 #mysqldump -u USER -pPASSWORD --all-databases --skip-lock-tables > /tmp/databaseExport.sql
-#echo "MYSQL-DUMP finished at $(date)..."
+#echo "MYSQL-DUMP finished at \$(date)..."
 
 
 # Now execute the backup (add -p to show progress while working; -s show a resumé at the end)
-echo "Backup started at $(date)..."
-borg create -s $BACKUP_OPTIONS "$THIS_TARGET"::$(date +"%s") $BACKUP_THIS
-echo "Backup finished at $(date)."
+echo "Backup started at \$(date)..."
+borg create -s \$BACKUP_OPTIONS "\$THIS_TARGET"::\$(date +"%s") \$BACKUP_THIS
+echo "Backup finished at \$(date)."
 
-echo "Cleanup started at $(date)..."
-borg prune -s $CLEANUP_OPTIONS "$THIS_TARGET" --keep-daily=7 --keep-weekly=4 --keep-monthly=6 --keep-yearly=2
-echo "Cleanup finished at $(date)...
+echo "Cleanup started at \$(date)..."
+borg prune -s \$CLEANUP_OPTIONS "\$THIS_TARGET" --keep-daily=7 --keep-weekly=4 --keep-monthly=6 --keep-yearly=2
+echo "Cleanup finished at \$(date)..."
 
 # Clean the varibales...
 unset THIS_TARGET
