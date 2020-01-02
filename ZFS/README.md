@@ -84,13 +84,14 @@ Nett2Know - how you can list specific snapshots for a specific pool: `sudo zfs l
 
 # Snapshot replication #
 _May used for offsite-backups - the script below had this part(s) removed. So refer to more info (also below)!_
-1. Get your source pool ready by creating some snapshots...
+1. Get your source pool ready by creating some snapshots and maybe activating zfs-auto-snapshot...
 2. Create your target pool (maybe on an other system)
     * Consider to set it to `readonly=on`
     * ...or to remove its mountpoint...
+    * It should also be encrypted if the source was
 3. Setup the script
     1. The steps 2 and 4 contains a script which should be added to the daily crontab of root. Make sure to run it with the bash command!
-    2. The universal script header (should be run every time before the initial and incremental backup part)
+    2. The universal script header (should be run every time before the initial and incremental backup parts)
         ```
         #!/bin/bash
 
@@ -122,7 +123,7 @@ _May used for offsite-backups - the script below had this part(s) removed. So re
         # Create new recursive snapshot of the whole pool.
         zfs snapshot -r "$new_snap"
         # Incremental replication.
-        zfs send -R -I "$old_snap" "$new_snap" | zfs receive -Fdu -x mountpoint -x readonly "$destination_pool"
+        zfs send -RI "$old_snap" "$new_snap" | zfs receive -Fdu -x mountpoint -x readonly "$destination_pool"
         # Delete older snaps on the local source (grep -v inverts the selection)
         delete_from=$(zfs list -H -o name -t snapshot -r "$source_pool" | grep "$snapshot_string" | grep -v "$timestamp")
         for snap in $delete_from; do
