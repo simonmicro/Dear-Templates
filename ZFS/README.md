@@ -82,6 +82,59 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ```
 Nett2Know - how you can list specific snapshots for a specific pool: `sudo zfs list -t snapshot [ZFS_POOL] | grep frequent`
 
+# Snapshot replication #
+_May used for offsite-backups - the script below had this part(s) removed. So refer to more info (also below)!_
+1. Get your source pool ready by creating some snapshots...
+2. Create your target pool (maybe on an other system)
+    * Consider to set it to `readonly=on`
+    * ...or to remove its mountpoint...
+3. Setup the script
+    1. The steps 2 and 4 contains a script which should be added to the daily crontab of root. Make sure to run it with the bash command!
+    2. The universal script header (should be run every time before the initial and incremental backup part)
+        ```
+        #!/bin/bash
+
+        # Setup/variables:
+
+        # Each snapshot name must be unique, timestamp is a good choice.
+        # You can also use Solaris date, but I don't know the correct syntax.
+        snapshot_string=DO_NOT_DELETE_target_replication_pools_state_
+        timestamp=$(date '+%Y%m%d%H%M%S')
+        source_pool=[SOURCE_POOL]
+        destination_pool=[TARGET_POOL]
+        new_snap="$source_pool"@"$snapshot_string""$timestamp"
+        ```
+    3. Initial setup (first snapshot to init the target pool) - you CAN'T IGNORE the `zfs snapshot -r "$new_snap"` part, otherwise the incremental wouldn't find the refernce point!
+        ```
+        # Initial send:
+
+        # Create first recursive snapshot of the whole pool.
+        zfs snapshot -r "$new_snap"
+        # Initial replication.
+        zfs send -R "$new_snap" | zfs recv -Fdu "$destination_pool"
+        ```
+    4. Send and receive the pools snapshotted state incrementally by using the following script
+        ```
+        # Incremental sends:
+
+        # Get old snapshot name.
+        old_snap=$(zfs list -H -o name -t snapshot -r "$source_pool" | grep "$source_pool"@"$snapshot_string" | tail --lines=1)
+        # Create new recursive snapshot of the whole pool.
+        zfs snapshot -r "$new_snap"
+        # Incremental replication.
+        zfs send -R -I "$old_snap" "$new_snap" | zfs receive -Fdu -x mountpoint -x readonly "$destination_pool"
+        # Delete older snaps on the local source (grep -v inverts the selection)
+        delete_from=$(zfs list -H -o name -t snapshot -r "$source_pool" | grep "$snapshot_string" | grep -v "$timestamp")
+        for snap in $delete_from; do
+            zfs destroy "$snap"
+        done
+        ```
+        The `-x` options are required - otherwise the specified options would be applied on the target pool (don't worry, they will still be transferred)
+4. Maybe remove the target pool from the zfs-auto-snapshot script (don't forget to add the `-x` to the `receive` above, so it won't be resetted)
+    `zfs set com.sun:auto-snapshot=false`
+
+[More info](https://unix.stackexchange.com/questions/263677/how-to-one-way-mirror-an-entire-zfs-pool-to-another-zfs-pool)
+
 # Move a pool to an other system #
 On source PC: `sudo zpool export [ZFS_POOL]`
 On target PC: `sudo zpool import [ZFS_POOL]` - omit `[ZFS_POOL]` to see all available
