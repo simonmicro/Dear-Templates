@@ -58,7 +58,7 @@ WantedBy=zfs-mount.service
 # Snapshotting #
 * List: `sudo zfs list -t snapshot`
 * Create: `sudo zfs snapshot [ZFS_POOL]@[SNAPSHOT_NAME]` Add `-r` to snapshot all subpools (or delete)!
-* Delete: `sudo zfs destroy [ZFS_POOL]@[SNAPSHOT_NAME]`
+* Delete: `sudo zfs destroy [ZFS_POOL]@[SNAPSHOT_NAME]` (use `%` for the snapshots name to delete them all)
 * Apply it: `sudo zfs rollback [ZFS_POOL]@[SNAPSHOT_NAME]`
     You want to rollback to an older without the deletion of the newer?
     1. `sudo zfs rename [ZFS_POOL] [ZFS_POOL_OTHER] `
