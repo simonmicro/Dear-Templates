@@ -52,8 +52,14 @@ For more hints about the used chroot env [see here](https://wiki.alpinelinux.org
 ### Insert a moint point(s) ###
 1. `sudo mkdir -p /jails/[USERNAME]/mnt/[MOUNT_POINT]`
 2. Add the mount to `/etc/fstab`
-    * `[SOURCE_PATH]    /jails/[USERNAME]/mnt/[MOUNT_POINT] none    bind    0   0`
-    * (requires `bindfs`) `[SOURCE_PATH]    /jails/[USERNAME]/mnt/[MOUNT_POINT] fuse.bindfs   force-user=[USERNAME],force-group=[USERNAME or e.g. www-data],create-for-user=[USERNAME],create-for-group=[USERNAME or e.g. www-data],perms=770,create-with-perms=770,chmod-filter=770,chown-ignore,chgrp-ignore,resolve-symlinks,resolved-symlink-deletion=symlink-only,hide-hard-links    0  0`
+    * Native version
+        ```
+        [SOURCE_PATH]    /jails/[USERNAME]/mnt/[MOUNT_POINT] none    bind    0   0
+        ```
+    * (requires `bindfs`)
+        ```
+        [SOURCE_PATH]    /jails/[USERNAME]/mnt/[MOUNT_POINT] fuse.bindfs   force-user=[USERNAME],force-group=[USERNAME or e.g. www-data],create-for-user=[USERNAME],create-for-group=[USERNAME or e.g. www-data],perms=770,create-with-perms=770,chmod-filter=770,chown-ignore,chgrp-ignore,resolve-symlinks,resolved-symlink-deletion=symlink-only,hide-hard-links    0  0
+        ```
     * or use you own cifs / sshfs / ... magic!
 
 ### Set the default editor in Alpine Linux ###
