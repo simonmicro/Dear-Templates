@@ -1,4 +1,4 @@
-# A
+#
 # Replace example.com with your domain
 # 
 <VirtualHost *:80>
@@ -38,8 +38,8 @@
 #    SSLCertificateKeyFile /etc/letsencrypt/live/example.com/privkey.pem
 
 # Log stuff
-    ErrorLog /var/log/apache2/example_main-https-error.log
-    CustomLog /var/log/apache2/example_main-https-access.log common
+    ErrorLog /var/log/apache2/example.com-https-error.log
+    CustomLog /var/log/apache2/example.com-https-access.log common
 
 # To allow .htaccess in DocumentRoot
 #    <Directory /var/www/example.com>
