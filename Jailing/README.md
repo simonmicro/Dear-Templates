@@ -27,32 +27,35 @@ Match group sshjailed
 3. `sudo chmod 750 /jails`
 
 ## Create the individual jail-cell with the user ##
+### For simpler use... ###
+...let us define a variable for the user here: `export CHROOT_USER_NAME=[USERNAME]`
+
 ### Add the user ###
-1. `sudo adduser --no-create-home [USERNAME]`
-2. `sudo adduser [USERNAME] sshjailed`
+1. `sudo adduser --no-create-home $CHROOT_USER_NAME`
+2. `sudo adduser $CHROOT_USER_NAME sshjailed`
 
 ### Create his root ###
 For more hints about the used chroot env [see here](https://wiki.alpinelinux.org/wiki/Alpine_Linux_in_a_chroot)!
-1. `sudo mkdir /jails/[USERNAME]`
-2. `sudo chown root: /jails/[USERNAME]`
-3. `sudo chmod 755 /jails/[USERNAME]`
+1. `sudo mkdir /jails/$CHROOT_USER_NAME`
+2. `sudo chown root: /jails/$CHROOT_USER_NAME`
+3. `sudo chmod 755 /jails/$CHROOT_USER_NAME`
 4. Download the newest alpine linux installer (`apk-tools-static`) from [here](http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/) and extract ot with `tar -xzf apk-tools-static-*.apk`
-5. `sudo ./sbin/apk.static -X http://dl-cdn.alpinelinux.org/alpine/latest-stable/main -U --allow-untrusted --root /jails/[USERNAME] --initdb add alpine-base bash openssh git doxygen graphviz nano iputils`
-6. `sudo mkdir /jails/[USERNAME]/home/[USERNAME]`
-7. `sudo chown [USERNAME]: /jails/[USERNAME]/home/[USERNAME]`
-8. `echo $(getent passwd [USERNAME]) | sudo tee -a /jails/[USERNAME]/etc/passwd`
-9. `sudo usermod --shell /usr/sbin/nologin [USERNAME]`
-10. `sudo ln -s ../../bin/bash /jails/[USERNAME]/usr/sbin/nologin`
+5. `sudo ./sbin/apk.static -X http://dl-cdn.alpinelinux.org/alpine/latest-stable/main -U --allow-untrusted --root /jails/$CHROOT_USER_NAME --initdb add alpine-base bash openssh git doxygen graphviz nano iputils`
+6. `sudo mkdir /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME`
+7. `sudo chown $CHROOT_USER_NAME: /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME`
+8. `echo $(getent passwd $CHROOT_USER_NAME) | sudo tee -a /jails/$CHROOT_USER_NAME/etc/passwd`
+9. `sudo usermod --shell /usr/sbin/nologin $CHROOT_USER_NAME`
+10. `sudo ln -s ../../bin/bash /jails/$CHROOT_USER_NAME/usr/sbin/nologin`
 
 ### Enable networking inside the chroot env ###
-1. Add a barebone to allow bind mounting `sudo touch /jails/[USERNAME]/etc/resolv.conf`
+1. Add a barebone to allow bind mounting `sudo touch /jails/$CHROOT_USER_NAME/etc/resolv.conf`
 2. Add a mount to `/etc/fstab`:
     ```
     /etc/resolv.conf    /jails/[USERNAME]/etc/resolv.conf   none    ro,bind 0   0
     ```
 
 ### Insert a moint point(s) ###
-1. `sudo mkdir -p /jails/[USERNAME]/mnt/[MOUNT_POINT]`
+1. `sudo mkdir -p /jails/$CHROOT_USER_NAME/mnt/[MOUNT_POINT]`
 2. Add the mount to `/etc/fstab`
     * `[SOURCE_PATH]    /jails/[USERNAME]/mnt/[MOUNT_POINT] none    bind    0   0`
     * (requires `bindfs`) `[SOURCE_PATH]    /jails/[USERNAME]/mnt/[MOUNT_POINT] fuse.bindfs   force-user=[USERNAME],force-group=[USERNAME or e.g. www-data],create-for-user=[USERNAME],create-for-group=[USERNAME or e.g. www-data],perms=770,create-with-perms=770,chmod-filter=770,chown-ignore,chgrp-ignore,resolve-symlinks,resolved-symlink-deletion=symlink-only,hide-hard-links    0  0`
@@ -60,7 +63,7 @@ For more hints about the used chroot env [see here](https://wiki.alpinelinux.org
 
 ### Set the default editor in Alpine Linux ###
 _Inside the chroot env!_
-`sudo nano /home/[USERNAME]/.profile`
+`nano ~/.profile`
 ...and add:
 ```
 export EDITOR='nano'
