@@ -41,6 +41,8 @@ For more hints about the used chroot env [see here](https://wiki.alpinelinux.org
 6. `sudo mkdir /jails/[USERNAME]/home/[USERNAME]`
 7. `sudo chown [USERNAME]: /jails/[USERNAME]/home/[USERNAME]`
 8. `echo $(getent passwd [USERNAME]) | sudo tee -a /jails/[USERNAME]/etc/passwd`
+9. `sudo usermod --shell /usr/sbin/nologin [USERNAME]`
+10. `sudo ln -s ../../bin/bash /jails/[USERNAME]/usr/sbin/nologin`
 
 ### Enable networking inside the chroot env ###
 1. Add a barebone to allow bind mounting `sudo touch /jails/[USERNAME]/etc/resolv.conf`
