@@ -58,6 +58,13 @@ Run this to configure your profile (omit `--global` for local repo only) - can a
 Add a path per line to get it ignored! The path is NOT absolute!
 -> `.directory` ignores Kubuntu-Files in every subfolder too. Neat.
 
+## Change Authorname and Authoremail in history ##
+1. First time only (it's global): `git config --global alias.change-commits '!'"f() { VAR1=\$1; VAR='\$'\$1; OLD=\$2; NEW=\$3; echo \"Are you sure for replace \$VAR \$OLD => \$NEW ?(Y/N)\";read OK;if [ \"\$OK\" = 'Y' ] ; then shift 3; git filter-branch --env-filter \"if [ \\\"\${VAR}\\\" = '\$OLD' ]; then export \$VAR1='\$NEW';echo 'to \$NEW'; fi\" $@; fi;}; f "`
+2. Now you can use...
+    * git change-commits GIT_AUTHOR_NAME "old name" "new name"
+    * git change-commits GIT_AUTHOR_EMAIL "old@email.com" "new@email.com" HEAD~10..HEAD
+[See here](https://stackoverflow.com/questions/2919878/git-rewrite-previous-commit-usernames-and-emails)
+
 ## If the credentials file has been added... ##
 Or a file bigger than 100MB. Or some private data has been commited - and already pushed:
 [RESCUE IS HERE](https://help.github.com/en/github/managing-large-files/removing-files-from-a-repositorys-history)

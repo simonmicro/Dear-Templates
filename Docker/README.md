@@ -5,14 +5,17 @@
 
 ## Prepare certificates ##
 ### Initially create the certificate ###
+```
 certbot certonly --standalone --preferred-challenges http --non-interactive  --staple-ocsp --agree-tos -m webmaster@example.com -d example.com
+```
 
 ### Add crontab for renewing ###
-cat <<EOF > /etc/cron.d/letencrypt
+Add this to `/etc/cron.d/letencrypt`
+```
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 30 2 * * 1 root /usr/bin/certbot renew >> /var/log/letsencrypt-renew.log && cd /etc/letsencrypt/live/example.com && cp privkey.pem domain.key && cat cert.pem chain.pem > domain.crt && chmod 777 domain.*
-EOF
+```
 
 ## Prepare the storage ##
 `mkdir -p /mnt/docker-registry`
