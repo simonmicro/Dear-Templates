@@ -43,7 +43,7 @@ sudo chmod 755 /jails/$CHROOT_USER_NAME
 ```
 Now download the latest alpine linux installer (`apk-tools-static`) from [here](http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/) and extract it with `tar -xzf apk-tools-static-*.apk`
 ```
-sudo ./sbin/apk.static -X http://dl-cdn.alpinelinux.org/alpine/latest-stable/main -U --allow-untrusted --root /jails/$CHROOT_USER_NAME --initdb add alpine-base bash openssh git doxygen graphviz nano iputils
+sudo ./sbin/apk.static -X http://dl-cdn.alpinelinux.org/alpine/latest-stable/main -U --allow-untrusted --root /jails/$CHROOT_USER_NAME --initdb add alpine-base bash openssh git nano iputils doxygen graphviz
 sudo mkdir /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME
 sudo chown $CHROOT_USER_NAME: /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME
 echo $(getent passwd $CHROOT_USER_NAME) | sudo tee -a /jails/$CHROOT_USER_NAME/etc/passwd
