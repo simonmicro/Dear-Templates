@@ -36,16 +36,20 @@ Match group sshjailed
 
 ### Create his root ###
 For more hints about the used chroot env [see here](https://wiki.alpinelinux.org/wiki/Alpine_Linux_in_a_chroot)!
-1. `sudo mkdir /jails/$CHROOT_USER_NAME`
-2. `sudo chown root: /jails/$CHROOT_USER_NAME`
-3. `sudo chmod 755 /jails/$CHROOT_USER_NAME`
-4. Download the newest alpine linux installer (`apk-tools-static`) from [here](http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/) and extract ot with `tar -xzf apk-tools-static-*.apk`
-5. `sudo ./sbin/apk.static -X http://dl-cdn.alpinelinux.org/alpine/latest-stable/main -U --allow-untrusted --root /jails/$CHROOT_USER_NAME --initdb add alpine-base bash openssh git doxygen graphviz nano iputils`
-6. `sudo mkdir /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME`
-7. `sudo chown $CHROOT_USER_NAME: /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME`
-8. `echo $(getent passwd $CHROOT_USER_NAME) | sudo tee -a /jails/$CHROOT_USER_NAME/etc/passwd`
-9. `sudo usermod --shell /usr/sbin/nologin $CHROOT_USER_NAME`
-10. `sudo ln -s ../../bin/bash /jails/$CHROOT_USER_NAME/usr/sbin/nologin`
+```
+sudo mkdir /jails/$CHROOT_USER_NAME
+sudo chown root: /jails/$CHROOT_USER_NAME
+sudo chmod 755 /jails/$CHROOT_USER_NAME
+```
+Now download the latest alpine linux installer (`apk-tools-static`) from [here](http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/) and extract it with `tar -xzf apk-tools-static-*.apk`
+```
+sudo ./sbin/apk.static -X http://dl-cdn.alpinelinux.org/alpine/latest-stable/main -U --allow-untrusted --root /jails/$CHROOT_USER_NAME --initdb add alpine-base bash openssh git doxygen graphviz nano iputils
+sudo mkdir /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME
+sudo chown $CHROOT_USER_NAME: /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME
+echo $(getent passwd $CHROOT_USER_NAME) | sudo tee -a /jails/$CHROOT_USER_NAME/etc/passwd
+sudo usermod --shell /usr/sbin/nologin $CHROOT_USER_NAME
+sudo ln -s ../../bin/bash /jails/$CHROOT_USER_NAME/usr/sbin/nologin
+```
 
 ### Enable networking inside the chroot env ###
 1. Add a barebone to allow bind mounting `sudo touch /jails/$CHROOT_USER_NAME/etc/resolv.conf`
