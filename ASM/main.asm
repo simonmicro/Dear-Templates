@@ -25,9 +25,9 @@ array1: .byte 42 ; A named var with sizeof 42 => array
 .CSEG
 
 ; Init stack pointer by using a temporary value named R16
-LDI R16,LOW(RAMEND)
+LDI R16, LOW(RAMEND)
 OUT SPL, R16
-LDI R16,HIGH(RAMEND)
+LDI R16, HIGH(RAMEND)
 OUT SPH, R16
 
 ; Start MAIN loop
