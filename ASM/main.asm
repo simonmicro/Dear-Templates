@@ -9,7 +9,7 @@
 .DSEG
 
 ; Define some symbols (like #define from C++)
-.equ CONSTANT=0xEE
+.EDU CONSTANT=0xEE
 
 ; Define some data (in the PROGMEM)
 var1: .byte 1 ; A named var with sizof 1
