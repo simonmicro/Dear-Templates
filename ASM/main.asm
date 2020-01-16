@@ -55,4 +55,4 @@ SUB1:
 ; The following SHOULD be at the end of the CSEG, otherwise the code would be added AFTER this data... Bad. Because we start to execute at 0x0 // $0000
 ; @array2
 .ORG $0100 ; Now set the "cursor" to address 0100
-array2: 	.db	1, 2, 3, 4 ; Put this values into the PROGMEM
+array2: .DB 1, 2, 3, 4 ; Put this values into the PROGMEM
