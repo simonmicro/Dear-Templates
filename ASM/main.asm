@@ -32,6 +32,7 @@ OUT SPH, R16
 
 ; Start MAIN loop
 INIT:
+	LDI R16, 0x00 ; Reset our R16 after its use from above...
 	LDI R17, 0x00
 MAIN:
 	PUSH R16 ; Save R16 to stack
