@@ -11,7 +11,7 @@
 ; Define some symbols (like #define from C++)
 .EQU CONSTANT=0xEE
 
-; Define some data (in the PROGMEM)
+; Define some data (in the RAM)
 var1: .byte 1 ; A named var with sizof 1
 array1: .byte 42 ; A named var with sizeof 42 => array
 ; To create a var with sizeof 4 and {1, 2, 3, 4} you have to put them into the .CSEG -> see down @array2
@@ -41,6 +41,7 @@ MAIN:
 	LDI R16, CONSTANT ; Load out constant into the R16
 	POP R16 ; ... and restore R16 from stack
 	CALL SUB1 ; Got into a subprog (store address of next line in stack)...
+	CALL SUB2 ; ...
 	JMP MAIN ; Back to start...
 
 SUB1:
@@ -51,6 +52,18 @@ SUB1:
 	LPM R21, Z + 1
 	LPM R22, Z + 2
 	LPM R23, Z + 3
+	RET ; -> Pop addr from stack and go back...
+
+SUB2:
+    ; Lets create a working copy of the pointer to the array1 and write to it...
+	LDI YL, LOW(array1)
+	LDI YH, HIGH(array1)
+    ; Now Y points to the first element of array1 and is writeable...
+	ST R20, Y + 0 ; Now store to RAM by using the Y-pointer
+	ST R21, Y + 1
+	ST R22, Y + 2
+	ST R23, Y + 3
+	ST R21, Y+ ; Now we store R21 to the first element and also increase pointer to point to the second element of our array...
 	RET ; -> Pop addr from stack and go back...
 
 ; The following SHOULD be at the end of the CSEG, otherwise the code would be added AFTER this data... Bad. Because we start to execute at 0x0 // $0000
