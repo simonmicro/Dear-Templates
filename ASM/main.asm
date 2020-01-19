@@ -59,11 +59,12 @@ SUB2:
 	LDI YL, LOW(array1)
 	LDI YH, HIGH(array1)
     ; Now Y points to the first element of array1 and is writeable...
-	ST R20, Y + 0 ; Now store to RAM by using the Y-pointer
-	ST R21, Y + 1
-	ST R22, Y + 2
-	ST R23, Y + 3
-	ST R21, Y+ ; Now we store R21 to the first element and also increase pointer to point to the second element of our array...
+	ST Y, R20 ; Now store to RAM by using the Y-pointer (reg to FIRST element)
+	ST Y, R21 ; (reg to FIRST element)
+	ST Y, R22 ; (reg to FIRST element)
+	ST Y, R23 ; (reg to FIRST element)
+	ST Y+, R21 ; Now we store R21 to the first element and also increase pointer to point to the second element of our array...
+	ST Y, R23 ; (reg to SECOND element)
 	RET ; -> Pop addr from stack and go back...
 
 ; The following SHOULD be at the end of the CSEG, otherwise the code would be added AFTER this data... Bad. Because we start to execute at 0x0 // $0000
