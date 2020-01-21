@@ -16,10 +16,9 @@ sudo apt-get install adapta-gtk-theme adapta-kde papirus-icon-theme fonts-roboto
 
 # Activate them #
 Cinnamon / KDE
-* Default / General: Roboto Regular 9
-* Monospace / Fixed width: Hack Regular 9
 * * / *: Roboto Regular 10
-* - / small: Roboto Light 8
+* Monospace / Fixed width: Hack Regular 10
+* - / small: Roboto Light 9
 * Document / -: Default with Sans Regular 10
 
 # Unify the themes in editors / IDEs #
