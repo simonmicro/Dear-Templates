@@ -11,6 +11,9 @@
 ; Define some symbols (like #define from C++)
 .EQU CONSTANT=0xEE
 
+; Define as other name for a register
+.DEF TEMP=R16
+
 ; Define some data (in the RAM)
 var1: .byte 1 ; A named var with sizof 1
 array1: .byte 42 ; A named var with sizeof 42 => array
@@ -31,10 +34,10 @@ array1: .byte 42 ; A named var with sizeof 42 => array
 .CSEG
 
 ; Init stack pointer by using a temporary value named R16
-LDI R16, LOW(RAMEND)
-OUT SPL, R16
-LDI R16, HIGH(RAMEND)
-OUT SPH, R16
+LDI TEMP, LOW(RAMEND)
+OUT SPL, TEMP
+LDI TEMP, HIGH(RAMEND)
+OUT SPH, TEMP
 
 ; Start MAIN loop
 INIT:
