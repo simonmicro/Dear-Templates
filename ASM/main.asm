@@ -21,6 +21,12 @@ array1: .byte 42 ; A named var with sizeof 42 => array
 	INC R17
 .ENDMACRO
 
+; Lets define a macro with "parameters" @0 and @1
+.MACRO DOMORESHIT
+	INC @0
+    DEC @1
+.ENDMACRO
+
 ; Start the code segment
 .CSEG
 
@@ -38,6 +44,7 @@ MAIN:
 	PUSH R16 ; Save R16 to stack
 	INC R17 ; Increase R17
 	DOSHIT ; Same
+    DOMORESHIT R16, R16 ; Does "nothing"
 	LDI R16, CONSTANT ; Load out constant into the R16
 	POP R16 ; ... and restore R16 from stack
 	CALL SUB1 ; Got into a subprog (store address of next line in stack)...
