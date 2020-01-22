@@ -5,6 +5,9 @@
 ; Author : Simon Beginn
 ;
 
+; Get the default definitions for this chip (not really needed in thes example)
+; .INCLUDE "m16def.inc"
+
 ; Start the data definition segment
 .DSEG
 
