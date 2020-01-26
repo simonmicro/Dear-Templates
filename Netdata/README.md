@@ -1,6 +1,6 @@
 # Setup #
-1. Install with `bash <(curl -Ss https://my-netdata.io/kickstart.sh)` or `bash <(curl -Ss https://my-netdata.io/kickstart-static64.sh)`
-2. **Restrict to localhost only** by appending (`sudo /opt/netdata/etc/netdata/edit-config netdata.conf`):
+1. Install with `sudo apt install netdata` (preferred) or `bash <(curl -Ss https://my-netdata.io/kickstart.sh)` or `bash <(curl -Ss https://my-netdata.io/kickstart-static64.sh)`
+2. **Restrict to localhost only (already done for the debian package)** by appending (`sudo /etc/netdata/edit-config netdata.conf`):
     ```
     [web]
         bind to = *:19999
@@ -11,7 +11,7 @@
 4. NICE2KNOW Check the generated config out at http://localhost:19999/netdata.conf
 
 ## Extend the history ##
-By using (`sudo /opt/netdata/etc/netdata/edit-config netdata.conf`):
+By using (`sudo /etc/netdata/edit-config netdata.conf`):
     *
         ```
         [global]
@@ -38,7 +38,7 @@ Note:
 * `allow from` are [simple patterns](https://docs.netdata.cloud/libnetdata/simple_pattern/) -> `10.0.0.*` or `!192.168.0.1` or `*`...
 
 ### Slave ###
-3. Edit the global config: `sudo /opt/netdata/etc/netdata/edit-config netdata.conf`
+3. Edit the global config: `sudo /etc/netdata/edit-config netdata.conf`
 4. Disable own storage and webinterface (= slave mode):
     ```
     [global]
@@ -46,7 +46,7 @@ Note:
     [web]
         mode = none
     ```
-3. Edit the config: `sudo /opt/netdata/etc/netdata/edit-config stream.conf`
+3. Edit the config: `sudo /etc/netdata/edit-config stream.conf`
 4. Now add the master (append ':SSL' to the address for https (respect the port!)):
     ```
     [stream]
@@ -56,7 +56,7 @@ Note:
     ```
 
 ### Master ###
-1. Edit the config: `sudo /opt/netdata/etc/netdata/edit-config stream.conf`
+1. Edit the config: `sudo /etc/netdata/edit-config stream.conf`
 2. Now add the slave:
     ```
     [xxxxxxxx-xxxx-xxxxx-xxxx-xxxxxxxxxxxx]
@@ -73,7 +73,7 @@ You should add the following to the crontab of root. This makes sure that netdat
 ```
 
 # Add teleram bot notifications #
-1. Edit the config with `sudo /opt/netdata/etc/netdata/edit-config health_alarm_notify.conf` and modify it so it contains:
+1. Edit the config with `sudo /etc/netdata/edit-config health_alarm_notify.conf` and modify it so it contains:
     ```
     SEND_TELEGRAM="YES"
     TELEGRAM_BOT_TOKEN="[BOT_API_TOKEN]"
@@ -82,7 +82,7 @@ You should add the following to the crontab of root. This makes sure that netdat
 2. Done - test it ([see here at the end](https://docs.netdata.cloud/health/notifications/email/))
 
 # How to mute a specific alarm #
-One or more alarms are useless and can be ignored? Check out the source row at the dashboard (-> e.g. `sudo /opt/netdata/etc/netdata/edit-config health.d/...`). Go there and change the recipient from `to: [someone]` to `to: silent`. Or disable it by comment it with # out!
+One or more alarms are useless and can be ignored? Check out the source row at the dashboard (-> e.g. `sudo /etc/netdata/edit-config health.d/...`). Go there and change the recipient from `to: [someone]` to `to: silent`. Or disable it by comment it with # out!
 
 ~ Finally: Quiet nights! ~
 
@@ -130,8 +130,8 @@ sleep 5
 # Nett2Know #
 If you get much dbengine fs errors and can't add any more working instances to the netdata streaming config (the access.log is filled with `CANNOT ACQUIRE HOST`) you should [increase the file descriptor limit](https://github.com/netdata/netdata/blob/master/database/engine/README.md).
 
-# Update #
+# Update (non-debian package only) #
 `sudo chmod +x /opt/netdata/usr/libexec/netdata/netdata-updater.sh && sudo /opt/netdata/usr/libexec/netdata/netdata-updater.sh`
 
-# Uninstall #
+# Uninstall (non-debian package only) #
 `sudo chmod +x /opt/netdata/usr/libexec/netdata/netdata-uninstaller.sh && sudo /opt/netdata/usr/libexec/netdata/netdata-uninstaller.sh`
