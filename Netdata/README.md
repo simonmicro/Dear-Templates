@@ -127,6 +127,9 @@ echo "*****Connections closed."
 sleep 5
 ```
 
+# Nett2Know #
+If you get much dbengine fs errors and can't add any more working instances to the netdata streaming config (the access.log is filled with `CANNOT ACQUIRE HOST`) you should [increase the file descriptor limit](https://github.com/netdata/netdata/blob/master/database/engine/README.md).
+
 # Update #
 `sudo chmod +x /opt/netdata/usr/libexec/netdata/netdata-updater.sh && sudo /opt/netdata/usr/libexec/netdata/netdata-updater.sh`
 
