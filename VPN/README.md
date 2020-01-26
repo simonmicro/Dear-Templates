@@ -1,5 +1,5 @@
 # HowTo use pritunl... #
-...or how to install on debian buster...
+...or how to install on debian buster (amek sure to also checkout [this neat helper](https://gitlab.simonmicro.de/simonmicro/pritunl-fake-api))...
 
 ```
 sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list << EOF
@@ -17,11 +17,11 @@ sudo apt-get --assume-yes install pritunl mongodb-org-server
 sudo systemctl start mongod pritunl
 sudo systemctl enable mongod pritunl
 ```
-(shamelessly copied from [here](https://docs.pritunl.com/docs/installation) and [here](https://github.com/pritunl/pritunl))
+(shamelessly fixed and commited to [here](https://docs.pritunl.com/docs/installation) and [here](https://github.com/pritunl/pritunl))
 ...If the key is missing: Just rerun the apt-key command with the shown digits...
 
 ## Change the web interface port ##
 with `pritunl set app.server_port [NEW_PORT]` on the console.
 
 ## Client setup ##
-Make sure to have the openvp packages (also the ones for gnome!) installed.
+Make sure to have the openvpn packages (also the ones for gnome!) installed.
