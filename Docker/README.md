@@ -89,7 +89,7 @@ docker run -d \
     -e WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2 \
     containrrr/watchtower \
     --cleanup \
-    --schedule "0 4 * * *" \
+    --schedule "0 0 4 * * *" \
     --stop-timeout 360s
 ```
 **Make sure to insert the path to the private registry file!**
