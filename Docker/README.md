@@ -1,4 +1,4 @@
-# Install repo #
+# Setup a registry #
 - Auto restart
 - Runs on port 5425
 - Mounts /etc/letsencrypt/live/domain.example.com to repositories /certs
@@ -56,3 +56,45 @@ Pull:
 
 # Auto cleanup: Crontab! #
 -> Add on weekly basis `docker system prune -f`
+
+# Automatic docker image updates? Watchtower! #
+Watchtower is an automatic updater, which stops, repulls, and restarts all specified images...
+
+## Add creds for private registry ##
+```
+{
+    "auths": {
+        "<REGISTRY_NAME>": {
+            "auth": "[USERNAME_PASSWORD_BASE64]"
+        }
+    }
+}
+```
+Replace the `[USERNAME_PASSWORD_BASE64]` with the output of `echo -n '[REG_USERNAME]:[REG_PASSWORD]' | base64`.
+For the creds you must add a new user to gitlab wich can see the docker images from the repo...
+Save the new file to a secure location on the vm and write down the absolute path.
+
+## Now start watchtower... ##
+```
+docker run -d \
+    --name watchtower \
+    -v [ABSOLUTE_PATH_TO_PRIVATE_REGISTRY_CREDENTIALS]:/config.json \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -e WATCHTOWER_NOTIFICATIONS=email \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_FROM=[FROM_EMAIL] \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_TO=[TO_EMAIL] \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER=[EMAIL_SERVER] \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=[EMAIL_USER_SERVER] \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=[EMAIL_PASS_SERVER] \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2 \
+    containrrr/watchtower \
+    --cleanup \
+    --schedule "0 4 * * *" \
+    --stop-timeout 360s
+```
+**Make sure to insert the path to the private registry file!**
+* The credentials part can be omitted, if not needed...
+* The email part can be omitted, if not needed...
+* The watchtower will update all images every day at 4 o'clock
+* It will delete the now unused image tags / versions
+* It will wait 6 minutes until a forceful update to stop the container (using docker stop)
