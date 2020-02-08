@@ -12,3 +12,4 @@
 2. Enter at `IP address or host name of the outgoing smarthost` your smtp server like `[SMTP_SERVER_HOST]::[PORT_587]`
 3. Add the credentials to the local config: `sudo nano /etc/exim4/passwd.client`: `[SMTP_SERVER_HOST]:[USERNAME]:[PASSWORD]`
 4. Restart exim4 with `sudo systemctl restart exim4`
+5. Test with: `mail -s [SUBJECT]` and CTRL-D
