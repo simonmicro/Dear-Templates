@@ -23,6 +23,8 @@
 # ...or proxy everything from...
 #    ProxyPass / http://localhost:19999/
 #    ProxyPassReverse / http://localhost:19999/
+# DON'T inform the proxy target, that an other client has requested the site instead of this server (don't set X-Forward...)
+#    ProxyPreserveHost on
 # Use SSL + stuff
     SSLEngine on
 # ...allow SSL on the proxy...
