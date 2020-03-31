@@ -26,3 +26,11 @@ Sadly I didn't found a truely universal theme: So here a list of used ones:
 * `Solarized Dark` - XED, Kate
 * `Norway Today` - Netbeans
 
+# Use the UEFI image at boot #
+For that several steps are needed!
+1. Go to `/sys/firmware/acpi/bgrt` and make sure the path and a file named `image` exists. If no, then the device doesn't support this!
+2. Use `cp /sys/firmware/acpi/bgrt/image /tmp/` to copy the UEFI image and convert it with `mogrify -format png /tmp/image` into a PNG.
+3. **Following is FOR LINUX MINT ONLY!**
+4. Rename the original logo with `sudo mv -v /usr/share/plymouth/themes/mint-logo/logo.png /usr/share/plymouth/themes/mint-logo/logo.orig.png`
+5. And insert the vendors logo `sudo cp -v /tmp/image.png /usr/share/plymouth/themes/mint-logo/logo.png`
+6. Now update the initramfs to apply the change at the next reboot with `sudo update-initramfs -u -k all`
