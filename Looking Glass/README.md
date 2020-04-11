@@ -1,3 +1,7 @@
+# Prepare PCIE #
+https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF
+...so the vm could restart and reset own GPU for that. Otherwise cold VM boot needed.
+
 # Windows install #
 * https://www.reddit.com/r/VFIO/comments/8gdbnm/ryzen_2700_system_thread_exception_not_handled/ -> EPYC is killing windows kernel. Epic.
 * QEMU guest tools
