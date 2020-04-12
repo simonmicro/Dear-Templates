@@ -21,3 +21,4 @@ Hmmm, yes you can also include this files into e.g. your own hugo website as e.g
 # TODOs #
 * Add ../ link or index.md
 * Add note to contibute at github repo to here or index.md
+* Fix Gamemode png at Hugo render
