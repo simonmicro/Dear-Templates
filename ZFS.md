@@ -1,3 +1,10 @@
+---
+title: ZFS
+summary: Install, usage, tips and tricks, encryption, compression & more!
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # Setup on Debian (10) #
 1. Add the "contib" and "non-free" branch to the `/etc/apt/sources.list`
 2. Install zfs: `sudo apt install zfsutils-linux`
