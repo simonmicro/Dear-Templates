@@ -5,7 +5,7 @@ type: blog
 banner: "/img/dear-templates/default.jpg"
 ---
 
-# Setup frpint for your user #
+# Setup fprint for your user #
 1. Install `sudo apt install fprint`
 2. Enroll a finger `sudo fprintd-enroll [USER]`
 
