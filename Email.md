@@ -1,5 +1,12 @@
+---
+title: Email
+summary: Let your server email yourself (useful for crontab, SMART, ...)
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # Setup basic email #
-...debian to send all emails received with `mail` by itself to the target.
+...on debian to send all emails received with `mail` by itself to the target.
 1. Install `mailutils` and `exim4` (Both required!): `sudo apt-get install mailutils exim4`
 2. `sudo nano /etc/aliases`
 3. Add desired target: `[USERNAME]: [EMAIL]`
