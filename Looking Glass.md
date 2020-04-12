@@ -1,4 +1,11 @@
-# Prepare PCIE #
+---
+title: Looking Glass
+summary: Notes how to setup and use Looking Glass
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
+# Prepare PCIe #
 https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF
 ...so the vm could restart and reset own GPU for that. Otherwise cold VM boot needed.
 
