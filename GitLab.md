@@ -1,4 +1,12 @@
-[Reference_0](https://docs.gitlab.com/runner/install/docker.html) and [Reference_1](https://docs.gitlab.com/runner/register/index.html#docker)
+---
+title: GitLab
+summary: GitLab runner setup, docker & more
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
+* [Reference_0](https://docs.gitlab.com/runner/install/docker.html)
+* [Reference_1](https://docs.gitlab.com/runner/register/index.html#docker)
 
 # Setup #
 ...a runner in our docker env
