@@ -4,6 +4,7 @@ summary: Some copy-paste scripts for mass conversion
 type: blog
 banner: "/img/dear-templates/default.jpg"
 ---
+
 # Video #
 
 ## AVI to MP4 ##
@@ -50,7 +51,7 @@ done
 # Audio #
 
 ## Normalize ##
-This normalizes to 0db - NOTE that the parent folder is used since we dont change the audio format...
+This normalizes to 0db - NOTE that the parent folder is used since we dont change the audio format and therefore we would loop for a infinite time...
 ```
 #!/bin/bash
 mkdir -p ../normalized/
