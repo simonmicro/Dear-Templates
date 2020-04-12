@@ -1,5 +1,12 @@
+---
+title: VPN
+summary: How to use properly setup pritunl on debian buster
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # HowTo use pritunl... #
-...or how to install on debian buster (amek sure to also checkout [this neat helper](https://gitlab.simonmicro.de/simonmicro/pritunl-fake-api))...
+...or how to install on debian buster (make sure to also checkout [this neat helper](https://gitlab.simonmicro.de/simonmicro/pritunl-fake-api))...
 
 ```
 sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list << EOF
