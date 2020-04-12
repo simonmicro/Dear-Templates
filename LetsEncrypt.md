@@ -1,3 +1,10 @@
+---
+title: Lets Encrypt
+summary: Incredible complex setup guide...
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # Setup #
 [See](https://certbot.eff.org/lets-encrypt/debianbuster-apache)
 1. `sudo apt-get install certbot python-certbot-apache`
