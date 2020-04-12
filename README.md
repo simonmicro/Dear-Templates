@@ -1,6 +1,7 @@
 # Dear Templates - what is this? #
-![code-size](https://img.shields.io/github/languages/code-size/simonmicro/dear-templates)
-![open-issues](https://img.shields.io/github/issues-raw/simonmicro/dear-templates)
+![repo-size](https://img.shields.io/github/repo-size/simonmicro/dear-templates)
+![open-issues](https://img.shields.io/github/issues/simonmicro/dear-templates)
+![last-commit](https://img.shields.io/github/last-commit/simonmicro/dear-templates/master)
 
 This is a collection of little guides about servers, problems and features - mostly Linux.
 You can view and learn from them - they are designed to give a quick and dirty overview about a topic.
