@@ -1,3 +1,10 @@
+---
+title: Java
+summary: HowTo jar
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # 0. Compile any sources to ".class"-files #
 `javac *.java [ANY OTHER PATH WHICH CONTAINS USED SOURCES]`
 
