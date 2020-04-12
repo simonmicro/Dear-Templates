@@ -6,6 +6,10 @@ slug: .
 banner: "/img/dear-templates/default.jpg"
 ---
 
+### Note ###
+This code has been tested and developed with the [Atmel Studio 7.0](http://studio.download.atmel.com/7.0.2397/as-installer-7.0.2397-full.exe) for an ATMEGA16 chip.
+You should also consult the instruction manual from [here](http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf)!
+
 ```
 ; Get the default definitions for this chip (not really needed in this example)
 ; .INCLUDE "m16def.inc"
@@ -87,7 +91,3 @@ SUB2:
 .ORG $0100 ; Now set the "cursor" to address 0100
 array2: .DB 1, 2, 3, 4 ; Put this values into the PROGMEM
 ```
-
-### Note ###
-This code has been tested and developed with the [Atmel Studio 7.0](http://studio.download.atmel.com/7.0.2397/as-installer-7.0.2397-full.exe) for an ATMEGA16 chip.
-You should also consult the instruction manual from [here](http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf)!
