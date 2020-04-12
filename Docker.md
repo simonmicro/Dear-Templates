@@ -1,3 +1,10 @@
+---
+title: Docker
+summary: Own registry and container auto updates!
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # Setup a registry #
 - Auto restart
 - Runs on port 5425
