@@ -1,5 +1,4 @@
 # Dear Templates - what is this? #
-![top-lang](https://img.shields.io/github/languages/top/simonmicro/dear-templates)
 ![code-size](https://img.shields.io/github/languages/code-size/simonmicro/dear-templates)
 ![open-issues](https://img.shields.io/github/issues-raw/simonmicro/dear-templates)
 
