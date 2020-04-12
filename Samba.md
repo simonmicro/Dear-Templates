@@ -1,6 +1,14 @@
-# THIS ALL REQUIRES samba
-# This is lacated at /etc/samba/smb.conf
+---
+title: Samba
+summary: Template config
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
 
+THIS ALL REQUIRES the `samba` package
+Located at `/etc/samba/smb.conf`
+
+```
 [global]
 # Network stuff
 workgroup = WORKGROUP
@@ -169,3 +177,4 @@ server role = standalone server
 # Public Access
 #   guest ok = yes
 #   writeable = yes
+```
