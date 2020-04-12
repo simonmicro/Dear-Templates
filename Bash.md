@@ -1,3 +1,10 @@
+---
+title: Bash
+summary: Interactive bash shells in background with pipe access
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # The ultimative... #
 ...command to send an interactive bash shell into the background:
 ```
