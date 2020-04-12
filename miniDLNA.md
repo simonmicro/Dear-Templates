@@ -1,3 +1,19 @@
+---
+title: miniDLNA
+summary: Notes how to setup and use Looking Glass
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
+# Note #
+Take a look into the minidlna.conf file (you'll be able to view the status of the minidlna server at the port 8200)!
+Maybe you should add a cronjob to rescan the network attached folders every midnight by restarting the server...
+```
+0 4 * * * systemctl restart minidlna
+```
+
+# Example config #
+```
 # This file is located at /et/minidlna.conf
 
 # If you want to restrict a media_dir to a specific content type, you can
@@ -101,3 +117,22 @@ enable_tivo=yes
 
 # Set this to merge all media_dir base contents into the root container (so the browse dir don't show the last folder name of every path and just handels everything as one)
 merge_media_dirs=yes
+```
+
+# Startup rescan service #
+Caused by the delayed start of virtualbox, minidlna will scan at startup an empty folder. To fix this, restart minidlna right after the vbox service (for the shared folders) to trigger a rescan...
+```
+# Add it under /etc/systemd/system/minidlna_vbox_fix.service
+# Enable it with "systemctl enable minidlna_vbox_fix"
+
+[Unit]
+Description=Restarts minidlna after virtualbox shared folders are available
+After=vboxadd.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "systemctl restart minidlna.service"
+
+[Install]
+WantedBy=multi-user.target
+```
