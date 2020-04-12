@@ -2,7 +2,6 @@
 title: Avahi
 summary: Some common templates for avahi services
 type: blog
-slug: .
 banner: "/img/dear-templates/default.jpg"
 ---
 

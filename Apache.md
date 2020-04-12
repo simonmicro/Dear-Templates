@@ -2,7 +2,6 @@
 title: Apache
 summary: Templates for sites and hardening
 type: blog
-slug: .
 banner: "/img/dear-templates/default.jpg"
 ---
 

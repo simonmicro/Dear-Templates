@@ -2,7 +2,6 @@
 title: ASM
 summary: Some overview of ASM code for ATMEGA16
 type: blog
-slug: .
 banner: "/img/dear-templates/default.jpg"
 ---
 
