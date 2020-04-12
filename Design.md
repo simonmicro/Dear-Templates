@@ -1,3 +1,10 @@
+---
+title: Design
+summary: The design config used on all of my computers
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # Add adapta theme #
 ```
 sudo add-apt-repository ppa:tista/adapta
