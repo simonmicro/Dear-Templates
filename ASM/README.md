@@ -7,7 +7,7 @@ banner: "/img/dear-templates/default.jpg"
 ---
 
 ```
-; Get the default definitions for this chip (not really needed in thes example)
+; Get the default definitions for this chip (not really needed in this example)
 ; .INCLUDE "m16def.inc"
 
 ; Start the data definition segment
