@@ -8,7 +8,9 @@ Sometimes they also include notes to workarounds or tips and tricks!
 What ever you intend to do with them, have fun and make sure to share this repo, if it helped you!
 
 ## Contributing ##
-You found a bug or want to improve something? Just do it! _But please make sure to also update the `summary:`-tag at the head of the modified file..._
+You found a bug or want to improve something? Just do it!
+
+_But please make sure to also update the `summary:`-tag at the head of the modified file..._
 
 ### What is that header at top of every file? ###
 This markdown files are written for my website - running hugo. And because I want to specify e.g. custom banners,
