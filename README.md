@@ -13,7 +13,7 @@ This markdown files are written for my website - running hugo. And because I wan
 I'll need to provide a own header in each file anyways, therwise a simple script generating this headers would have been enough...
 
 ## Contributing and Issues ##
-You found a bug or want to improve something? Just do it! _But please make sure to also update the `date:`-tag at the head of the modified file..._
+You found a bug or want to improve something? Just do it! _But please make sure to also update the `summary:`-tag at the head of the modified file..._
 
 ### Redistribution ###
 Hmmm, yes you can also include this files into e.g. your own hugo website as e.g. git submodule. But please give credit to all the contributors here.
