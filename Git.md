@@ -1,3 +1,10 @@
+---
+title: Git
+summary: Fun with git and a common .gitignore
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # HowTo Git #
 
 ## Nett2Know ##
@@ -68,3 +75,42 @@ Add a path per line to get it ignored! The path is NOT absolute!
 ## If the credentials file has been added... ##
 Or a file bigger than 100MB. Or some private data has been commited - and already pushed:
 [RESCUE IS HERE](https://help.github.com/en/github/managing-large-files/removing-files-from-a-repositorys-history)
+
+# Basic .gitignore #
+...for the most files from me - a more complete list is [here](https://github.com/github/gitignore)...
+```
+#CLion
+.idea/
+cmake-build-debug/
+
+# Netbeans
+**/nbproject/
+**/dist/
+**/build/
+.dep.inc
+
+# (C)Make
+**/CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Kubuntu
+.directory
+
+# MacOSX
+.DS_Store
+
+# block directory for binaries
+bin/
+
+# Doxygen stuff
+doc/
+
+
+# vscode
+.vscode
+
+# Our game
+config.json
+```
