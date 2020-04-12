@@ -17,3 +17,7 @@ You found a bug or want to improve something? Just do it! _But please make sure 
 
 ### Redistribution ###
 Hmmm, yes you can also include this files into e.g. your own hugo website as e.g. git submodule. But please give credit to all the contributors here.
+
+# TODOs #
+* Add ../ link or index.md
+* Add note to contibute at github repo to here or index.md
