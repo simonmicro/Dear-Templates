@@ -1,6 +1,6 @@
 ---
 title: Lets Encrypt
-summary: Incredible complex setup guide...
+summary: A incredible complex setup guide...
 type: blog
 banner: "/img/dear-templates/default.jpg"
 ---
