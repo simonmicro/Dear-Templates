@@ -7,17 +7,15 @@ You can view and learn from them - they are designed to give a quick and dirty o
 Sometimes they also include notes to workarounds or tips and tricks!
 What ever you intend to do with them, have fun and make sure to share this repo, if it helped you!
 
-## What is that header at top of every file? ##
+## Contributing ##
+You found a bug or want to improve something? Just do it! _But please make sure to also update the `summary:`-tag at the head of the modified file..._
+
+### What is that header at top of every file? ###
 This markdown files are written for my website - running hugo. And because I want to specify e.g. custom banners,
 I'll need to provide a own header in each file anyways, therwise a simple script generating this headers would have been enough...
 
-## Contributing and Issues ##
-You found a bug or want to improve something? Just do it! _But please make sure to also update the `summary:`-tag at the head of the modified file..._
-
-### Redistribution ###
+## Redistribution ##
 Hmmm, yes you can also include this files into e.g. your own hugo website as e.g. git submodule. But please give credit to all the contributors here.
 
 # TODOs #
-* Add ../ link or index.md
-* Add note to contibute at github repo to here or index.md
 * Fix Gamemode png at Hugo render
