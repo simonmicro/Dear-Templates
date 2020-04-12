@@ -1,3 +1,10 @@
+---
+title: Jailing
+summary: SSH user jailing
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # Basic idea #
 * Use an own VM - jails are under `/jails/`
 * Every user which sould be jailed into his folder `/jails/[USERNAME]` is in group `sshjailed`
