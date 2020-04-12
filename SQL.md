@@ -1,3 +1,10 @@
+---
+title: SQL
+summary: Backup & restore, unlock root and some notes
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # Backup #
 ADD BACKUP USER TO DATABASE (localhost only) - pwd maybe with 'openssl rand -base64 32'
 1. `sudo mysql -u root`
