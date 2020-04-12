@@ -1,3 +1,10 @@
+---
+title: Netdata
+summary: Setup, replication and some config hints
+type: blog
+banner: "/img/dear-templates/default.jpg"
+---
+
 # Setup #
 1. Install with `sudo apt install netdata` (preferred) or `bash <(curl -Ss https://my-netdata.io/kickstart.sh)` or `bash <(curl -Ss https://my-netdata.io/kickstart-static64.sh)`
 2. **Restrict to localhost only (already done for the debian package)** by appending (`sudo /etc/netdata/edit-config netdata.conf`):
@@ -86,15 +93,13 @@ One or more alarms are useless and can be ignored? Check out the source row at t
 
 ~ Finally: Quiet nights! ~
 
-<!--
-# How to prevent package drop warnings #
+# How to prevent package drop warnings without muting the alarm #
 1. Apply `sudo sysctl -w net.core.netdev_budget_usecs=6400 && sudo sysctl -w net.core.netdev_budget=600` as temporary fix. The alarm should now fade.
 2. If that was successful: Apply them permanent in /etc/sysctl.conf by adding:
     ```
     net.core.netdev_budget_usecs=6400
     net.core.netdev_budget=600
     ```
--->
 
 # Usage #
 1. Establish a tunnel to the server: `ssh -N -L [LOCAL_PORT]:127.0.0.1:19999 [TARGET_ADDR]`
