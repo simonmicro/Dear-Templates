@@ -1,24 +1,20 @@
 ---
 title: Unattended Upgrades
-summary: Enable aggresive unattended upgrades on debian
+summary: Enable aggressive unattended upgrades on debian
 type: blog
 banner: "/img/dear-templates/default.jpg"
 ---
 
-`sudo apt install unattended-upgrades apt-listchanges`
+# Install #
+```
+sudo apt install unattended-upgrades apt-listchanges
+```
 
-`sudo nano /etc/apt/apt.conf.d/50unattended-upgrades`
-
-Update:
+# Config #
+In `/etc/apt/apt.conf.d/50unattended-upgrades` uncomment:
 ```
 //Unattended-Upgrade::Mail "root";
 ```
-->
-```
-Unattended-Upgrade::Mail "root";
-```
-(MAYBE REMOVE THE label...security PART OF THE STRING, so ALL updates will be installed)
+...to allow a regulray report about the updates. Also may change the `Unattended-Upgrade::Allowed-Origins` array to include a `"*:*";` - this will allow automatic updates for _all_ packages!
 
-`sudo dpkg-reconfigure -plow unattended-upgrades`
-
-Test with (check for the matching string messages!!!): `sudo unattended-upgrade -d`
+Test with (check for the matching string messages!!!): `sudo unattended-upgrade --debug --dry-run`
