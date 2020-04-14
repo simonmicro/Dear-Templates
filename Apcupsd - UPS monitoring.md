@@ -2,7 +2,7 @@
 title: Apcupsd - UPS monitoring
 summary: HowTo get a weekly UPS status report
 type: blog
-banner: "/img/dear-templates/default.jpg"
+banner: "/img/dear-templates/ups.jpg"
 ---
 
 # Weekly UPS report... #

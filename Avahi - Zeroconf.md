@@ -2,7 +2,7 @@
 title: Avahi - Zeroconf
 summary: Some common templates for avahi services
 type: blog
-banner: "/img/dear-templates/default.jpg"
+banner: "/img/dear-templates/avahi.jpg"
 ---
 
 # Note #

@@ -2,7 +2,7 @@
 title: Borg - Backup
 summary: Notes regarding the borg backup system. Also a setup script included...
 type: blog
-banner: "/img/dear-templates/default.jpg"
+banner: "/img/dear-templates/backup.jpg"
 ---
 
 # NOTE / WARNING #

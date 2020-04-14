@@ -2,7 +2,7 @@
 title: Bash - Shells
 summary: Interactive bash sessions in the background with pipe access
 type: blog
-banner: "/img/dear-templates/default.jpg"
+banner: "/img/dear-templates/bash.jpg"
 ---
 
 # The command itself #
