@@ -1,5 +1,5 @@
 ---
-title: CUPS
+title: CUPS - Printers
 summary: HowTo unlock the web interface...
 type: blog
 banner: "/img/dear-templates/default.jpg"

@@ -1,5 +1,5 @@
 ---
-title: GitLab
+title: GitLab - SCM
 summary: GitLab runner setup, docker & more
 type: blog
 banner: "/img/dear-templates/default.jpg"
