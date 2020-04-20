@@ -1,5 +1,5 @@
 ---
-title: Git - SCM
+title: Git - Source Code Mirror
 summary: Fun with git and a common .gitignore
 type: blog
 banner: "/img/dear-templates/default.jpg"
@@ -79,10 +79,6 @@ Or a file bigger than 100MB. Or some private data has been commited - and alread
 # Basic .gitignore #
 ...for the most files from me - a more complete list is [here](https://github.com/github/gitignore)...
 ```
-#CLion
-.idea/
-cmake-build-debug/
-
 # Netbeans
 **/nbproject/
 **/dist/
@@ -107,10 +103,10 @@ bin/
 # Doxygen stuff
 doc/
 
+# CLion
+.idea/
+cmake-build-debug/
 
 # vscode
 .vscode
-
-# Our game
-config.json
 ```
