@@ -6,6 +6,7 @@ banner: "/img/dear-templates/ffmpeg.jpg"
 ---
 
 # Video #
+_Note:_ Without proper reencoding the filesize will stay the same and some devices still don't open the results - even if they support e.g. mp4 - this does not mean they support the used codec. To fix this, please reencode the files - this will take time, but ensure better filesizes and results!
 
 ## AVI to MP4 ##
 
