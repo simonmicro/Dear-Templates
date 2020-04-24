@@ -15,7 +15,7 @@ alias downloadbestmp4="~/.youtube-dl --format "bestvideo+bestaudio[ext=m4a]/best
 ```
 Add the following into your `crontab` to make sure the used binary is _always_ the latest version (updated at 12:00 every day) - this prevents strange errors after some time the binary was downloaded.
 ```
-0 12 * * * wget https://yt-dl.org/downloads/latest/youtube-dl -O ~/.youtube-dl && chmod +x .youtube-dl
+0 12 * * * bash -c "wget https://yt-dl.org/downloads/latest/youtube-dl -O $HOME/.youtube-dl && chmod +x $HOME/.youtube-dl"
 ```
 You must install the following packages to ensure the downloaded files can be convterted to the required format.
 ```
