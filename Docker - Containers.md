@@ -2,7 +2,7 @@
 title: Docker - Containers
 summary: Own registry and container auto updates!
 type: blog
-banner: "/img/dear-templates/docker.jpg"
+banner: "/img/dear-templates/default.jpg"
 ---
 
 # Setup a registry #

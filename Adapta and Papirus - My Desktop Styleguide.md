@@ -2,7 +2,7 @@
 title: Adapta and Papirus - My Desktop Styleguide
 summary: The design config used on all of my computers
 type: blog
-banner: "/img/dear-templates/design.jpg"
+banner: "/img/dear-templates/default.jpg"
 ---
 
 The styleguide used to unify the surfaces of all my desktops.

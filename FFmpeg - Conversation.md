@@ -2,7 +2,7 @@
 title: FFmpeg - Conversation
 summary: Some copy-paste scripts for mass conversion
 type: blog
-banner: "/img/dear-templates/ffmpeg.jpg"
+banner: "/img/dear-templates/default.jpg"
 ---
 
 # Video #

@@ -2,7 +2,7 @@
 title: Apache - Webserver
 summary: Templates for sites and hardening
 type: blog
-banner: "/img/dear-templates/webserver.jpg"
+banner: "/img/dear-templates/default.jpg"
 ---
 
 # Templates #

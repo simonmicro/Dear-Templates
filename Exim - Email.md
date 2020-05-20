@@ -2,7 +2,7 @@
 title: Exim - Email
 summary: Let your server email yourself (useful for crontab, SMART, ...)
 type: blog
-banner: "/img/dear-templates/exim.jpg"
+banner: "/img/dear-templates/default.jpg"
 ---
 
 # Setup basic email #
