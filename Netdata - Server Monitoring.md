@@ -17,6 +17,9 @@ banner: "/img/dear-templates/default.jpg"
 3. Restart netdata `sudo systemctl restart netdata`
 4. NICE2KNOW Check the generated config out at http://localhost:19999/netdata.conf
 
+## Claim a node ##
+Just use the command from the cloud - but make sure to add `/opt/netdata/bin/` before the `netdata-claim.sh` shell.
+
 ## Extend the history ##
 By using (`sudo /opt/netdata/etc/netdata/edit-config netdata.conf`) - `dbengine` is the default:
     *
