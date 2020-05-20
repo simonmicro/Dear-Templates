@@ -100,37 +100,6 @@ One or more alarms are useless and can be ignored? Check out the source row at t
     net.core.netdev_budget=600
     ```
 
-# Usage #
-1. Establish a tunnel to the server: `ssh -N -L [LOCAL_PORT]:127.0.0.1:19999 [TARGET_ADDR]`
-2. Open your browser: `firefox localhost:[LOCAL_PORT]`
-
-## Example script to connect to multiple nodes ##
-```
-echo "*****Connecting to [SERVER1_NAME]..."
-ssh -f -N -L 20000:127.0.0.1:19999 [SERVER1_PORT]
-echo "*****Connecting to [SERVER2_NAME]..."
-ssh -f -N -L 20001:127.0.0.1:19999 [SERVER2_PORT]
-echo "*****Connecting to [SERVER3_NAME]..."
-ssh -f -N -L 20002:127.0.0.1:19999 [SERVER3_PORT]
-echo "*****Connecting to [SERVER4_NAME]..."
-ssh -f -N -L 20003:127.0.0.1:19999 [SERVER4_PORT]
-
-address=http://localhost:20000/
-echo "*****Starting firefox for $address..."
-echo "You should have added all servers as node already (simply sign in on them) to see them by clocking on nodes!"
-firefox $address &
-sleep 5
-```
-
-## Example script to connect to disconnect from multiple nodes ##
-```
-echo "*****Killing all connections..."
-pkill -e -f "ssh -f -N -L 200"
-
-echo "*****Connections closed."
-sleep 5
-```
-
 # Nett2Know #
 If you get much dbengine fs errors and can't add any more working instances to the netdata streaming config (the access.log is filled with `CANNOT ACQUIRE HOST`) you should [increase the file descriptor limit](https://github.com/netdata/netdata/blob/master/database/engine/README.md).
 
