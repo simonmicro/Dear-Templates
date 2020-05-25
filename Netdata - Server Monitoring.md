@@ -18,7 +18,7 @@ banner: "/img/dear-templates/default.jpg"
 4. NICE2KNOW Check the generated config out at http://localhost:19999/netdata.conf
 
 ## Enable autostart (if disabled) ##
-To allow autostarting of the `netdata` service you have to unmask the systemd unit with `sudo systemctl unmask netdata`...
+To allow autostarting of the `netdata` service you have to unmask the systemd unit with `sudo systemctl unmask netdata` and `sudo systemctl enable netdata`...
 
 ## Claim a node ##
 Just use the command from the cloud - but make sure to add `/opt/netdata/bin/` before the `netdata-claim.sh` shell.
@@ -82,7 +82,7 @@ You should add the following to the crontab of root. This makes sure that netdat
 @reboot sleep 60 && systemctl restart netdata
 ```
 
-# Add teleram bot notifications #
+# Add Teleram bot notifications #
 1. Edit the config with `sudo /opt/netdata/etc/netdata/edit-config health_alarm_notify.conf` and modify it so it contains:
     ```
     SEND_TELEGRAM="YES"
