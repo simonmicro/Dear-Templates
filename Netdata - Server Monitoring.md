@@ -25,20 +25,18 @@ Just use the command from the cloud - but make sure to add `/opt/netdata/bin/` b
 
 ## Extend the history ##
 By using (`sudo /opt/netdata/etc/netdata/edit-config netdata.conf`) - `dbengine` is the default:
-    *
-        ```
-        [global]
-            memory mode = dbengine
-            page cache size = 32
-            dbengine disk space = 256
-        ```
-        > This holds 32 MB of data in RAM and dumps (compresses) them to disk until 256 MB are stored. 
-    *
-        ```
-        [global]
-            history = SECONDS
-        ```
-        > For every hour of data, Netdata needs about 25MB of RAM. If you can dedicate about 100MB of RAM to Netdata, you should set its database size to 4 hours.
+* ```
+    [global]
+        memory mode = dbengine
+        page cache size = 32
+        dbengine disk space = 256
+    ```
+    > This holds 32 MB of data in RAM and dumps (compresses) them to disk until 256 MB are stored. 
+* ```
+    [global]
+        history = SECONDS
+    ```
+    > For every hour of data, Netdata needs about 25MB of RAM. If you can dedicate about 100MB of RAM to Netdata, you should set its database size to 4 hours.
         
 ## Setup a slave / master relationship ##
 This configures a netdata instance to only collect and send the metrics to the master (the slave cant generate alarms anymore). Both must share the same API KEY (obtained by `uuidgen`)! The master then can decide to store the data e.g. to the dbengine or keep them in ram...
