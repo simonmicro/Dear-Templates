@@ -29,9 +29,9 @@ By using (`sudo /opt/netdata/etc/netdata/edit-config netdata.conf`) - `dbengine`
     [global]
         memory mode = dbengine
         page cache size = 32
-        dbengine disk space = 256
+        dbengine disk space = 330
     ```
-    > This holds 32 MB of data in RAM and dumps (compresses) them to disk until 256 MB are stored. 
+    > This holds 32 MB of data in RAM and dumps (compresses) them to disk until 330 MB are stored. This would be enough to store the history of one day - [according to this](https://learn.netdata.cloud/docs/agent/database/calculator).
 * ```
     [global]
         history = SECONDS
