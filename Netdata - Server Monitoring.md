@@ -84,7 +84,7 @@ You should add the following to the crontab of root. This makes sure that netdat
 @reboot sleep 60 && systemctl restart netdata
 ```
 
-# Add teleram bot notifications #
+# Add Teleram bot notifications #
 1. Edit the config with `sudo /opt/netdata/etc/netdata/edit-config health_alarm_notify.conf` and modify it so it contains:
     ```
     SEND_TELEGRAM="YES"
