@@ -1,8 +1,5 @@
 ---
-title: Libvirtd - Linux virtualisation
 summary: Server, client, shared folders, freezing and much more!
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # SERVER #

@@ -1,8 +1,5 @@
 ---
-title: ProFTPd - FTP
 summary: Setup, useage and config
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # INSTALL #

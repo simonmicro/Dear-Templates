@@ -1,8 +1,5 @@
 ---
-title: Bash - Shells
 summary: Interactive bash sessions in the background with pipe access
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # The command itself #

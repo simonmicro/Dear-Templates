@@ -1,8 +1,5 @@
 ---
-title: Netdata - Server Monitoring
 summary: Setup, replication and some config hints
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Setup #

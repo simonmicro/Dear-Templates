@@ -1,8 +1,5 @@
 ---
-title: Vnc4server - VNC Desktop
 summary: Fast and dirty way to enable vnc on a debian server
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Install #

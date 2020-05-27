@@ -1,8 +1,5 @@
 ---
-title: Lets Encrypt - Certificates
 summary: A incredible complex setup guide...
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Setup #

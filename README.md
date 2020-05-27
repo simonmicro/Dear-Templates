@@ -14,8 +14,8 @@ You found a bug or want to improve something? Just do it!
 _But please make sure to also update the `summary:`-tag at the head of the modified file..._
 
 ### What is that header at top of every file? ###
-This markdown files are written for my website - running hugo. And because I want to specify e.g. custom banners,
-I'll need to provide a own header in each file anyways, therefore a simple script generating them would have not been enough...
+This markdown files are written for my website - compiled by hugo. And because I want to specify an own summary,
+I'll need to provide a own header in each file, therefore a simple Python script is generating the rest - so there is not too much overhead here...
 
 ## Redistribution ##
 Hmmm, yes you can also include this files into e.g. your own hugo website as e.g. git submodule. But please give credit to all the contributors here.

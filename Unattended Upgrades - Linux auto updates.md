@@ -1,8 +1,5 @@
 ---
-title: Unattended Upgrades - Linux auto updates
 summary: Enable aggressive unattended upgrades on Ubuntu and Debian
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Install #

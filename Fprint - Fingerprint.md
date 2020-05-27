@@ -1,8 +1,5 @@
 ---
-title: Fprint - Fingerprint
 summary: How to setup fprint and how to use fringerprint based login with KDE plasma
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Setup fprint for your user #

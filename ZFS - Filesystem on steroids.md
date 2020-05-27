@@ -1,8 +1,5 @@
 ---
-title: ZFS - Filesystem on steroids
 summary: Install, usage, tips and tricks, encryption, compression & more!
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Setup on Debian (10) #

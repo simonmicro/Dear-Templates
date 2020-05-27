@@ -1,8 +1,5 @@
 ---
-title: GitLab - Source Code Mirror
 summary: GitLab runner setup, docker & more
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 * [Reference_0](https://docs.gitlab.com/runner/install/docker.html)

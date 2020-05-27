@@ -1,8 +1,5 @@
 ---
-title: Looking Glass - Windows in Linux
 summary: Notes how to setup and use Looking Glass
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Prepare PCIe #

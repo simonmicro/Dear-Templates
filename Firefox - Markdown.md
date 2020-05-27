@@ -1,8 +1,5 @@
 ---
-title: Firefox - Markdown
 summary: Enable proper markdown renderer
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Buggy markdown renderer in Firefox #

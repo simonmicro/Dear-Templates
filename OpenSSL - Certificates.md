@@ -1,8 +1,5 @@
 ---
-title: OpenSSL - Certificates
 summary: Fast script to generate a self-signed certificate for apache
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 ```

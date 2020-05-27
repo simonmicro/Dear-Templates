@@ -1,8 +1,5 @@
 ---
-title: Youtube-dl - Simply download mp3 and mp4
 summary: Bash alias to fastly download mp3s and mp4 from e.g. youtube
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Setup #

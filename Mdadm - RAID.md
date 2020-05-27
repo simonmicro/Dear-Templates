@@ -1,8 +1,5 @@
 ---
-title: Mdadm - RAID
 summary: RAID using mdadm - predecessor of ZFS RAID
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Setup #

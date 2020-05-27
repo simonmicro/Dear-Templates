@@ -1,8 +1,5 @@
 ---
-title: Samba - File sharing
 summary: Template config
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 THIS ALL REQUIRES the `samba` package

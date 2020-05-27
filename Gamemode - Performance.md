@@ -1,8 +1,5 @@
 ---
-title: Gamemode - Performance
 summary: How to enable FeralInteractives gamemode
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 1. `sudo add-apt-repository ppa:samoilov-lex/gamemode`

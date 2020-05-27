@@ -1,8 +1,5 @@
 ---
-title: Mariadb - SQL
 summary: Backup & restore, unlock root and some notes
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Backup #

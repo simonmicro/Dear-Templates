@@ -1,8 +1,5 @@
 ---
-title: Pritunl - Powerful VPN
 summary: How to use properly setup pritunl on debian buster
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # HowTo use pritunl... #

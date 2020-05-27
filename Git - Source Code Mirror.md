@@ -1,8 +1,5 @@
 ---
-title: Git - Source Code Mirror
 summary: Fun with git and a common .gitignore
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # HowTo Git #

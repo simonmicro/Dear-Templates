@@ -1,8 +1,5 @@
 ---
-title: Pulseaudio - Sound
 summary: Improve linux sound quality
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 [See here](https://medium.com/@gamunu/enable-high-quality-audio-on-linux-6f16f3fe7e1f)

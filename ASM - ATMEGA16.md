@@ -1,8 +1,5 @@
 ---
-title: ASM - ATMEGA16
 summary: Some overview of ASM code for ATMEGA16
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 ### Note ###

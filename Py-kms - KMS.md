@@ -1,8 +1,5 @@
 ---
-title: Py-kms - KMS
 summary: Link collection to work with py-kms
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 [Go here](https://github.com/SystemRage/py-kms) for the server.

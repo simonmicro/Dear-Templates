@@ -1,8 +1,5 @@
 ---
-title: MiniDLNA - Zeroconf
 summary: Notes how to setup and use Looking Glass
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # Note #

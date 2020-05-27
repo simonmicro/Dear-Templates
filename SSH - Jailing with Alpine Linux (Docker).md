@@ -1,8 +1,5 @@
 ---
-title: SSH - Jailing with Alpine Linux (Docker)
 summary: SSH user Jailing with Docker and bindfs mounts
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 > This is an improved version of the [native SSH Jailing](../ssh-jailing-with-alpine-linux-native/), because multiple users will use the same environment (the Docker container) - instead of own directories. This saves disk space and allows the typical Docker features to be used (e.g. CPU and memory limiting). Also updates are much easier...

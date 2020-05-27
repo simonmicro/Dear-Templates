@@ -1,8 +1,5 @@
 ---
-title: Kdocker - Move applications into tray
 summary: Move any application windows as icon into the tray
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 For this use `kdocker` - install it from apt...

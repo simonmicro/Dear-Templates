@@ -1,8 +1,5 @@
 ---
-title: SSH - Shells
 summary: KeyAuth and sshd hardening
-type: blog
-banner: "/img/dear-templates/default.jpg"
 ---
 
 # HowTo SSH KeyAuth #
