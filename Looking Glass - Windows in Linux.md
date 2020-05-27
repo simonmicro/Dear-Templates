@@ -2,6 +2,8 @@
 summary: Notes how to setup and use Looking Glass
 ---
 
+> At the time of testing the mouse and keyboard support was... Lets call it non-deterministic.
+
 # Prepare PCIe #
 https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF
 ...so the vm could restart and reset own GPU for that. Otherwise cold VM boot needed.
