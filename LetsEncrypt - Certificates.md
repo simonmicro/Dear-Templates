@@ -1,5 +1,5 @@
 ---
-summary: A incredible complex setup guide...
+summary: An incredible complex setup guide for free SSL certificates...
 ---
 
 # Setup #
