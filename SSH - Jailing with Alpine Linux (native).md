@@ -1,6 +1,6 @@
 ---
-title: SSH - Jailing with Alpine Linux
-summary: SSH user jailing
+title: SSH - Jailing with Alpine Linux (native)
+summary: SSH user Jailing with native tools and bindfs mounts
 type: blog
 banner: "/img/dear-templates/default.jpg"
 ---
