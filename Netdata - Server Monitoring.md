@@ -1,5 +1,5 @@
 ---
-summary: Setup, replication and some config hints
+summary: Setup, replication, notifications and some further config hints
 ---
 
 # Setup #
