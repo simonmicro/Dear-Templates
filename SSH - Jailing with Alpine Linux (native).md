@@ -2,8 +2,10 @@
 summary: SSH user Jailing with native tools and bindfs mounts
 ---
 
+> This has been reworked [in here]((../ssh-jailing-with-alpine-linux-docker/))
+
 # Basic idea #
-* Use an own VM - jails are under `/jails/`
+* Use a seperate VM for this - jails are under `/jails/`
 * Every user which sould be jailed into his folder `/jails/[USERNAME]` is in group `sshjailed`
 * `sshd` is configured to use multiple ports and activate jailing if required ↑
 * Every jail has its own binaries and libs
