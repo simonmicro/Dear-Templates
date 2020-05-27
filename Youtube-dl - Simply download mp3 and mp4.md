@@ -1,5 +1,5 @@
 ---
-summary: Bash alias to fastly download mp3s and mp4 from e.g. youtube
+summary: Bash alias to fastly download mp3 and mp4 from e.g. Youtube
 ---
 
 # Setup #
