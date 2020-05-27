@@ -1,5 +1,5 @@
 ---
-summary: KeyAuth and sshd hardening
+summary: Template config for key based authentication and SSH-daemon hardening
 ---
 
 # HowTo SSH KeyAuth #
