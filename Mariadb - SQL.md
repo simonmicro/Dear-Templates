@@ -1,5 +1,5 @@
 ---
-summary: Backup & restore, unlock root and some notes
+summary: Backup & restore, unlock root and some notes regarding security and preinstalled user accounts
 ---
 
 # Backup #
