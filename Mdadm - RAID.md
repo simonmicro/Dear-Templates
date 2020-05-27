@@ -1,5 +1,5 @@
 ---
-summary: RAID using mdadm - predecessor of ZFS RAID
+summary: RAID using mdadm - a predecessor of ZFS and its RAID features
 ---
 
 # Setup #
