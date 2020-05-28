@@ -13,9 +13,11 @@ Add `deb http://deb.debian.org/debian buster-backports main` to the sources.list
 
 # Create a pool #
 1. Create (for device use: _/dev/disk/by-id/..._): `sudo zpool create [ZFS_POOL] [DEVICE/FILE]` <- **APPEND `-o ashift=12` IF THE DEVICE IS A REAL DISK**
+
 1.1 Oh, I see - you want encryption (a SUBPOOL is recommended - do not encrypt the root one, so you can't creaty any unencrypted anymore...)? You have to create a key and then tell zfs to use it ([take a note](https://www.reddit.com/r/zfs/comments/bnvdco/zol_080_encryption_dont_encrypt_the_pool_root/)):
     * `openssl rand -hex -out /media/stick/key 32`
     * `zfs create -o encryption=on -o keyformat=hex -o keylocation=file:///media/stick/key [ZFS_POOL]` **use -O at zpool to pass them to zfs, otherwise -o is enough**
+
 1.2 And RAID? Of course RAID 5!
     * Create: `sudo zpool create -f [ZFS_POOL] raidz [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]` <- **Add won't work here!**
     * Replace: `sudo zpool replace [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE]`
