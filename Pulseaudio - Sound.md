@@ -1,6 +1,8 @@
 ---
-summary: Improve linux sound quality
+summary: Improve Linux sound quality to the absolute maximum
 ---
+
+> At the time of writing, Discord seems to have some problems with it, which lead to freezes and crashes...
 
 [See here](https://medium.com/@gamunu/enable-high-quality-audio-on-linux-6f16f3fe7e1f)
 

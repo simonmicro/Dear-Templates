@@ -7,6 +7,6 @@ summary: How to enable FeralInteractives gamemode
 
 lib = sudo find /usr/ -name libgamemodeauto.so.0
 ADD THE lib TO LUTIRS
-![active it here](Gamemode.png)
+![active it here](Gamemode - Performance.png)
 
 -> [see](https://github.com/FeralInteractive/gamemode)

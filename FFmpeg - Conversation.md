@@ -1,5 +1,5 @@
 ---
-summary: Some copy-paste scripts for mass conversion
+summary: Some copy-paste scripts for mass media conversion
 ---
 
 # Video #

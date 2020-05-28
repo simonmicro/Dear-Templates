@@ -1,5 +1,5 @@
 ---
-summary: Notes regarding the borg backup system. Also a setup script included...
+summary: Notes regarding the borg backup system. Also a setup script for automated, encrypted, and deduplicated backups is included...
 ---
 
 # NOTE / WARNING #

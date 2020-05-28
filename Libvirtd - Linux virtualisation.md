@@ -1,5 +1,5 @@
 ---
-summary: Server, client, shared folders, freezing and much more!
+summary: Server, client, shared folders, freezing at host down-times and much, much more!
 ---
 
 # SERVER #

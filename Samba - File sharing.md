@@ -1,5 +1,5 @@
 ---
-summary: Template config
+summary: A config template with examples for permission enforcement and performance tweaking
 ---
 
 THIS ALL REQUIRES the `samba` package

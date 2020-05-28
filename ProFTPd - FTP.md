@@ -1,5 +1,5 @@
 ---
-summary: Setup, useage and config
+summary: Setup with SSL for encryptet credentials and special umasks
 ---
 
 # INSTALL #

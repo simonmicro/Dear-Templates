@@ -1,8 +1,6 @@
 ---
-summary: The design config used on all of my computers
+summary: The styleguide used to unify the surfaces of all my desktops. It uses Adapta and the Papirus Icon Theme. Also some editor recommendations included.
 ---
-
-The styleguide used to unify the surfaces of all my desktops.
 
 # Add required PPAs #
 ```

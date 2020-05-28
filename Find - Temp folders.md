@@ -1,5 +1,5 @@
 ---
-summary: Little command to create auto-cleaning folders
+summary: A little command to create self-cleaning folders
 ---
 
 # Every file/folder older than 48h will be deleted... #

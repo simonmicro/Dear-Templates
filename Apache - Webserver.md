@@ -1,5 +1,5 @@
 ---
-summary: Templates for sites and hardening
+summary: Templates for vitual hosts (https with LetsEncrypt, proxies, authentication and more) and hardening
 ---
 
 # Templates #

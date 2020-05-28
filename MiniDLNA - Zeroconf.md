@@ -1,5 +1,5 @@
 ---
-summary: Notes how to setup and use Looking Glass
+summary: How to configure your DLNA server and why restarts are needed
 ---
 
 # Note #

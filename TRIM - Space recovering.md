@@ -1,5 +1,5 @@
 ---
-summary: Enable automatic TRIM on debian
+summary: Three commands to enable automatic TRIM on debian
 ---
 
 **First line is not needed on Debian Buster anymore!**

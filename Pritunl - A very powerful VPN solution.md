@@ -2,6 +2,8 @@
 summary: How to use properly setup pritunl on debian buster
 ---
 
+> I would recommend to use the docker image directly, because updates are applied that way much faster. But if you absolutly must - here you go...
+
 # HowTo use pritunl... #
 ...or how to install on debian buster (make sure to also checkout [this neat helper](https://gitlab.simonmicro.de/simonmicro/pritunl-fake-api))...
 

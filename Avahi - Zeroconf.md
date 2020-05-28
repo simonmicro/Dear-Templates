@@ -1,5 +1,5 @@
 ---
-summary: Some common templates for avahi services
+summary: Some common templates for avahi services like FTP, SSH, Samba & more
 ---
 
 # Note #
