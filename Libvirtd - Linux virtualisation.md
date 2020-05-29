@@ -118,6 +118,19 @@ IF you get emergency boot failures - insert the following into `/etc/initramfs-t
 ```
 ...and update `sudo update-initramfs -u`!
 
+If the listing of much files is too slow, try enabling the cache ([copied from here](https://www.kernel.org/doc/Documentation/filesystems/9p.txt)):
+```
+cache=mode	specifies a caching policy.  By default, no caches are used.
+        none = default no cache policy, metadata and data
+                alike are synchronous.
+		loose = no attempts are made at consistency,
+                intended for exclusive, read-only mounts
+        fscache = use FS-Cache for a persistent, read-only
+			    cache backend.
+        mmap = minimal cache that is only used for read-write
+                mmap.  Northing else is cached, like cache=none
+```
+
 ### Samba ###
 #### Install server... ####
 `sudo apt install samba`
