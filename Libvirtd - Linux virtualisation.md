@@ -123,10 +123,10 @@ If the listing of much files is too slow, try enabling the cache ([copied from h
 cache=mode	specifies a caching policy.  By default, no caches are used.
         none = default no cache policy, metadata and data
                 alike are synchronous.
-		loose = no attempts are made at consistency,
+        loose = no attempts are made at consistency,
                 intended for exclusive, read-only mounts
         fscache = use FS-Cache for a persistent, read-only
-			    cache backend.
+	            cache backend.
         mmap = minimal cache that is only used for read-write
                 mmap.  Northing else is cached, like cache=none
 ```
