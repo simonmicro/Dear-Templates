@@ -76,18 +76,3 @@ sudo ln -s ../../bin/bash /jails/$CHROOT_USER_NAME/usr/sbin/nologin
         [SOURCE_PATH]    /jails/[USERNAME]/mnt/[MOUNT_POINT] fuse.bindfs   force-user=[USERNAME],force-group=[USERNAME or e.g. www-data],create-for-user=[USERNAME],create-for-group=[USERNAME or e.g. www-data],perms=770,create-with-perms=770,chmod-filter=770,chown-ignore,chgrp-ignore,resolve-symlinks,resolved-symlink-deletion=symlink-only,hide-hard-links    0  0
         ```
     * or use you own cifs / sshfs / ... magic!
-
-### Set the default editor in Alpine Linux ###
-_Inside the chroot env!_
-`nano ~/.profile`
-...and add:
-```
-export EDITOR='nano'
-export VISUAL='nano'
-```
-
-### Accept new SSH host in Alpine Linux ###
-_The `-p` can be omitted but not moved inside the command!_
-```
-ssh-keyscan -H -p [PORT] [HOST] >> ~/.ssh/known_hosts
-```
