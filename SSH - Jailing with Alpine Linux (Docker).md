@@ -69,3 +69,9 @@ Now you just need to add the prepared folder as new volume:
 ```
             - ./sharedfolder.bind:/host
 ```
+
+## Customize your MOTD ##
+Maybe you should consider to create a new `motd`-file to greet your users with a warm welcome - mount it into the container with:
+```
+            - ./motd:/etc/motd:ro
+```
