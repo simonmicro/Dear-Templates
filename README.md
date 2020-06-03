@@ -19,6 +19,3 @@ I'll need to provide a own header in each file, therefore a simple Python script
 
 ## Redistribution ##
 Hmmm, yes you can also include this files into e.g. your own hugo website as e.g. git submodule. But please give credit to all the contributors here.
-
-# TODOs #
-* Fix Gamemode png at site render
