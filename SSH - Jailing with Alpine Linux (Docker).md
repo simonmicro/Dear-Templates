@@ -63,6 +63,7 @@ Just create an other `bindfs` mount inside your `/etc/fstab` (make sure to have 
 ```
 [PATH_TO_YOUR_FOLDER]    [PATH_TO_YOUR_COMPOSE]/sharedfolder.bind fuse.bindfs   perms=777,create-with-perms=777,chmod-filter=777,chown-ignore,chgrp-ignore,resolve-symlinks,resolved-symlink-deletion=symlink-only,hide-hard-links    0  0
 ```
+_Note that `git` seems to have a problem with the `force-*` and `create-for-*` options. They will cause `git submodule update` or `git init` to fail with an `Operation not permitted`!_
 
 ## Preperation at Docker ##
 Now you just need to add the prepared folder as new volume:
