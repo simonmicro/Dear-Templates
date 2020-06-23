@@ -3,7 +3,7 @@ summary: Enable aggressive unattended upgrades on Ubuntu and Debian
 ---
 
 # Install #
-```
+```bash
 sudo apt install unattended-upgrades apt-listchanges
 ```
 

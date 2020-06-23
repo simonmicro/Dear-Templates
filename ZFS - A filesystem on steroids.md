@@ -25,7 +25,7 @@ Add `deb http://deb.debian.org/debian buster-backports main` to the sources.list
 
 # Load all the encryption keys at startup #
 Add the service: `/etc/systemd/system/zfs-load-all-keys.service`
-```
+```systemd
 [Unit]
 Description=Loads all ZFS keys for all imported pools
 DefaultDependencies=no
@@ -98,7 +98,7 @@ _May used for offsite-backups - the script below had this part(s) removed. So re
 3. Setup the script
     1. The steps 2 and 4 contains a script which should be added to the daily crontab of root. Make sure to run it with the bash command!
     2. The universal script header (should be run every time before the initial and incremental backup parts)
-        ```
+        ```bash
         #!/bin/bash
 
         # Setup/variables:
@@ -112,7 +112,7 @@ _May used for offsite-backups - the script below had this part(s) removed. So re
         new_snap="$source_pool"@"$snapshot_string""$timestamp"
         ```
     3. Initial setup (first snapshot to init the target pool) - you CAN'T IGNORE the `zfs snapshot -r "$new_snap"` part, otherwise the incremental wouldn't find the refernce point!
-        ```
+        ```bash
         # Initial send:
 
         # Create first recursive snapshot of the whole pool.
@@ -121,7 +121,7 @@ _May used for offsite-backups - the script below had this part(s) removed. So re
         zfs send -R "$new_snap" | zfs recv -Fdu "$destination_pool"
         ```
     4. Send and receive the pools snapshotted state incrementally by using the following script
-        ```
+        ```bash
         # Incremental sends:
 
         # Get old snapshot name.

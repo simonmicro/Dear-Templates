@@ -118,7 +118,7 @@ merge_media_dirs=yes
 
 # Startup rescan service #
 Caused by the delayed start of virtualbox, minidlna will scan at startup an empty folder. To fix this, restart minidlna right after the vbox service (for the shared folders) to trigger a rescan...
-```
+```systemd
 # Add it under /etc/systemd/system/minidlna_vbox_fix.service
 # Enable it with "systemctl enable minidlna_vbox_fix"
 

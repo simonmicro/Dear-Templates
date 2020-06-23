@@ -11,7 +11,7 @@ summary: SSH user Jailing with Docker and bindfs mounts
 
 # Setup the Container #
 As first we prepare the `docker-compose.yml` file:
-```
+```yaml
 version: '3'
 services:
     sshd:
@@ -25,7 +25,7 @@ services:
 ...which needs the following build environment files (at `./sshd/build`):
 * ssh-keys folder - created with `mkdir -p ./sshd/build/ssh-keys/etc/ssh/ && ssh-keygen -A -f ./sshd/build/ssh-keys`
 * `Dockerfile`
-    ```
+    ```docker
     FROM alpine:latest
 
     # Add some packages
@@ -42,7 +42,7 @@ services:
     ```
 * `entry.sh`: To add own users, just duplicate the two lines and generate the password hash with `mkpasswd -m sha-512`. If you remove any user, you'll need to rebuild the container (otherwise the `/etc/passwd` wont be updated correctly).
     > Why are the users added at runtime? Well, because we have no way to over-mount the /home directory while building, therefore the users would have no home folder at runtime, if we put them into a volume.
-    ```
+    ```bash
     # Now (re-)add the user...
     adduser -D jlaforge || true
     echo 'jlaforge:$6$sa0Dor.8a.$B2yhNI5KG76G416vHIxNAR/sd8TRtZ.4bMFVIVjZ.AYpB8iSddTNw2jdHPAhO7QUeaFSPvjpVG3qGFn18INeu.' | chpasswd -e
@@ -67,12 +67,12 @@ _Note that `git` seems to have a problem with the `force-*` and `create-for-*` o
 
 ## Preperation at Docker ##
 Now you just need to add the prepared folder as new volume:
-```
+```yaml
             - ./sharedfolder.bind:/host
 ```
 
 ## Customize your MOTD ##
 Maybe you should consider to create a new `motd`-file to greet your users with a warm welcome - mount it into the container with:
-```
+```yaml
             - ./motd:/etc/motd:ro
 ```

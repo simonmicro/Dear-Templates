@@ -7,16 +7,20 @@ summary: GitLab runner setup, docker & more
 
 # Setup #
 ...a runner in our docker env
-`docker run -d --name gitlab-runner-[RUNNER_NAME] --restart always -v /srv/gitlab-runner-[RUNNER_NAME]/config:/etc/gitlab-runner -v /var/run/docker.sock:/var/run/docker.sock gitlab/gitlab-runner:latest`
+```bash
+docker run -d --name gitlab-runner-[RUNNER_NAME] --restart always -v /srv/gitlab-runner-[RUNNER_NAME]/config:/etc/gitlab-runner -v /var/run/docker.sock:/var/run/docker.sock gitlab/gitlab-runner:latest
+```
 
 # Config #
 ..the runner with RUNNER_NAME
-`docker run --rm -t -i -v /srv/gitlab-runner-[RUNNER_NAME]/config:/etc/gitlab-runner gitlab/gitlab-runner register`
+```bash
+docker run --rm -t -i -v /srv/gitlab-runner-[RUNNER_NAME]/config:/etc/gitlab-runner gitlab/gitlab-runner register
+```
 
 # Build docker images with the GitLab CI #
 ## Inside the Dockerfile ##
 ...to use the `docker` command integrate the code from below (you can use for `$CI_REGISTRY_IMAGE` `$CI_REGISTRY` instead to reference just the docker registry url)...
-```
+```yaml
     services:
         - docker:stable-dind
     image: docker:stable
@@ -29,7 +33,7 @@ summary: GitLab runner setup, docker & more
 
 ## Configure a runner to allow dind ##
 ...add the following into the `[runners.docker]`-section...
-```
+```yaml
     privileged = true
     volumes = ["/certs", "/cache"]
 ```

@@ -3,7 +3,7 @@ summary: Fast script to generate a self-signed certificate for any purpose
 ---
 
 Just store and execute the following...
-```
+```bash
 echo "Step 1: Generate a Private Key"
 openssl genrsa -des3 -out server.key
 

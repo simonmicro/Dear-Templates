@@ -56,7 +56,7 @@ Create an archive
 * `export BORG_RSH='ssh -i [SSH_KEYFILE_PATH]'` Maybe neccessary, if ssh fails to authenticate automatically with the keyfiles under ~/.ssh
 
 # Universal setup script #
-```
+```bash
 #!/bin/bash
 
 # CONFIGURATION SECTION - ENTER HERE YOUR DESIRED VALUES

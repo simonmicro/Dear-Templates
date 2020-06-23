@@ -10,15 +10,19 @@ ADD BACKUP USER TO DATABASE (localhost only) - pwd maybe with 'openssl rand -bas
 4. `quit;`
 
 BACKUP ALL DATABASES (no space at -p is intentionally)
-`mysqldump -u databaseBackupUser -p[PASSWORD] --all-databases --skip-lock-tables > /tmp/databaseExport.sql`
+```bash
+mysqldump -u databaseBackupUser -p[PASSWORD] --all-databases --skip-lock-tables > /tmp/databaseExport.sql
+```
 
 RESTORE ALL DATABASES
-`sudo mysql -u root < /tmp/databaseExport.sql`
+```bash
+sudo mysql -u root < /tmp/databaseExport.sql
+```
 
 # Access #
-Install `mariadb-server` or `mariadb-client`
-Install `phpmyadmin`
-\[configure phpmyadmin\]
+1. Install `mariadb-server` or `mariadb-client`
+2. Install `phpmyadmin`
+3. \[configure phpmyadmin\]
 
 ## Unlock root (works only on localhost) [source](https://kofler.info/root-login-problem-mit-mariadb/) ##
 1. `sudo mysql -u root`

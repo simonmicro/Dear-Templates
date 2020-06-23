@@ -5,7 +5,7 @@ summary: A config template with examples for permission enforcement and performa
 THIS ALL REQUIRES the `samba` package
 Located at `/etc/samba/smb.conf`
 
-```
+```ini
 [global]
 # Network stuff
 workgroup = WORKGROUP

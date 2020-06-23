@@ -9,7 +9,7 @@ _Note:_ Without proper reencoding the filesize will stay the same and some devic
 
 ### Fast (without reencode) ###
 This just copies the data without proper reencoding - some devices don't like the results...
-```
+```bash
 #!/bin/bash
 mkdir -p ./converted/
 for i in *.avi;
@@ -22,7 +22,7 @@ done
 ```
 
 ## MKV to MP4 ##
-```
+```bash
 #!/bin/bash
 mkdir -p ./converted/
 for i in *.mkv;
@@ -35,7 +35,7 @@ done
 
 ### Fast (without reencode) ###
 This just copies the data without proper reencoding - some devices don't like the results...
-```
+```bash
 #!/bin/bash
 mkdir -p ./converted/
 for i in *.mkv;
@@ -50,7 +50,7 @@ done
 
 ## Normalize ##
 This normalizes to 0db - NOTE that the parent folder is used since we dont change the audio format and therefore we would loop for a infinite time...
-```
+```bash
 #!/bin/bash
 mkdir -p ../normalized/
 for i in *.mp3;
@@ -62,7 +62,7 @@ done
 ```
 
 ## FLAC to MP3 ##
-```
+```bash
 #!/bin/bash
 mkdir -p ./converted/
 for i in *.flac;

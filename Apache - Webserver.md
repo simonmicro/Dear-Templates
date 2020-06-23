@@ -6,7 +6,7 @@ summary: Templates for vitual hosts (https with LetsEncrypt, proxies, authentica
 The following are mostly located under `/etc/apache/sites-available` - just copy-paste and enjoy!
 
 ## Virtual Host ##
-```
+```apacheconf
 #
 # Replace example.com with your domain
 # 
@@ -98,7 +98,7 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 ```
 
 ## Default Host ##
-```
+```apacheconf
 ###THIS NEEDS TO BE NAMED AS 000-default.conf###
 
 <VirtualHost *:80>
@@ -126,7 +126,7 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 ```
 
 ## Simple .htaccess ##
-```
+```apacheconf
 # No file lists!
 Options -Indexes
 
@@ -145,7 +145,7 @@ Options -Indexes
 
 ### Hide Apache Version and OS Identity ###
 Append to `/etc/apache2/apache2.conf`
-```
+```apacheconf
 ServerSignature Off
 ServerTokens Prod
 ```

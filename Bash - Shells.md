@@ -3,7 +3,7 @@ summary: Interactive bash sessions in the background with pipe access
 ---
 
 # The command itself #
-```
+```bash
 mkdir -p /tmp/[SESSION_NAME]/; mkfifo /tmp/[SESSION_NAME]/IN; nohup bash -c "while [ -e /tmp/[SESSION_NAME]/IN ]; do cat /tmp/[SESSION_NAME]/IN; sleep 0.4; done | bash -c \"echo \$ > /tmp/[SESSION_NAME]/PID; [SESSION_COMMAND]; echo \"End\" > /tmp/[SESSION_NAME]/IN; rm /tmp/[SESSION_NAME]/IN\"" > /tmp/[SESSION_NAME]/OUT 2>&1 </dev/null &
 ```
 Make sure to fill in the following placeholders!

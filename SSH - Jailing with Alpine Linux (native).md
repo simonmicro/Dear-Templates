@@ -13,13 +13,13 @@ summary: SSH user Jailing with native tools and bindfs mounts
 
 ## Setup sshd for the new user ##
 `sudo nano /etc/ssh/sshd_config`
-```
+```apacheconf
 Port 22
 Port 1234
 Subsystem   sftp    internal-sftp
 ```
 [...]
-```
+```apacheconf
 Match group sshjailed
     # Forces the user into /jails/[USERNAME]/home/[USERNAME]
     ChrootDirectory /jails/%u
@@ -28,27 +28,31 @@ Match group sshjailed
 ```
 
 ## Prepare global jail ##
-1. `sudo mkdir /jails`
-2. `sudo chown root: /jails`
-3. `sudo chmod 750 /jails`
+```bash
+sudo mkdir /jails
+sudo chown root: /jails
+sudo chmod 750 /jails
+```
 
 ## Create the individual jail-cell with the user ##
 ### For simpler use... ###
 ...let us define a variable for the user here: `export CHROOT_USER_NAME=[USERNAME]`
 
 ### Add the user ###
-1. `sudo adduser --no-create-home $CHROOT_USER_NAME`
-2. `sudo adduser $CHROOT_USER_NAME sshjailed`
+```bash
+sudo adduser --no-create-home $CHROOT_USER_NAME
+sudo adduser $CHROOT_USER_NAME sshjailed
+```
 
 ### Create his root ###
 For more hints about the used chroot env [see here](https://wiki.alpinelinux.org/wiki/Alpine_Linux_in_a_chroot)!
-```
+```bash
 sudo mkdir /jails/$CHROOT_USER_NAME
 sudo chown root: /jails/$CHROOT_USER_NAME
 sudo chmod 755 /jails/$CHROOT_USER_NAME
 ```
 Now download the latest alpine linux installer (`apk-tools-static`) from [here](http://dl-cdn.alpinelinux.org/alpine/latest-stable/main/) and extract it with `tar -xzf apk-tools-static-*.apk`
-```
+```bash
 sudo ./sbin/apk.static -X http://dl-cdn.alpinelinux.org/alpine/latest-stable/main -U --allow-untrusted --root /jails/$CHROOT_USER_NAME --initdb add alpine-base bash openssh git nano iputils doxygen graphviz
 sudo mkdir /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME
 sudo chown $CHROOT_USER_NAME: /jails/$CHROOT_USER_NAME/home/$CHROOT_USER_NAME

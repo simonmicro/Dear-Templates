@@ -11,7 +11,7 @@ summary: Template config for key based authentication and SSH-daemon hardening
 # Example config #
 Located at `/etc/ssh/sshd_config`
 APPEND or modify for more security and features...
-```
+```apacheconf
 # Automatic IDLE-Timeout after 30 minutes
 ClientAliveInterval 1800
 ClientAliveCountMax 0

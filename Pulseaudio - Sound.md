@@ -6,7 +6,7 @@ summary: Improve Linux sound quality to the absolute maximum
 
 [See here](https://medium.com/@gamunu/enable-high-quality-audio-on-linux-6f16f3fe7e1f)
 
-```
+```ini
 default-sample-format = float32le
 default-sample-rate = 48000
 alternate-sample-rate = 44100

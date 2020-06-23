@@ -5,7 +5,7 @@ summary: Setup, replication, notifications and some further config hints
 # Setup #
 1. Install with `bash <(curl -Ss https://my-netdata.io/kickstart-static64.sh)` or (on e.g. a Raspberry Pi) `bash <(curl -Ss https://my-netdata.io/kickstart.sh)`
 2. **Restrict to localhost only (already done for the debian package)** by appending (`sudo /opt/netdata/etc/netdata/edit-config netdata.conf`):
-    ```
+    ```ini
     [web]
         bind to = *:19999
         allow connections from = localhost 42.12.322.424
@@ -22,14 +22,14 @@ Just use the command from the cloud - but make sure to add `/opt/netdata/bin/` b
 
 ## Extend the history ##
 By using (`sudo /opt/netdata/etc/netdata/edit-config netdata.conf`) - `dbengine` is the default:
-* ```
+* ```ini
   [global]
       memory mode = dbengine
       page cache size = 32
       dbengine disk space = 330
   ```
   > This holds 32 MB of data in RAM and dumps (compresses) them to disk until 330 MB are stored. This would be enough to store the history of one day - [according to this](https://learn.netdata.cloud/docs/agent/database/calculator).
-* ```
+* ```ini
   [global]
       history = SECONDS
   ```
@@ -47,7 +47,7 @@ Note:
 ### Slave ###
 3. Edit the global config: `sudo /opt/netdata/etc/netdata/edit-config netdata.conf`
 4. Disable own storage and webinterface (= slave mode):
-    ```
+    ```ini
     [global]
         memory mode = none
     [web]
@@ -55,7 +55,7 @@ Note:
     ```
 3. Edit the config: `sudo /opt/netdata/etc/netdata/edit-config stream.conf`
 4. Now add the master (append ':SSL' to the address for https (respect the port!)):
-    ```
+    ```ini
     [stream]
         enabled = yes
         destination = [TARGET_ADDR]:[TARGET_WEB_PORT]
@@ -65,7 +65,7 @@ Note:
 ### Master ###
 1. Edit the config: `sudo /opt/netdata/etc/netdata/edit-config stream.conf`
 2. Now add the slave:
-    ```
+    ```ini
     [xxxxxxxx-xxxx-xxxxx-xxxx-xxxxxxxxxxxx]
         enabled = yes
         default memory mode = dbengine
@@ -81,7 +81,7 @@ You should add the following to the crontab of root. This makes sure that netdat
 
 # Add Teleram bot notifications #
 1. Edit the config with `sudo /opt/netdata/etc/netdata/edit-config health_alarm_notify.conf` and modify it so it contains:
-    ```
+    ```ini
     SEND_TELEGRAM="YES"
     TELEGRAM_BOT_TOKEN="[BOT_API_TOKEN]"
     DEFAULT_RECIPIENT_TELEGRAM="[TARGET_CHAT_ID]"
@@ -105,7 +105,11 @@ One or more alarms are useless and can be ignored? Check out the source row at t
 If you get much dbengine fs errors and can't add any more working instances to the netdata streaming config (the access.log is filled with `CANNOT ACQUIRE HOST`) you should [increase the file descriptor limit](https://github.com/netdata/netdata/blob/master/database/engine/README.md).
 
 # Update (non-debian package only) #
-`sudo chmod +x /opt/netdata/usr/libexec/netdata/netdata-updater.sh && sudo /opt/netdata/usr/libexec/netdata/netdata-updater.sh`
+```bash
+sudo chmod +x /opt/netdata/usr/libexec/netdata/netdata-updater.sh && sudo /opt/netdata/usr/libexec/netdata/netdata-updater.sh
+```
 
 # Uninstall (non-debian package only) #
-`sudo chmod +x /opt/netdata/usr/libexec/netdata/netdata-uninstaller.sh && sudo /opt/netdata/usr/libexec/netdata/netdata-uninstaller.sh`
+```bash
+sudo chmod +x /opt/netdata/usr/libexec/netdata/netdata-uninstaller.sh && sudo /opt/netdata/usr/libexec/netdata/netdata-uninstaller.sh
+```

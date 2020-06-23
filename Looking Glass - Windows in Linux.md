@@ -21,16 +21,16 @@ https://wiki.archlinux.org/index.php/PCI_passthrough_via_OVMF
     * Download and upload windows binaries and installed as task `SCHTASKS /Create /TN "Looking Glass" /SC  ONLOGON /RL HIGHEST /TR C:\looking-glass-host.exe`
     * Modfiy KVM to provide shared mem https://looking-glass.hostfission.com/wiki/Installation#libvirt_Configuration
     * Error on kvm init after prev step?
-        ```
+        ```bash
         touch /dev/shm/looking-glass
         chown user:kvm /dev/shm/looking-glass
         ```
         Following is needed after every reboot
-        ```
+        ```bash
         chmod 660 /dev/shm/looking-glass
         ```
         Insert `/{dev,run}/shm/looking-glass rw,` into /etc/apparmor.d/abstractions/libvirt-qemu
-        ```
+        ```bash
         sudo systemctl reload apparmor
         ```
     * Cold boot + install driver https://looking-glass.hostfission.com/wiki/Installation#Installing_the_IVSHMEM_Driver

@@ -9,7 +9,7 @@ summary: Own registry and container auto updates!
 
 ## Prepare certificates ##
 ### Initially create the certificate ###
-```
+```bash
 certbot certonly --standalone --preferred-challenges http --non-interactive  --staple-ocsp --agree-tos -m webmaster@example.com -d example.com
 ```
 
@@ -22,13 +22,18 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 ```
 
 ## Prepare the storage ##
-`mkdir -p /mnt/docker-registry`
+```bash
+mkdir -p /mnt/docker-registry
+```
 
 ## Prepare authentication ##
-`docker run --entrypoint htpasswd registry:latest -Bbn [USER] [PASSWORD]` - add it to: /mnt/docker-registry/passfile
+```bash
+docker run --entrypoint htpasswd registry:latest -Bbn [USER] [PASSWORD]
+```
+-> add it to: `/mnt/docker-registry/passfile`
 
 ## Start the registry ##
-```
+```bash
 docker run -d \
   -p 5425:5000 \
   --restart=always \
@@ -65,7 +70,7 @@ Pull:
 Watchtower is an automatic updater, which stops, repulls, and restarts all specified images...
 
 ## Add creds for private registry ##
-```
+```json
 {
     "auths": {
         "<REGISTRY_NAME>": {
@@ -79,7 +84,7 @@ For the creds you must add a new user to gitlab wich can see the docker images f
 Save the new file to a secure location on the vm and write down the absolute path.
 
 ## Now start watchtower... ##
-```
+```bash
 docker run -d \
     --name watchtower \
     -v [ABSOLUTE_PATH_TO_PRIVATE_REGISTRY_CREDENTIALS]:/config.json \

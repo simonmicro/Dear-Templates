@@ -8,7 +8,7 @@ Also make sure the new service file is readible by the avahi daemon - a `chmod 6
 
 ## FTP ##
 Located at `/etc/avahi/services/ftp.service`
-```
+```xml
 <?xml version="1.0" standalone='no'?>
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>
@@ -22,7 +22,7 @@ Located at `/etc/avahi/services/ftp.service`
 
 ## HTTP ##
 Located at `/etc/avahi/services/http.service`
-```
+```xml
 <?xml version="1.0" standalone='no'?>
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>
@@ -36,7 +36,7 @@ Located at `/etc/avahi/services/http.service`
 
 ## HTTPS ##
 Located at `/etc/avahi/services/https.service`
-```
+```xml
 <?xml version="1.0" standalone='no'?>
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>
@@ -50,7 +50,7 @@ Located at `/etc/avahi/services/https.service`
 
 ## Samba ##
 Located at `/etc/avahi/services/samba.service`
-```
+```xml
 <?xml version="1.0" standalone='no'?>
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>
@@ -64,7 +64,7 @@ Located at `/etc/avahi/services/samba.service`
 
 ## SSH ##
 Located at `/etc/avahi/services/ssh.service`
-```
+```xml
 <?xml version="1.0" standalone='no'?>
 <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
 <service-group>

@@ -3,13 +3,13 @@ summary: The styleguide used to unify the surfaces of all my desktops. It uses A
 ---
 
 # Add required PPAs #
-```
+```bash
 sudo add-apt-repository ppa:tista/adapta
 sudo add-apt-repository ppa:papirus/papirus
 ```
 
 # Install them with Roboto fonts #
-```
+```bash
 sudo apt-get update
 sudo apt-get install adapta-gtk-theme adapta-kde papirus-icon-theme fonts-roboto fonts-hack
 ```

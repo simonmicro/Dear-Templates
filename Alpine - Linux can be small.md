@@ -11,6 +11,6 @@ export VISUAL='nano'
 
 # Accept new SSH host key in Alpine Linux #
 _The `-p` can be omitted but not moved inside the command!_
-```
+```bash
 ssh-keyscan -H -p [PORT] [HOST] >> ~/.ssh/known_hosts
 ```

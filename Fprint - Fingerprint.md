@@ -8,7 +8,7 @@ summary: How to setup fprint and how to use fringerprint based login with KDE pl
 
 # Script for KDE fingerprint login #
 This wont work after a relogin. This is caused by a blocking fprint and the fact, that we can't really detect the end of a session...
-```
+```bash
 #!/bin/bash
 
 # Create a locking directory to make sure this script can only run once at the time. Maybe add "-$USER" to allow multi users...
