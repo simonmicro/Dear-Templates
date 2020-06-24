@@ -1,11 +1,16 @@
 ---
-summary: Fun with git and a common .gitignore
+summary: Full guide to Git, LFS and a common .gitignore
 ---
 
 # HowTo Git #
 
-## Nett2Know ##
+## Nett2Know: Credentials ##
 SSH-Key auth is heaven. You should use this. Really. If you commit and push a lot... You'll NEED it. Also it is more secure than having a GitHub access token copy-pasted for every push.
+If you still need to use the HTTP-based remotes, you can configure the Git Credential Store. This will save the username/password as **plain text** to your disk - therefore only recommended when you must use Git LFS! To do that, just execute:
+```bash
+git config --global credential.helper store
+```
+...and every next HTTP-remote will only ask once for your credentials.
 
 ## Setup ##
 `git init` Init of local repo
@@ -72,6 +77,17 @@ Add a path per line to get it ignored! The path is NOT absolute!
 ## If the credentials file has been added... ##
 Or a file bigger than 100MB. Or some private data has been commited - and already pushed:
 [RESCUE IS HERE](https://help.github.com/en/github/managing-large-files/removing-files-from-a-repositorys-history)
+
+# Git LFS #
+...Imagine having a huge repository - lets say about 60 GB in files. But only some files are huge - lets also say they are all zip files. First activate LFS for your repo:
+```bash
+git lfs install
+```
+And specify which files you want to handle seperatly:
+```bash
+git lfs track "*.zip"
+```
+Thats it! Whenever you work from now on with e.g. GitLab this huge files will be compressed and managed (much) faster!
 
 # Basic .gitignore #
 ...for the most files from me - a more complete list is [here](https://github.com/github/gitignore)...
