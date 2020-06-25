@@ -8,7 +8,7 @@ summary: Template config for key based authentication and SSH-daemon hardening
 * (maybe use `ssh-copy-id USER@HOST`)
 * (client connects now with ssh [] -i KEYFILE_PATH) - should work without if KEYFILE is located under clients `~/.ssh/`
 
-# Example config #
+## Example config ##
 Located at `/etc/ssh/sshd_config`
 APPEND or modify for more security and features...
 ```apacheconf
@@ -31,10 +31,10 @@ Protocol 2
 # x11's SSH-Forward - it's a feature xP
 X11Forwarding yes
 
-# !!!DANGER!!! FORCE GROUP MEMBERSHIP (REQUIRES sudo addgroup sshuser before)
-#AllowGroups sshuser
+# !!!DANGER!!! FORCE GROUP MEMBERSHIP (REQUIRES sudo addgroup [GROUP] before)
+#AllowGroups [GROUP]
 
-# Allow public key authentication see 'HowTo SSH KeyAuth'
+# Allow public key authentication
 #PubkeyAuthentication yes
 
 # !!!DANGER!!! FORCE PUBLIC KEY AUTH FOR THIS MACHINE
