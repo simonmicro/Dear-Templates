@@ -89,6 +89,9 @@ git lfs track "*.zip"
 ```
 Thats it! Whenever you work from now on with e.g. GitLab this huge files will be compressed and managed (much) faster!
 
+_Note:_ As stated on the GitLab help page the Git LFS authentication does not require you to setup the credentieal store mentioned before:
+> With 8.12 GitLab added LFS support to SSH. The Git LFS communication still goes over HTTP, but now the SSH client passes the correct credentials to the Git LFS client, so no action is required by the user.
+
 # Basic .gitignore #
 ...for the most files from me - a more complete list is [here](https://github.com/github/gitignore)...
 ```
