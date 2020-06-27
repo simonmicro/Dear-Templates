@@ -79,7 +79,7 @@ Or a file bigger than 100MB. Or some private data has been commited - and alread
 [RESCUE IS HERE](https://help.github.com/en/github/managing-large-files/removing-files-from-a-repositorys-history)
 
 # Git LFS #
-...Imagine having a huge repository - lets say about 60 GB in files. But only some files are huge - lets also say they are all zip files. First activate LFS for your repo:
+...Imagine having a huge repository - lets say about 60 GB in files. But only some files are huge - lets also say they are all zip files. First activate LFS for your repo (don't forget to install the `git-lfs` package):
 ```bash
 git lfs install
 ```
