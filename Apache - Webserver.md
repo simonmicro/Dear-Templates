@@ -134,7 +134,10 @@ Options -Indexes
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </ifModule>
 
-# Block access to any .git folder...
+# Block access to any .git folder - for more information why see...
+# * https://www.heise.de/ct/artikel/Massive-Sicherheitsprobleme-durch-offene-Git-Repositorys-4795181.html
+# * https://www.tagesschau.de/investigativ/ndr/it-sicherheit-quellcodes-101.html
+# * https://www.zeit.de/2020/28/datensicherheit-computer-server-deutschland-gefahr
 <Directorymatch "^/.*/\.git/">
     Order deny,allow
     Deny from all
