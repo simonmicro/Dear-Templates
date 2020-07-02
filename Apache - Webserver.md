@@ -92,12 +92,9 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 ```
 
 ## Default Host ##
+### THIS FILE NEEDS TO BE NAMED AS 000-default.conf ###
 ```apacheconf
-###THIS NEEDS TO BE NAMED AS 000-default.conf###
-
 <VirtualHost *:80>
-    #E.g. mail for 500 error	
-        ServerAdmin webmaster@example.com
     #Where default site is located (HTTP)
         DocumentRoot /var/www/default
     #Log stuff
@@ -105,8 +102,6 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
         CustomLog /var/log/apache2/default-http-access.log common
 </VirtualHost>
 <VirtualHost *:443>
-    #E.g. mail for 500 error	
-        ServerAdmin webmaster@example.com
     #Where default site is located (HTTPS)
         DocumentRoot /var/www/default
     #Use SSL + stuff
@@ -117,6 +112,14 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
         ErrorLog /var/log/apache2/default-https-error.log
         CustomLog /var/log/apache2/default-https-access.log common
 </VirtualHost>
+
+# Block access to any .git folder - for more information why and how see...
+# * https://www.heise.de/ct/artikel/Massive-Sicherheitsprobleme-durch-offene-Git-Repositorys-4795181.html
+# * https://www.tagesschau.de/investigativ/ndr/it-sicherheit-quellcodes-101.html
+# * https://www.zeit.de/2020/28/datensicherheit-computer-server-deutschland-gefahr
+<Directorymatch "^/.*/\.git/">
+    Require all denied
+</Directorymatch>
 ```
 
 ## Simple .htaccess ##
@@ -125,7 +128,7 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 Options -Indexes
 
 # Block any access to here (useful for e.g. lib/ folders)
-#deny from all
+#Require all denied
 
 <ifModule mod_rewrite.c>
     # Force HTTPS
@@ -133,15 +136,6 @@ Options -Indexes
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </ifModule>
-
-# Block access to any .git folder - for more information why see...
-# * https://www.heise.de/ct/artikel/Massive-Sicherheitsprobleme-durch-offene-Git-Repositorys-4795181.html
-# * https://www.tagesschau.de/investigativ/ndr/it-sicherheit-quellcodes-101.html
-# * https://www.zeit.de/2020/28/datensicherheit-computer-server-deutschland-gefahr
-<Directorymatch "^/.*/\.git/">
-    Order deny,allow
-    Deny from all
-</Directorymatch>
 ```
 
 # Harden Apache #
