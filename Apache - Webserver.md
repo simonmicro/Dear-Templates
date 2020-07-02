@@ -57,12 +57,6 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 #        AllowOverride All
 #    </Directory>
 
-# Block access to any .git folder...
-#    <Directorymatch "^/.*/\.git/">
-#        Order deny,allow
-#        Deny from all
-#    </Directorymatch>
-
 # To force htpasswd authentication
 # The htpasswd file is created with "sudo htpasswd [-c (ONLY FOR FIRST USER)] /etc/htpasswd [INITIAL_USER]" --- MAKE SURE TO CHOWN THE FILE CORRECTLY!
 # A user is added with "sudo htpasswd /etc/htpasswd [USER]"
@@ -139,6 +133,12 @@ Options -Indexes
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </ifModule>
+
+# Block access to any .git folder...
+<Directorymatch "^/.*/\.git/">
+    Order deny,allow
+    Deny from all
+</Directorymatch>
 ```
 
 # Harden Apache #
