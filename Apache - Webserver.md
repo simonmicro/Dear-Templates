@@ -117,6 +117,8 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 # * https://www.tagesschau.de/investigativ/ndr/it-sicherheit-quellcodes-101.html
 # * https://www.zeit.de/2020/28/datensicherheit-computer-server-deutschland-gefahr
 <Directorymatch "^/.*/\.git/">
+# OR more aggressive with...
+# <Directorymatch "^/.*/\.git.*">
     Require all denied
 </Directorymatch>
 ```
