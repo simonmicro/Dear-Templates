@@ -52,7 +52,7 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
     ErrorLog /var/log/apache2/example.com-https-error.log
     CustomLog /var/log/apache2/example.com-https-access.log common
 
-# To allow .htaccess in DocumentRoot
+# To allow .htaccess inside the pages root dir
 #    <Directory /var/www/example.com>
 #        AllowOverride All
 #    </Directory>
@@ -66,7 +66,6 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 #        AuthName "Authentication Required"
 #        AuthUserFile "/etc/htpasswd"
 #        Require valid-user
-#
 #        Order allow,deny
 #        Allow from all
 #    </Location>
@@ -84,7 +83,7 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 #        Require ldap-group CN=[required group],OU=[OU of groups],DC=example,DC=com
 #    </Location>
 
-# Following needed if lets-encrypt with active auth is wanted...
+# Following is needed if lets-encrypt with active auth is wanted...
 #    <Location /.well-known>
 #        Require all granted
 #    </Location>
