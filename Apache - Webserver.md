@@ -37,10 +37,10 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 # Use SSL + stuff
     SSLEngine on
 # ...allow SSL on the proxy...
-    SSLProxyEngine on
+#    SSLProxyEngine on
 # ...to enforce the validity of the proxied server target...
-    SSLProxyCheckPeerCN on
-    SSLProxyCheckPeerExpire on
+#    SSLProxyCheckPeerCN on
+#    SSLProxyCheckPeerExpire on
 # The following in case no letsencrypt cert is there
     SSLCertificateFile /etc/ssl/certs/apache.crt
     SSLCertificateKeyFile /etc/ssl/private/apache.key
