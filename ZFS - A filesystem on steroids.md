@@ -8,20 +8,26 @@ summary: Install, usage, tips and tricks, encryption, compression & more!
 3. Reboot or modprobe (`sudo modprobe zfs`) to activate zfs
 
 # Under Debian 10: Upgrade to zfs 0.8+ #
-...otherwise the encryption won't exist.
-Add `deb http://deb.debian.org/debian buster-backports main` to the sources.list and run `sudo apt update`
+...otherwise the encryption won't be there.
+Add `deb http://deb.debian.org/debian buster-backports main` to the sources.list and run `sudo apt update`...
 
 # Create a pool #
-1. Create (for device use: _/dev/disk/by-id/..._): `sudo zpool create [ZFS_POOL] [DEVICE/FILE]` <- **APPEND `-o ashift=12` IF THE DEVICE IS A REAL DISK**
+Create (for device use: _/dev/disk/by-id/..._, **APPEND `-o ashift=12` IF THE DEVICE IS A REAL DISK**):
+```bash
+sudo zpool create [ZFS_POOL] [DEVICE/FILE]
+```
 
-1.1 Oh, I see - you want encryption (a SUBPOOL is recommended - do not encrypt the root one, so you can't creaty any unencrypted anymore...)? You have to create a key and then tell zfs to use it ([take a note](https://www.reddit.com/r/zfs/comments/bnvdco/zol_080_encryption_dont_encrypt_the_pool_root/)):
-    * `openssl rand -hex -out /media/stick/key 32`
-    * `zfs create -o encryption=on -o keyformat=hex -o keylocation=file:///media/stick/key [ZFS_POOL]` **use -O at zpool to pass them to zfs, otherwise -o is enough**
-
-1.2 And RAID? Of course RAID 5!
-    * Create: `sudo zpool create -f [ZFS_POOL] raidz [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]` <- **Add won't work here!**
-    * Replace: `sudo zpool replace [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE]`
-    * Detach the failed: `sudo zpool detach [ZFS_POOL] [DEVICE/FILE]` <- **Maybe offlining first**
+Oh, I see - you want encryption (a SUBPOOL is recommended - do not encrypt the root one, so you can't creaty any unencrypted anymore...)?
+_For following you can use `-O` at zpool to pass options to zfs, otherwise `-o` is at any zfs command just enough._
+You have to create a key and then tell zfs to use it ([take a note](https://www.reddit.com/r/zfs/comments/bnvdco/zol_080_encryption_dont_encrypt_the_pool_root/)):
+```bash
+openssl rand -hex -out /root/keys/key 32
+zfs create -o encryption=on -o keyformat=hex -o keylocation=file:///root/keys/key [ZFS_POOL]
+```
+And RAID? Of course RAID 5 - here some commands!
+* Create: `sudo zpool create -f [ZFS_POOL] raidz [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]` <- **Add won't work here!**
+* Replace: `sudo zpool replace [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE]`
+* Detach the failed: `sudo zpool detach [ZFS_POOL] [DEVICE/FILE]` <- **Maybe offlining first**
 
 # Load all the encryption keys at startup #
 Add the service: `/etc/systemd/system/zfs-load-all-keys.service`
