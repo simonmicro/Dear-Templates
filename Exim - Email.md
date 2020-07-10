@@ -35,3 +35,7 @@ Some SMTP email servers really don't like freely choosen sender emails. To bypas
 ```bash
 sudo nano /etc/email-addresses
 ```
+
+# Something wrong? #
+...or you don't get the sent emails? Send some emails manually with `mail -s [SUBJECT] [TARGET_EMAIL_OR_LOCAL_USERNAME]` and `CTRL-D`
+and watch the logs with `sudo tail -f /var/log/exim4/mainlog` or `sudo tail -f /var/log/exim4/paniclog`
