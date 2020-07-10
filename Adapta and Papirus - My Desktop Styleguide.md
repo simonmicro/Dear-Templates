@@ -15,15 +15,18 @@ sudo apt-get install adapta-gtk-theme adapta-kde papirus-icon-theme fonts-roboto
 ```
 
 # Activate them in Cinnamon / KDE #
-* * / *: Roboto Regular 10
-* Monospace / Fixed width: Hack Regular 10
-* - / small: Roboto Light 9
-* Document / -: Default with Sans Regular 10
+* `* / *`: Roboto Regular 10
+* `Monospace / Fixed width`: Hack Regular 10
+* `- / small`: Roboto Light 9
+* `Document / -`: Default with Sans Regular 10
 
 # Unify the themes in editors / IDEs #
 Sadly I didn't found a truly universal theme: So here a list of used ones:
 * `Solarized Dark` - XED, Kate
 * `Norway Today` - Netbeans
+
+# Animations #
+...should alwas be `Blend`.
 
 # Display the UEFI image at boot screen #
 Tested on Linux Mint Cinnamon 19.3
