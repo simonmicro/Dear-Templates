@@ -24,7 +24,8 @@ sudo nano /etc/aliases
 5. Test with: `mail -s [SUBJECT]` and CTRL-D
 
 ### Override `From`-Server domain ###
-...just by filling out the fields at the `dpkg-reconfigure` command correctly an then enabling the option `Hide local mail name in outgoing mail?`.
+...just by filling out the fields at the `dpkg-reconfigure` command correctly an then enabling the option `Hide local mail name in outgoing mail?`
+(the visible internal name does not matter).
 This ensures the domain name is correcty for every possible email-sending user - other than the option, which allows the rewrite
 only for specific users (so you must fix e.g. `root`, `netdata` and so on seperatly)!
 
