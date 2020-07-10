@@ -25,9 +25,10 @@ sudo nano /etc/aliases
 
 ### Override `From`-Server domain ###
 ...just by filling out the fields at the `dpkg-reconfigure` command correctly an then enabling the option `Hide local mail name in outgoing mail?`
-(the visible internal name does not matter).
-This ensures the domain name is correcty for every possible email-sending user - other than the option, which allows the rewrite
-only for specific users (so you must fix e.g. `root`, `netdata` and so on seperatly)!
+(the visible internal system name does matter, if you wish to still be able to distinct e.g. the `root`-user of two machines. Otherwise
+their domain name will be replaced to the server name and in this case also the aliases won't work).
+This ensures the domain name is corrected for every possible email-sending user - other than the following option, which allows the rewrite
+only for specific users (so you must fix e.g. `root`, `netdata` and so on seperatly on evey machine)!
 
 ### Override `From`-Field completly ###
 Some SMTP email servers really don't like freely choosen sender emails. To bypass this add a new line to the file like
@@ -38,4 +39,4 @@ sudo nano /etc/email-addresses
 
 # Something wrong? #
 ...or you don't get the sent emails? Send some emails manually with `mail -s [SUBJECT] [TARGET_EMAIL_OR_LOCAL_USERNAME]` and `CTRL-D`
-and watch the logs with `sudo tail -f /var/log/exim4/mainlog` or `sudo tail -f /var/log/exim4/paniclog`
+and watch the logs with `sudo tail -f /var/log/exim4/mainlog` or `sudo tail -f /var/log/exim4/paniclog`...
