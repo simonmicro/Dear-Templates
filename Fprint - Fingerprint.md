@@ -5,6 +5,7 @@ summary: How to setup fprint and how to use fringerprint based login with KDE pl
 # Setup fprint for your user #
 1. Install `sudo apt install fprint`
 2. Enroll a finger `sudo fprintd-enroll [USER]`
+3. Enable the authentication method `sudo pam-auth-update`
 
 # Script for KDE fingerprint login #
 This wont work after a relogin. This is caused by a blocking fprint and the fact, that we can't really detect the end of a session...
