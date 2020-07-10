@@ -2,18 +2,30 @@
 summary: Let your server email yourself (useful for crontab, SMART, ...)
 ---
 
-# Setup basic email #
+# Setup #
 ...on debian to send all emails received with `mail` by itself to the target.
-1. Install `mailutils` and `exim4` (Both required!): `sudo apt-get install mailutils exim4`
-2. `sudo nano /etc/aliases`
-3. Add desired target: `[USERNAME]: [EMAIL]`
-4. Run `sudo dpkg-reconfigure exim4-config` and select `internet site` (confirm everything with return...)
-5. Add `[USERNAME]` to the `mail` group: `sudo adduser [USERNAME] mail`
-6. Enjoy you local email service!
+Install `mailutils` and `exim4` (Both required!) and add desired target (maybe forward `root` to your own user) by adding
+some lines like `[USERNAME]: [EMAIL]` to the following file:
+```bash
+sudo apt-get install mailutils exim4
+sudo nano /etc/aliases
+```
 
-# Setup email with remote SMTP server #
+## Local email ##
+1. Run `sudo dpkg-reconfigure exim4-config` and select `internet site` (confirm everything with return...)
+2. Add `[USERNAME]` to the `mail` group: `sudo adduser [USERNAME] mail`
+3. Enjoy you local email service!
+
+## Email with remote SMTP server ##
 1. Run `sudo dpkg-reconfigure exim4-config` and select `mail sent by smarthost; received via SMTP or fetchmail`
 2. Enter at `IP address or host name of the outgoing smarthost` your smtp server like `[SMTP_SERVER_HOST]::[PORT_587]`
 3. Add the credentials to the local config: `sudo nano /etc/exim4/passwd.client`: `[SMTP_SERVER_HOST]:[USERNAME]:[PASSWORD]`
 4. Restart exim4 with `sudo systemctl restart exim4`
 5. Test with: `mail -s [SUBJECT]` and CTRL-D
+
+### Override `From`-Field ###
+Some SMTP email servers really don't like freely choosen sender emails. To bypass this add a new line to the file like
+`[USERNAME]: [NEW_FROM_EMAIL]`:
+```bash
+sudo nano /etc/email-addresses
+```
