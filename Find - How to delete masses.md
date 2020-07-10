@@ -13,5 +13,5 @@ find ./ -name '*.~*'
 
 Then delete them...
 ```bash
-find ./ -name '*.~*' -exec rm -rf {} \;
+find ./ -name '*.~*' -exec rm -rfv {} \;
 ```
