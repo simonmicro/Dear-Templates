@@ -11,10 +11,10 @@ This just reencodes the files...
 #!/bin/bash
 mkdir -p ../normalized/
 for i in *.mp4;
-    do name=`echo $i | cut -d'.' -f1`;
+    do name=`echo ${i%.*}`;
     echo $name;
     # Using the pts has no value fix...
-    ffmpeg -fflags +genpts -i "$i" -codec copy "../normalized/${name}.mp4";
+    ffmpeg -fflags +genpts -i "$i" -vcodec libx265 -crf 28  "../normalized/${name}.mp4";
     sleep 1
 done
 ```
@@ -27,7 +27,7 @@ This just copies the data without proper reencoding - some devices don't like th
 #!/bin/bash
 mkdir -p ./converted/
 for i in *.avi;
-    do name=`echo $i | cut -d'.' -f1`;
+    do name=`echo ${i%.*}`;
     echo $name;
     # Using the pts has no value fix...
     ffmpeg -fflags +genpts -i "$i" -codec copy "./converted/${name}.mp4";
@@ -40,7 +40,7 @@ done
 #!/bin/bash
 mkdir -p ./converted/
 for i in *.mkv;
-    do name=`echo $i | cut -d'.' -f1`;
+    do name=`echo ${i%.*}`;
     echo $name;
     ffmpeg -i "$i" "./converted/${name}.mp4";
     sleep 1
@@ -53,7 +53,7 @@ This just copies the data without proper reencoding - some devices don't like th
 #!/bin/bash
 mkdir -p ./converted/
 for i in *.mkv;
-    do name=`echo $i | cut -d'.' -f1`;
+    do name=`echo ${i%.*}`;
     echo $name;
     ffmpeg -i "$i" -codec copy "./converted/${name}.mp4";
     sleep 1
@@ -68,7 +68,7 @@ This normalizes to 0db - NOTE that the parent folder is used since we dont chang
 #!/bin/bash
 mkdir -p ../normalized/
 for i in *.mp3;
-    do name=`echo $i | cut -d'.' -f1`;
+    do name=`echo ${i%.*}`;
     echo $name;
     ffmpeg -i "$i" -af "volume=0dB" "../normalized/${name}.mp3";
     sleep 1
@@ -80,7 +80,7 @@ done
 #!/bin/bash
 mkdir -p ./converted/
 for i in *.flac;
-    do name=`echo $i | cut -d'.' -f1`;
+    do name=`echo ${i%.*}`;
     ffmpeg -i "$i" -acodec libmp3lame "./converted/${name}.mp3";
     sleep 1
 done
