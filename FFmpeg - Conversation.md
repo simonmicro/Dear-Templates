@@ -3,7 +3,21 @@ summary: Some copy-paste scripts for mass media conversion
 ---
 
 # Video #
-_Note:_ Without proper reencoding the filesize will stay the same and some devices still don't open the results - even if they support e.g. mp4 - this does not mean they support the used codec. To fix this, please reencode the files - this will take time, but ensure better filesizes and results!
+_Note:_ Without proper reencoding the filesize will stay the same and some devices still don't open the results - even if they support e.g. mp4 - this does not mean they support the used codec. To fix this, please reencode the files - this will take much more time, but provides better filesizes and results!
+
+## MP4 to MP4 ##
+This just reencodes the files...
+```bash
+#!/bin/bash
+mkdir -p ../normalized/
+for i in *.mp4;
+    do name=`echo $i | cut -d'.' -f1`;
+    echo $name;
+    # Using the pts has no value fix...
+    ffmpeg -fflags +genpts -i "$i" -codec copy "../normalized/${name}.mp4";
+    sleep 1
+done
+```
 
 ## AVI to MP4 ##
 
