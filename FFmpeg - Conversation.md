@@ -9,12 +9,12 @@ _Note:_ Without proper reencoding the filesize will stay the same and some devic
 This just reencodes the files...
 ```bash
 #!/bin/bash
-mkdir -p ../normalized/
+mkdir -p ../reencoded/
 for i in *.mp4;
     do name=`echo ${i%.*}`;
     echo $name;
     # Using the pts has no value fix...
-    ffmpeg -fflags +genpts -i "$i" -vcodec libx265 -crf 28  "../normalized/${name}.mp4";
+    ffmpeg -fflags +genpts -i "$i" -vcodec libx265 -crf 28  "../reencoded/${name}.mp4";
     sleep 1
 done
 ```
