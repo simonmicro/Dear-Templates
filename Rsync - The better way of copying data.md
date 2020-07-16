@@ -26,16 +26,16 @@ summary: Just some commands and explanations, because I always forget them...
 
 # Use cases #
 Here some copy-to-paste examples...
-You should not use `-z` on really low-end systems due its need for at least _some_ CPU power.
+You should only use `-z` on really fast systems and on remote transfer due its high need for at much CPU power!
 
 ## Local: Just a better `cp` ##
 ```bash
-rsync -zhvP [SOURCE] [DESTINATION]
+rsync -hvP [SOURCE] [DESTINATION]
 ```
 
 ## Local: Preserve every metadata ##
 ```bash
-sudo rsync -zahvP [SOURCE] [DESTINATION]
+sudo rsync -ahvP [SOURCE] [DESTINATION]
 ```
 
 ## How to remote ##
