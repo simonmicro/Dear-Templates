@@ -28,12 +28,12 @@ summary: Just some commands and explanations, because I always forget them...
 Here some copy-to-paste examples...
 You should only use `-z` on really fast systems and on remote transfer due its high need for at much CPU power!
 
-## Local: Just a better `cp` ##
+## Just a better `cp` ##
 ```bash
 rsync -hvP [SOURCE] [DESTINATION]
 ```
 
-## Local: Preserve every metadata ##
+## Preserve every metadata ##
 ```bash
 sudo rsync -ahvP [SOURCE] [DESTINATION]
 ```
