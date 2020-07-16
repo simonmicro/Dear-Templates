@@ -30,12 +30,12 @@ You should not use `-z` on really low-end systems due its need for at least _som
 
 ## Local: Just a better `cp` ##
 ```bash
-rsync -zhvP
+rsync -zhvP [SOURCE] [DESTINATION]
 ```
 
 ## Local: Preserve every metadata ##
 ```bash
-rsync -zahvP
+rsync -zahvP [SOURCE] [DESTINATION]
 ```
 
 ## How to remote ##
