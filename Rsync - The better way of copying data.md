@@ -35,7 +35,7 @@ rsync -zhvP [SOURCE] [DESTINATION]
 
 ## Local: Preserve every metadata ##
 ```bash
-rsync -zahvP [SOURCE] [DESTINATION]
+sudo rsync -zahvP [SOURCE] [DESTINATION]
 ```
 
 ## How to remote ##
@@ -44,14 +44,7 @@ Just prepend a `[USER]@[HOST]:` before the source / target.
 # The slash on directories #
 _I. Forget. It. EVERY. TIME._ So here once and for all:
 
-## No slash ##
-Every the source dir **itself** will be copied **within** the destination dir.
-
-## Destination slash ##
-Same as no slash at all.
-
-## Source slash ##
-Every file **within** the source dir will be copied **within** the destination dir.
-
-## Both slash ##
-Same as source slash.
+* **No slash** Every the source dir **itself** will be copied **within** the destination dir.
+* **Destination slash** Same as no slash at all.
+* **Source slash** Every file **within** the source dir will be copied **within** the destination dir.
+* **Both slash** Same as source slash.
