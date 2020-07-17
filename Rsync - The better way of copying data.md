@@ -22,6 +22,7 @@ summary: Just some commands and explanations, because I always forget them...
     show progress during transfer
 -z compress file data during the transfer
 -x don't cross filesystem boundaries
+-t preserve modification times
 --dry-run perform a trial run with no changes made
 ```
 
