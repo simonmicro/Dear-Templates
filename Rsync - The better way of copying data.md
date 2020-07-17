@@ -21,6 +21,7 @@ summary: Just some commands and explanations, because I always forget them...
     keep partially transferred files
     show progress during transfer
 -z compress file data during the transfer
+-x don't cross filesystem boundaries
 --dry-run perform a trial run with no changes made
 ```
 
