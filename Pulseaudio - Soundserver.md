@@ -1,5 +1,5 @@
 ---
-summary: Improve Linux sound quality to the absolute maximum
+summary: Improve Linux sound quality to the absolute (soundservers) maximum
 ---
 
 > At the time of writing, Discord seems to have some problems with it, which lead to freezes and crashes...
