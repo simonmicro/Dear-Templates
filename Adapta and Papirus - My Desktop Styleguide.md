@@ -21,6 +21,7 @@ sudo apt-get install adapta-gtk-theme adapta-kde papirus-icon-theme fonts-roboto
 * `Document / -`: Default with Sans Regular 10
 
 Select `Adapta-Nocto` inside "Themes" and `gtk2` inside "Qt5 Settings. Also make sure to select the `Papirus-Dark` icon theme (some icons will be lighter to be better readible on dark backgrounds).
+And don't forget to also apply the fonts for qt (also inside the dialog)...
 
 # Unify the themes in editors / IDEs #
 Sadly I didn't found a truly universal theme: So here a list of used ones:
