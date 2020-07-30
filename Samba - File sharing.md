@@ -71,14 +71,14 @@ server role = standalone server
     printable = yes
 
 [Home]
-   path = /home/jlaforge
+   path = /home/glaforge
    comment = Home folder
    available = yes
    browseable = yes
    guest ok = no
    writeable = no
-   valid users = jlaforge
-   write list = jlaforge
+   valid users = glaforge
+   write list = glaforge
 
 [Main drive]
    path = / 
@@ -87,8 +87,8 @@ server role = standalone server
    browseable = yes                         
    guest ok = no                            
    writeable = no
-   valid users = jlaforge
-   write list = jlaforge
+   valid users = glaforge
+   write list = glaforge
 
 #[Temp]
 #   path = /media/sf_Temp
@@ -105,8 +105,8 @@ server role = standalone server
 #   browseable = yes                         
 #   guest ok = no                            
 #   writeable = no
-#   valid users = jlaforge
-#   write list = jlaforge
+#   valid users = glaforge
+#   write list = glaforge
 #   #LOCAL: Delete moves to trash - REQUIRES samba-vfs-modules
 #   vfs objects = recycle shadow_copy2
 #   recycle:repository = Samba Trash
@@ -122,8 +122,8 @@ server role = standalone server
 #   browseable = yes                         
 #   guest ok = no                            
 #   writeable = no
-#   valid users = jlaforge
-#   write list = jlaforge
+#   valid users = glaforge
+#   write list = glaforge
 #   #LOCAL: Delete moves to trash - REQUIRES samba-vfs-modules
 #   vfs objects = recycle shadow_copy2
 #   recycle:repository = Samba Trash
@@ -139,8 +139,8 @@ server role = standalone server
 #   browseable = yes                         
 #   guest ok = no                            
 #   writeable = no
-#   valid users = jlaforge
-#   write list = jlaforge
+#   valid users = glaforge
+#   write list = glaforge
 # The the following forces any new file to permission 0770...
 #   create mask = 0770
 #   security mask = 0770
@@ -158,8 +158,8 @@ server role = standalone server
 #   browseable = yes                         
 #   guest ok = no                            
 #   writeable = no
-#   valid users = jlaforge
-#   write list = jlaforge
+#   valid users = glaforge
+#   write list = glaforge
 
 #[miniDLNA]
 #   path = /media/sf_Data/miniDLNA
@@ -169,8 +169,8 @@ server role = standalone server
 # Private Access XOR                    
 #   guest ok = no                            
 #   writeable = no
-#   valid users = jlaforge
-#   write list = jlaforge
+#   valid users = glaforge
+#   write list = glaforge
 # Public Access
 #   guest ok = yes
 #   writeable = yes
