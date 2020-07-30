@@ -102,6 +102,14 @@ _Otherwise a reboot could take up to several minutes!_
     ```
 4. Mark the scripts as executable: `sudo chmod 555 /root/save.sh /root/restore.sh`
 
+### Install the startup vm service ###
+1. Add the `vmfreezer.service` file to `/etc/systemd/system`
+2. Add the `save.sh` file to `/root`
+3. Add the `restore.sh` file to `/root`
+4. Set permissons for them `sudo chmod 500 /root/save.sh /root/restore.sh`
+5. DON'T FORGET to modify the scripts to use the correct path to save and restore the vms!
+6. Enable the new service with `sudo systemctl enable vmfreezer`
+
 ## Shared folders ##
 
 ### KVM ###
@@ -218,14 +226,6 @@ force directory mode = 770
     valid users = [VirtUsers]
     write list = [VirtUsers]
 ```
-
-### Server - install the startup vm service ###
-1. Add the `vmfreezer.service` file to `/etc/systemd/system`
-2. Add the `save.sh` file to `/root`
-3. Add the `restore.sh` file to `/root`
-4. Set permissons for them `sudo chmod 500 /root/save.sh /root/restore.sh`
-5. DON'T FORGET to modify the scripts to use the correct path to save and restore the vms!
-6. Enable the new service with `sudo systemctl enable vmfreezer`
 
 ### VM - Allow a vm access to a specific share... ####
 Nett2Know: Use `sudo pdbedit -L` to get current user list...
