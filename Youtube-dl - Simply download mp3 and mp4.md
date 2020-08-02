@@ -11,9 +11,9 @@ alias downloadmp4="~/.youtube-dl -i --prefer-ffmpeg --format mp4 --embed-thumbna
 alias downloadbestmp4="~/.youtube-dl --format "bestvideo+bestaudio[ext=m4a]/bestvideo+bestaudio/best" --merge-output-format mp4 --embed-thumbnail"
 ```
 
-Add the following into your `crontab` to make sure the used binary is _always_ the latest version (updated at 12:00 every day) - this prevents strange errors after some time the binary was downloaded.
+Add the following into your `crontab` to make sure the used binary is _always_ the latest version (updated at 14:00 every day) - this prevents strange errors after some time the binary was downloaded.
 ```
-0 12 * * * bash -c "wget https://yt-dl.org/downloads/latest/youtube-dl -O $HOME/.youtube-dl && chmod +x $HOME/.youtube-dl"
+0 14 * * * bash -c "wget https://yt-dl.org/downloads/latest/youtube-dl -O $HOME/.youtube-dl && chmod +x $HOME/.youtube-dl"
 ```
 
 You must install the following packages to ensure the downloaded files can be convterted to the required format.
