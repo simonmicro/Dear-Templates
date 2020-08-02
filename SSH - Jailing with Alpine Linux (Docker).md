@@ -44,8 +44,8 @@ services:
     > Why are the users added at runtime? Well, because we have no way to over-mount the /home directory while building, therefore the users would have no home folder at runtime, if we put them into a volume.
     ```bash
     # Now (re-)add the user...
-    adduser -D jlaforge || true
-    echo 'jlaforge:$6$sa0Dor.8a.$B2yhNI5KG76G416vHIxNAR/sd8TRtZ.4bMFVIVjZ.AYpB8iSddTNw2jdHPAhO7QUeaFSPvjpVG3qGFn18INeu.' | chpasswd -e
+    adduser -D glaforge || true
+    echo 'glaforge:$6$sa0Dor.8a.$B2yhNI5KG76G416vHIxNAR/sd8TRtZ.4bMFVIVjZ.AYpB8iSddTNw2jdHPAhO7QUeaFSPvjpVG3qGFn18INeu.' | chpasswd -e
 
     # And start the ssh server
     /usr/sbin/sshd -D
