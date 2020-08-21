@@ -34,4 +34,3 @@ Why Postfix? Because it is dead simple and we don't need any SMTP authentication
 * In case of errors with postfix: `sudo tail -f /var/log/mail.*`
 * If you ever need the install configure assistant again: `sudo dpkg-reconfigure postfix`
 * If you want to use postfix on the docker host itself, it will need an other port to talk to the front container of Mailu - add a port like this (instead of 25) -> `127.0.0.1:11823:25`. Otherwise postfix will think it would use itself to deliver emails - therefore block any email...
-* If you are using an (offline) Mailu instance for local delivery, which replaces the 25 port on your machine, be aware that postfix will only respect a direct hit inside the `/etc/aliases` file. Any indirect hit (`netdata -> root -> user` won't be resolved, which may cause some problems).
