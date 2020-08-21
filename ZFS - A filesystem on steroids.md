@@ -154,3 +154,10 @@ On target PC: `sudo zpool import [ZFS_POOL]` - omit `[ZFS_POOL]` to see all avai
 
 # Not working after reboot? #
 [-> see here](https://serverfault.com/questions/708783/zfs-never-mounts-my-pool-automatically-why)
+
+# Help! All my pools are gone... #
+...happened to me, after a kernel upgrade. Make sure...
+* Don't panic! ZFS is very resilient...
+* The `zfs` module is loaded
+* May need to `sudo apt install --reinstall zfs-dmks && sudo modprobe zfs` - watch out for errors!
+* Reimport the pool "from scratch" (thanks to [here](https://forum.level1techs.com/t/zfs-pool-disappeared-after-an-accidental-shutdown-help/111381)): `sudo zpool import -d /dev/ [POOL_NAME]`
