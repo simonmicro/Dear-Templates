@@ -38,7 +38,7 @@ Tested on Linux Mint Cinnamon 20 - it may breaks on major system upgrades. To pr
 Install this script and it will be executed on every upgrade by apt.
 1. Create the script hook inside the apt config `/etc/apt/apt.conf.d/80upgradehook` by appending:
     ```
-    Pkg::Post-Invoke {"/root/update_uefi_image.sh";};
+    DPkg::Post-Invoke {"/root/update_uefi_image.sh";};
     ```
 2. Add the simple script to `/root/update_uefi_image.sh` (as root):
     ```bash
