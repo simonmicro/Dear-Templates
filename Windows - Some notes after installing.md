@@ -30,6 +30,3 @@ Windows Registry Editor Version 5.00
 
 # Installers #
 I have a server mirroring all my beloved tools - I always map him as Network Drive (for easier usage). Without stored credentials of course...
-
-# Backups #
-
