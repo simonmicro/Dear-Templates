@@ -21,7 +21,7 @@ The first command should be:
 
 ## Firewalld - MAKE SURE TO FIX THAT BUG (if neccessary) ###
 Add/Replace this to `/etc/firewalld/firewalld.conf`
-```
+```ini
 CleanupOnExit=no
 ```
 _Otherwise a reboot could take up to several minutes!_
@@ -164,7 +164,7 @@ cache=mode	specifies a caching policy.  By default, no caches are used.
     3. Save it, restart the network and reboot any vms to apply the fix!
 
 #### Setup the smb.conf to... ####
-```
+```ini
 #THIS ALL REQUIRES samba
 #This is lacated at /etc/samba/smb.conf
 
