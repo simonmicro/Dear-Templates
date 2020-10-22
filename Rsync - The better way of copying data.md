@@ -52,4 +52,5 @@ _I. Forget. It. EVERY. TIME._ So here once and for all:
 * **Both slash** Same as source slash.
 
 # Note #
-To move the source files simply add `--remove-source-files`!
+* Other ssh key needed? Add `-e 'ssh -i /home/otheruser/.ssh/id_rsa'`
+* To remove the source files simply add `--remove-source-files`!
