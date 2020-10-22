@@ -18,12 +18,12 @@ sudo zpool create [ZFS_POOL] [DEVICE/FILE]
 ```
 
 Oh, I see - you want encryption (a SUBPOOL is recommended - do not encrypt the root one, so you can't creaty any unencrypted anymore...)?
-_For following you can use `-O` at zpool to pass options to zfs, otherwise `-o` is at any zfs command just enough._
 You have to create a key and then tell zfs to use it ([take a note](https://www.reddit.com/r/zfs/comments/bnvdco/zol_080_encryption_dont_encrypt_the_pool_root/)):
 ```bash
 openssl rand -hex -out /root/keys/key 32
 zfs create -o encryption=on -o keyformat=hex -o keylocation=file:///root/keys/key [ZFS_POOL]
 ```
+_For following you can use `-O` at `zpool` to pass options to `zfs`, otherwise `-o` is at any `zfs` command just enough._
 And RAID? Of course RAID5 - here some commands (omit the `raidz` part to create a somewhat dangerous RAID0)!
 * Create: `sudo zpool create -f [ZFS_POOL] raidz [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]` <- **Add won't work here!**
 * Replace: `sudo zpool replace [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE]`
