@@ -53,4 +53,4 @@ _I. Forget. It. EVERY. TIME._ So here once and for all:
 
 # Note #
 * Other ssh key needed? Add `-e 'ssh -i /home/otheruser/.ssh/id_rsa'`
-* To remove the source files simply add `--remove-source-files`!
+* To remove the source files simply add `--remove-source-files` and then clear up the empty folders with `rm -rv [SOURCE]`!
