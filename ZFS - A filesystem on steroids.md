@@ -24,7 +24,7 @@ You have to create a key and then tell zfs to use it ([take a note](https://www.
 openssl rand -hex -out /root/keys/key 32
 zfs create -o encryption=on -o keyformat=hex -o keylocation=file:///root/keys/key [ZFS_POOL]
 ```
-And RAID? Of course RAID 5 - here some commands!
+And RAID? Of course RAID5 - here some commands (omit the `raidz` part to create a somewhat dangerous RAID0)!
 * Create: `sudo zpool create -f [ZFS_POOL] raidz [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]` <- **Add won't work here!**
 * Replace: `sudo zpool replace [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE]`
 * Detach the failed: `sudo zpool detach [ZFS_POOL] [DEVICE/FILE]` <- **Maybe offlining first**
