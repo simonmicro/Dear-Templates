@@ -50,3 +50,6 @@ _I. Forget. It. EVERY. TIME._ So here once and for all:
 * **Destination slash** Same as no slash at all.
 * **Source slash** Every file **within** the source dir will be copied **within** the destination dir.
 * **Both slash** Same as source slash.
+
+# Note #
+To move the source files simply add `--remove-source-files`!
