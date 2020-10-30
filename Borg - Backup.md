@@ -12,6 +12,7 @@ To disable backup deletion see: 'https://borgbackup.readthedocs.io/en/stable/usa
 You can add to nearly to any command:
 * `-s` Show statistics at finish
 * `-p` Little information while working...
+* `--dry-run` Well, you know...
 
 ## LEGEND ##
 * `TARGET` Means the folders path (sometimes mentioned as repository) or an ssh-connection-folder (e.g. `ssh://([USER]@)[IP(:PORT)]/~/[PATH_IN_USERDIR](/$HOSTNAME)`)
@@ -33,7 +34,6 @@ Create an archive
 
 * `-C [MODE]` Sets compression level; `none` ~; `zlib` is medium speed and compression; `lzma` is slow but best; `zlib,[COMPRESSIONLEVEL]` and `lzma,[COMPRESSIONLEVEL]` are available too `[0,9]`
 * `--lock-wait [SECONDS]` Maybe inside a script which fires multiple creations - to proccess the timeout on connection losses
-* `--dry-run` Well, you know...
 
 ### Commands... ###
 * `borg check TARGET::NAME` Rechecks the archives integrity - useful to determine the size the dataloss after a drive failure
