@@ -48,7 +48,7 @@ Create an archive
 * `borg key export TARGET [PATH]` Backup the encryption key of the repository
 * `borg key import TARGET [PATH]` Restores the encryption key of the repository (useful with keyfile encrytion)
 * `borg break-lock TARGET` In case borg cant finish the backup, you'll need to release the lock manually
-* `borg extract TARGET::NAME [PATH]` Extracts the path from the archive to the disk (to its original location!)
+* `borg extract TARGET::NAME [PATH]` Extracts the path from the archive to the current working directory
 
 
 ### Useful... ###
