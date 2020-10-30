@@ -33,6 +33,7 @@ Create an archive
 
 * `-C [MODE]` Sets compression level; `none` ~; `zlib` is medium speed and compression; `lzma` is slow but best; `zlib,[COMPRESSIONLEVEL]` and `lzma,[COMPRESSIONLEVEL]` are available too `[0,9]`
 * `--lock-wait [SECONDS]` Maybe inside a script which fires multiple creations - to proccess the timeout on connection losses
+* `--dry-run` Well, you know...
 
 ### Commands... ###
 * `borg check TARGET::NAME` Rechecks the archives integrity - useful to determine the size the dataloss after a drive failure
@@ -47,6 +48,7 @@ Create an archive
 * `borg key export TARGET [PATH]` Backup the encryption key of the repository
 * `borg key import TARGET [PATH]` Restores the encryption key of the repository (useful with keyfile encrytion)
 * `borg break-lock TARGET` In case borg cant finish the backup, you'll need to release the lock manually
+* `borg extract TARGET::NAME [PATH]` Extracts the path from the archive to the disk (to its original location!)
 
 
 ### Useful... ###
