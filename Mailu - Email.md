@@ -38,18 +38,18 @@ Well, Mailu already comes with its own rate limits, but sadly it also counts suc
         driver: journald
 ```
 2. Install the `fail2ban` package on your host and create the following files with their content:
-* `/etc/fail2ban/filter.d/bad-auth.conf`
+* `/etc/fail2ban/filter.d/docker-mailu.conf`
     ```
     # Fail2Ban configuration file
     [Definition]
     failregex = .* client login failed: .+ client:\ <HOST>
     ignoreregex =
     ```
-* `/etc/fail2ban/jail.d/bad-auth.conf`
+* `/etc/fail2ban/jail.d/docker-mailu.conf`
     ```
-    [bad-auth]
+    [docker-mailu]
     enabled = true
-    filter = bad-auth
+    filter = docker-mailu
     logpath = /var/log/syslog
     bantime = 604800
     findtime = 300
@@ -60,27 +60,28 @@ Well, Mailu already comes with its own rate limits, but sadly it also counts suc
     ```
     [Definition]
 
-    actionstart = iptables -N f2b-bad-auth
-                  iptables -A f2b-bad-auth -j RETURN
-                  iptables -I FORWARD -p tcp -m multiport --dports 1:1024 -j f2b-bad-auth
+    actionstart = iptables -N f2b-docker-mailu
+                  iptables -A f2b-docker-mailu -j RETURN
+                  iptables -I FORWARD -p tcp -m multiport --dports 1:1024 -j f2b-docker-mailu
 
-    actionstop = iptables -D FORWARD -p tcp -m multiport --dports 1:1024 -j f2b-bad-auth
-                 iptables -F f2b-bad-auth
-                 iptables -X f2b-bad-auth
+    actionstop = iptables -D FORWARD -p tcp -m multiport --dports 1:1024 -j f2b-docker-mailu
+                 iptables -F f2b-docker-mailu
+                 iptables -X f2b-docker-mailu
 
-    actioncheck = iptables -n -L FORWARD | grep -q 'f2b-bad-auth[ \t]'
+    actioncheck = iptables -n -L FORWARD | grep -q 'f2b-docker-mailu[ \t]'
 
-    actionban = iptables -I f2b-bad-auth 1 -s <ip> -j DROP
+    actionban = iptables -I f2b-docker-mailu 1 -s <ip> -j DROP
 
-    actionunban = iptables -D f2b-bad-auth -s <ip> -j DROP
+    actionunban = iptables -D f2b-docker-mailu -s <ip> -j DROP
     ```
 3. Restart fail2ban and watch the logs of it for the ips, which gets blocked (for more stuff checkout the fail2ban template!)...
 4. Make sure to increase your auth limits inside the `.env` file, so fail2ban can work (and you wont get any further problems with it)! Example:
     ```
     # Authentication rate limit (per source IP address)
     # IS NOW SECURED BY FAIL2BAN -> DISABLED WITH VERY HIGH LIMITS!
-    AUTH_RATELIMIT=1000/minute;10000/hour 
+    AUTH_RATELIMIT=1000/minute;10000/hour
     ```
+5. NOTE: When you restart the container, you also MUST restart fail2ban - otherwise the old ban times must first expire, until they will again be blocked!
 
 ## Notes ##
 * In case of errors with postfix: `sudo tail -f /var/log/mail.*`

@@ -2,6 +2,8 @@
 summary: How to install and basic config for incremental banning...
 ---
 
+# Install with incremental bans!
+
 Install with: `sudo apt install fail2ban`
 Then open the file `/etc/fail2ban/jail.d/custom.conf` and insert:
 ```ini
@@ -19,3 +21,6 @@ bantime.rndtime = 2048
 bantime.multipliers = 1 5 30 60 300 720 1440 2880
 ```
 Then watch `/var/log/fail2ban.log` while all the bad guys get banned...
+
+## Note
+When you restart a docker container, you also MUST restart fail2ban - otherwise the old ban times must first expire, until they will again be blocked effectively!
