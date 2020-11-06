@@ -30,6 +30,58 @@ Why Postfix? Because it is dead simple and we don't need any SMTP authentication
     smtp      inet  n       -       y       -       -       smtpd
     ```
 
+# Setup Fail2Ban
+Well, Mailu already comes with its own rate limits, but sadly it also counts successful logins against it. When you have, at some point, multiple accounts for one user, this particular user may get blocked by the server regulary. Thats very unhelpful! To fix that, lets switch to Fail2Ban!
+1. Extend the `docker-compose.yml` for the `front` container:
+```
+    logging:
+        driver: journald
+```
+2. Install the `fail2ban` package on your host and create the following files with their content:
+* `/etc/fail2ban/filter.d/bad-auth.conf`
+    ```
+    # Fail2Ban configuration file
+    [Definition]
+    failregex = .* client login failed: .+ client:\ <HOST>
+    ignoreregex =
+    ```
+* `/etc/fail2ban/jail.d/bad-auth.conf`
+    ```
+    [bad-auth]
+    enabled = true
+    filter = bad-auth
+    logpath = /var/log/syslog
+    bantime = 604800
+    findtime = 300
+    maxretry = 5
+    action = docker-action
+    ```
+* `/etc/fail2ban/action.d/docker-action.conf`
+    ```
+    [Definition]
+
+    actionstart = iptables -N f2b-bad-auth
+                  iptables -A f2b-bad-auth -j RETURN
+                  iptables -I FORWARD -p tcp -m multiport --dports 1:1024 -j f2b-bad-auth
+
+    actionstop = iptables -D FORWARD -p tcp -m multiport --dports 1:1024 -j f2b-bad-auth
+                 iptables -F f2b-bad-auth
+                 iptables -X f2b-bad-auth
+
+    actioncheck = iptables -n -L FORWARD | grep -q 'f2b-bad-auth[ \t]'
+
+    actionban = iptables -I f2b-bad-auth 1 -s <ip> -j DROP
+
+    actionunban = iptables -D f2b-bad-auth -s <ip> -j DROP
+    ```
+3. Restart fail2ban and watch the logs of it for the ips, which gets blocked (for more stuff checkout the fail2ban template!)...
+4. Make sure to increase your auth limits inside the `.env` file, so fail2ban can work (and you wont get any further problems with it)! Example:
+    ```
+    # Authentication rate limit (per source IP address)
+    # IS NOW SECURED BY FAIL2BAN -> DISABLED WITH VERY HIGH LIMITS!
+    AUTH_RATELIMIT=1000/minute;10000/hour 
+    ```
+
 ## Notes ##
 * In case of errors with postfix: `sudo tail -f /var/log/mail.*`
 * If you ever need the install configure assistant again: `sudo dpkg-reconfigure postfix`
