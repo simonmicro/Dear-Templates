@@ -12,6 +12,9 @@ In `/etc/apt/apt.conf.d/50unattended-upgrades` uncomment:
 ```
 //Unattended-Upgrade::Mail "root";
 ```
-...to allow a regulray report about the updates. Also may change the `Unattended-Upgrade::Allowed-Origins` array to include a `"*:*";` - this will allow automatic updates for _all_ packages!
+...to allow a regulary report about the updates. Also may change the `Unattended-Upgrade::Allowed-Origins` array to include a `"*:*";` - this will allow
+automatic updates for _all_ packages!
 
 Test with (check for the matching string messages!!!): `sudo unattended-upgrade --debug --dry-run`
+
+Btw, you may want to use instead `origin=Debian,codename=${distro_codename}` for more specific updates...
