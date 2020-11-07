@@ -296,7 +296,7 @@ _The steps 1-2 are only needed for vm created before qemu v4.0!_
 4. Cold-boot the vm.
 
 When the `fstrim` command exits _too fast_ check with `sudo lsblk -o MOUNTPOINT,DISC-MAX,FSTYPE` for any `0B` entries - in that case that disk does not support
-TRIM -> you have done something wrong.
+TRIM -> you have done something wrong. Also you may want to check with `du -h [DISK_IMAGE]` the really used space for the images (they should shrink during the first `fstrim`)...
 
 * [More info](https://blog.zencoffee.org/2016/05/trim-support-kvm-virtual-machines/)
 * [For windows vms](https://pve.proxmox.com/wiki/Shrink_Qcow2_Disk_Files#Windows_Guest_Configuration)
