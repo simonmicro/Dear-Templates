@@ -29,7 +29,7 @@ applications - but Docker will may or may not recreate its rules on its own. Thi
 what the efficiency of your newly installed fail2ban rules - they'll get ignored. To make that all work you have to use an `docker-action.conf` like this:
 
 ```
-[Definition]
+[Definition]ini
 actioncheck = iptables -n -L DOCKER-USER | grep -q 'DOCKER-USER[ \t]'
 
 actionban = iptables -I DOCKER-USER -s <ip> -j DROP

@@ -39,14 +39,14 @@ Well, Mailu already comes with its own rate limits, but sadly it also counts suc
 ```
 2. Install the `fail2ban` package on your host and create the following files with their content:
 * `/etc/fail2ban/filter.d/docker-mailu.conf`
-    ```
+    ```ini
     # Fail2Ban configuration file
     [Definition]
     failregex = .* client login failed: .+ client:\ <HOST>
     ignoreregex =
     ```
 * `/etc/fail2ban/jail.d/docker-mailu.conf`
-    ```
+    ```ini
     [docker-mailu]
     enabled = true
     filter = docker-mailu
@@ -57,7 +57,7 @@ Well, Mailu already comes with its own rate limits, but sadly it also counts suc
     action = docker-action
     ```
 * `/etc/fail2ban/action.d/docker-action.conf`
-    ```
+    ```ini
     [Definition]
     actioncheck = iptables -n -L DOCKER-USER | grep -q 'DOCKER-USER[ \t]'
 
@@ -67,7 +67,7 @@ Well, Mailu already comes with its own rate limits, but sadly it also counts suc
     ```
 3. Restart fail2ban and watch the logs of it for the ips, which gets blocked (for more stuff checkout the fail2ban template!)...
 4. Make sure to increase your auth limits inside the `.env` file, so fail2ban can work (and you wont get any further problems with it)! Example:
-    ```
+    ```bash
     # Authentication rate limit (per source IP address)
     # IS NOW SECURED BY FAIL2BAN -> DISABLED WITH VERY HIGH LIMITS!
     AUTH_RATELIMIT=1000/minute;10000/hour
