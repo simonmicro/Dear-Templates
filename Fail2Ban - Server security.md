@@ -22,5 +22,20 @@ bantime.multipliers = 1 5 30 60 300 720 1440 2880
 ```
 Then watch `/var/log/fail2ban.log` while all the bad guys get banned...
 
-## Note
-When you restart a docker container, you also MUST restart fail2ban - otherwise the old ban times must first expire, until they will again be blocked effectively!
+# Docker
+
+When you want to use fail2ban with Docker you MUST use an other approach: Because the default way for the `docker-action.conf` is to create an own chain and insert the blocking rules there. This is fine when you are using normal
+applications - but Docker will may or may not recreate its rules on its own. This causes your fail2bain rules to shift down in the hierarchy and therefore will get ignored. You can test that by simply restarting your container and then
+what the efficiency of your newly installed fail2ban rules - they'll get ignored. To make that all work you have to use an `docker-action.conf` like this:
+
+```
+[Definition]
+actioncheck = iptables -n -L DOCKER-USER | grep -q 'DOCKER-USER[ \t]'
+
+actionban = iptables -I DOCKER-USER -s <ip> -j DROP
+
+actionunban = iptables -D DOCKER-USER -s <ip> -j DROP
+```
+
+As you may note there are no `actionstart` and `actionstop` - as we now use the iptables chain `DOCKER-USER`, which is specially desinged to be used for stuff like this! This chain is guaranteed to be evaluated _before_ any further internal
+networking for Docker. When you fail to do this you will may note that your rukes are ignored randomly or when you restart your container!
