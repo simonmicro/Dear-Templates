@@ -26,7 +26,7 @@ Then watch `/var/log/fail2ban.log` while all the bad guys get banned...
 
 When you want to use fail2ban with Docker you MUST use an other approach: Because the default way for the `docker-action.conf` is to create an own chain and insert the blocking rules there. This is fine when you are using normal
 applications - but Docker will may or may not recreate its rules on its own. This causes your fail2bain rules to shift down in the hierarchy and therefore will get ignored. You can test that by simply restarting your container and then
-whatching the efficiency of your newly installed fail2ban rules - they'll get ignored. To make that all work you have to use an other `docker-action.conf` like this:
+watching the efficiency of your newly installed fail2ban rules: They'll get ignored. To make that all work you have to use an other `docker-action.conf` like this:
 
 ```ini
 [Definition]
@@ -37,5 +37,5 @@ actionban = iptables -I DOCKER-USER -s <ip> -j DROP
 actionunban = iptables -D DOCKER-USER -s <ip> -j DROP
 ```
 
-As you may note there are no `actionstart` and `actionstop` - as we now use the iptables chain `DOCKER-USER`, which is specially desinged to be used for stuff like this! This chain is guaranteed to be evaluated _before_ any further internal
+As you may note there are no `actionstart` and `actionstop` - as we now use the iptables chain `DOCKER-USER`, which is specially designed to be used for stuff like this! This chain is guaranteed to be evaluated _before_ any further internal
 networking for Docker. When you fail to do this you will may note that your rukes are ignored randomly or when you restart your containers!
