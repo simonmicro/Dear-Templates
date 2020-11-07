@@ -33,10 +33,10 @@ Why Postfix? Because it is dead simple and we don't need any SMTP authentication
 # Setup Fail2Ban
 Well, Mailu already comes with its own rate limits, but sadly it also counts successful logins against it. When you have, at some point, multiple accounts for one user, this particular user may get blocked by the server regulary. Thats very unhelpful! To fix that, lets switch to Fail2Ban!
 1. Extend the `docker-compose.yml` for the `front` container:
-```
-    logging:
-        driver: journald
-```
+    ```yaml
+        logging:
+            driver: journald
+    ```
 2. Install the `fail2ban` package on your host and create the following files with their content:
 * `/etc/fail2ban/filter.d/docker-mailu.conf`
     ```ini
