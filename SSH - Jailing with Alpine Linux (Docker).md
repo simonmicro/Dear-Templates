@@ -43,8 +43,8 @@ services:
 * `entry.sh`: To add own users, just duplicate the two lines and generate the password hash with `mkpasswd -m sha-512`. If you remove any user, you'll need to rebuild the container (otherwise the `/etc/passwd` wont be updated correctly).
     > Why are the users added at runtime? Well, because we have no way to over-mount the /home directory while building, therefore the users would have no home folder at runtime, if we put them into a volume.
     ```bash
-    # Now (re-)add the user...
-    adduser -D glaforge || true
+    # Now (re-)add the user (using bash, otherwise Alpine defaults to ash)...
+    adduser --shell /bin/bash -D glaforge || true
     echo 'glaforge:$6$sa0Dor.8a.$B2yhNI5KG76G416vHIxNAR/sd8TRtZ.4bMFVIVjZ.AYpB8iSddTNw2jdHPAhO7QUeaFSPvjpVG3qGFn18INeu.' | chpasswd -e
 
     # And start the ssh server
@@ -76,3 +76,6 @@ Maybe you should consider to create a new `motd`-file to greet your users with a
 ```yaml
             - ./motd:/etc/motd:ro
 ```
+
+## .bashrc ##
+That file will be ignored - to use it anyways rename it to `.bash_profile`, which is only loaded after logging in (for any further subshell you can still use the `.bashrc`).
