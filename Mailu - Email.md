@@ -77,3 +77,9 @@ Well, Mailu already comes with its own rate limits, but sadly it also counts suc
 * In case of errors with postfix: `sudo tail -f /var/log/mail.*`
 * If you ever need the install configure assistant again: `sudo dpkg-reconfigure postfix`
 * If you want to use postfix on the docker host itself, it will need an other port to talk to the front container of Mailu - add a port like this (instead of 25) -> `127.0.0.1:11823:25`. Otherwise postfix will think it would use itself to deliver emails - therefore block any email...
+* Got some problems like [that](https://github.com/Mailu/Mailu/issues/1364)? Add into your mailu path `./mailu/overrides/dovecot.conf` with:
+    ```
+    protocol imap {
+        mail_max_userip_connections = 100
+    }
+    ```
