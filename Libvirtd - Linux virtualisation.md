@@ -64,7 +64,6 @@ Libvirt has a watchdog feature, which can e.g. reboot a vm on crash - other than
     watchdog-device = /dev/watchdog
     realtime        = yes
     priority        = 1
-    interval        = 10
     ```
 4. Cold-Boot the vm. If you ever wich to test the watchdog, you may crash the kernel with `sync; echo c > /proc/sysrq-trigger` as `root`!
 
