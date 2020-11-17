@@ -51,6 +51,23 @@ TRIM -> you have done something wrong. Also you may want to check with `du -h [D
 * [More info](https://blog.zencoffee.org/2016/05/trim-support-kvm-virtual-machines/)
 * [For windows vms](https://pve.proxmox.com/wiki/Shrink_Qcow2_Disk_Files#Windows_Guest_Configuration)
 
+## Watchdog & Panic Notifier ##
+Libvirt has a watchdog feature, which can e.g. reboot a vm on crash - other than the "panic notifier" device, which just powers the vm down. How to setup the watchdog:
+1. Add the Watchdog device into the vm
+2. Inside the vm:
+    ```bash
+    sudo apt install watchdog
+    sudo systemctl enable watchdog
+    ```
+3. Enable the device inside the service config `/etc/watchdog.conf`:
+    ```ini
+    watchdog-device = /dev/watchdog
+    realtime        = yes
+    priority        = 1
+    interval        = 10
+    ```
+4. Cold-Boot the vm. If you ever wich to test the watchdog, you may crash the kernel with `sync; echo c > /proc/sysrq-trigger` as `root`!
+
 ## [VM - Install windows support here](https://www.spice-space.org/download.html) ##
 
 # SERVER #
