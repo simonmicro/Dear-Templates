@@ -6,7 +6,7 @@ summary: Some copy-paste scripts for mass media conversion
 _Note:_ Without proper reencoding the filesize will stay the same and some devices still don't open the results - even if they support e.g. mp4 - this does not mean they support the used codec. To fix this, please reencode the files - this will take much more time, but provides better filesizes and results!
 
 ## MP4 to MP4 ##
-This just reencodes the files...
+This just reencodes the files (reduce size)...
 ```bash
 #!/bin/bash
 mkdir -p ../reencoded/
@@ -15,6 +15,20 @@ for i in *.mp4;
     echo $name;
     # Using the pts has no value fix...
     ffmpeg -fflags +genpts -i "$i" -vcodec libx265 -crf 28  "../reencoded/${name}.mp4";
+    sleep 1
+done
+```
+
+## MKV to MKV ##
+This just reencodes the files (reduce size) - same as for mp4!
+```bash
+#!/bin/bash
+mkdir -p ../reencoded/
+for i in *.mkv;
+    do name=`echo ${i%.*}`;
+    echo $name;
+    # Using the pts has no value fix...
+    ffmpeg -fflags +genpts -i "$i" -vcodec libx265 -crf 28  "../reencoded/${name}.mkv";
     sleep 1
 done
 ```
