@@ -8,7 +8,7 @@ eject -vx 0
 ```
 -> `0` disables any limit - you could also enter a speed (to test it is working choose something like `8` and the disk should spin down).
 
-But as always: Some disks drives (PIONEER) won't respect that and their firmware needs a kick in the b*** -> run (package `qpxtool`):
+But as always: Some disks drives (PIONEER - use `cdvdcontrol -d /dev/sr0 -s` to check for supported features) won't respect that and their firmware needs a kick in the b*** -> run (package `qpxtool`):
 ```bash
 cdvdcontrol -d /dev/sr0 --pio-limit off --pio-quiet perf
 ```
