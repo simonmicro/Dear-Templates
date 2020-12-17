@@ -20,7 +20,7 @@ done
 ```
 
 ## MKV to MKV ##
-This just reencodes the files (reduce size) - same as for mp4!
+This just reencodes the files (reduce size) - same as for mp4 (but keeps all audio tracks and subtitle metadata)!
 ```bash
 #!/bin/bash
 mkdir -p ../reencoded/
@@ -28,7 +28,7 @@ for i in *.mkv;
     do name=`echo ${i%.*}`;
     echo $name;
     # Using the pts has no value fix...
-    ffmpeg -fflags +genpts -i "$i" -vcodec libx265 -crf 28 -map 0 "../reencoded/${name}.mkv";
+    ffmpeg -fflags +genpts -i "$i" -vcodec libx265 -crf 28 -map 0 -scodec copy "../reencoded/${name}.mkv";
     sleep 1
 done
 ```
