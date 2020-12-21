@@ -92,10 +92,16 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 
 ## Default Host ##
 ### THIS FILE NEEDS TO BE NAMED AS 000-default.conf ###
+It also expects to have a `404.html` and a `50x.html` in the default directoy.
 ```apacheconf
 <VirtualHost *:80>
     #Where default site is located (HTTP)
         DocumentRoot /var/www/default
+        ErrorDocument 404 /404.html
+        ErrorDocument 500 /50x.html
+        ErrorDocument 502 /50x.html
+        ErrorDocument 503 /50x.html
+        ErrorDocument 504 /50x.html
     #Log stuff
         ErrorLog /var/log/apache2/default-http-error.log
         CustomLog /var/log/apache2/default-http-access.log common
@@ -103,6 +109,11 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 <VirtualHost *:443>
     #Where default site is located (HTTPS)
         DocumentRoot /var/www/default
+        ErrorDocument 404 /404.html
+        ErrorDocument 500 /50x.html
+        ErrorDocument 502 /50x.html
+        ErrorDocument 503 /50x.html
+        ErrorDocument 504 /50x.html
     #Use SSL + stuff
         SSLEngine on									
         SSLCertificateFile /etc/ssl/certs/apache.crt
