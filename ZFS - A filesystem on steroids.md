@@ -4,8 +4,9 @@ summary: Install, usage, tips and tricks, encryption, compression & more!
 
 # Setup on Debian (10) #
 1. Add the "contib" and "non-free" branch to the `/etc/apt/sources.list`
-2. Install zfs: `sudo apt install zfsutils-linux`
-3. Reboot or modprobe (`sudo modprobe zfs`) to activate zfs
+2. Make sure the header files for your kernel are installed - before installing zfs (zfs will build&install itself before the headers from its dependencies are installed - this WILL FAIL!). The package is commonly named e.g. `linux-headers-amd64`
+3. Install zfs: `sudo apt install zfsutils-linux`
+4. Reboot or modprobe (`sudo modprobe zfs`) to activate zfs
 
 # Under Debian 10: Upgrade to zfs 0.8+ #
 ...otherwise the encryption won't be there.
