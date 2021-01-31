@@ -3,7 +3,7 @@ summary: How to setup fprint and how to use fringerprint based login with KDE pl
 ---
 
 # Setup fprint for your user #
-1. Install `sudo apt install fprint`
+1. Install `sudo apt install fprint` - maybe `libpam-fprintd` is also needed
 2. Enroll a finger `fprintd-enroll [USER]`
     * `-f right-index-finger`
     * `-f right-middle-finger`
