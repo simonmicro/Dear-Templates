@@ -20,7 +20,7 @@ done
 ```
 
 ## MKV to MKV ##
-This just reencodes the files (reduce size) - same as for mp4 (but keeps all audio tracks and subtitle metadata)! And when you want to add a subtitle track (make sure the language code is before the ending) append `-f srt -i subtitles.[LANG].srt` just before the `-vcodec`.
+This just reencodes the files (reduce size) - same as for mp4 (but keeps all audio tracks and subtitle metadata)!
 ```bash
 #!/bin/bash
 mkdir -p ../reencoded/
