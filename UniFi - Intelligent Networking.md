@@ -37,7 +37,8 @@ openssl genrsa -out radius.key 2048
 
 ## Generate a new CRT
 ```bash
-openssl req -new -days 365 -x509 -key radius.key -out radius.crt
+openssl req -new -key radius.key -out radius.csr
+openssl x509 -req -days 365 -in radius.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out radius.crt
 ```
 
 ## Convert your CRT to a PEM
@@ -47,24 +48,26 @@ openssl x509 -in ca.crt -out ca.pem -outform PEM
 ```
 
 ## Push it to the gateway!
--> Upload new certs+key to the /tmp dir (`radius.key` -> `server.key` and also `radius.pem` -> `server.pem`). Then run
+-> Upload new certs+key to the `/tmp` dir. Then run
 ```bash
 sudo bash
+mv /tmp/radius.key /tmp/server.key
+mv /tmp/radius.pem /tmp/server.pem
 chmod -v 770 /tmp/ca.pem
 chmod -v 770 /tmp/server.key
 chmod -v 770 /tmp/server.pem
-chown -v root: /tmp/ca.pem
-chown -v root: /tmp/server.key
-chown -v root: /tmp/server.pem
-cp -v /tmp/ca.pem /etc/freeradius/certs/
-cp -v /tmp/server.key /etc/freeradius/certs/
-cp -v /tmp/server.pem /etc/freeradius/certs/
+chown -v freerad: /tmp/ca.pem
+chown -v freerad: /tmp/server.key
+chown -v freerad: /tmp/server.pem
+mv /tmp/ca.pem /etc/freeradius/certs/
+mv /tmp/server.key /etc/freeradius/certs/
+mv /tmp/server.pem /etc/freeradius/certs/
 ```
 
 ## Finalize!
-Reboot the Gateway to restart FreeRadius & wipe the tmp dir, which holds the sensitive information!
+Restart FreeRadius to apply the new certificate:
 ```bash
-reboot
+service freeradius restart
 ```
 
 # Trust ROOT-CA on Ubuntu
