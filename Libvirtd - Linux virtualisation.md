@@ -122,7 +122,9 @@ _Otherwise a reboot could take up to several minutes!_
 **[More info (firewalld)](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-firewalld-on-centos-7)**
 
 ## Enable automatic freezing of guests at host reboot ##
-1. Add a new service (e.g. `/etc/systemd/system/vmfreezer.service`)
+This are the needed files & scripts:
+
+* Service file `vmfreezer.service`
     ```systemd
     [Unit]
     Description=VMFreezer - saves / restores all running machines of libvirt from / to disk
@@ -144,7 +146,7 @@ _Otherwise a reboot could take up to several minutes!_
     [Install]
     WantedBy=multi-user.target
     ```
-2. Add the required restore script to `/root/restore.sh` (**make sure to change the target path!**)
+* Restore script to `restore.sh`
     ```bash
     #!/bin/bash
     # Restore all guests from saved state and start
@@ -162,11 +164,11 @@ _Otherwise a reboot could take up to several minutes!_
             echo "Start of $GUEST failed. The state will be moved to /tmp/ - so it can manually restored... Eventually..."
             mv $GUEST /tmp/
         fi
-        # Now sleep a shot period of time to make sure, that e.g. dynamic memory has been populated properly...
+        # Now sleep a short period of time to make sure, that e.g. dynamic memory has been populated properly...
         sleep 5
     done
     ```
-3. Add the required save script to `/root/save.sh` (**make sure to change the target path!**)
+* Restore script to `save.sh`
     ```bash
     #!/bin/bash
     # Save (store ram and shutdown) all guests
@@ -181,14 +183,15 @@ _Otherwise a reboot could take up to several minutes!_
         virsh save $GUEST $GUEST.state
     done
     ```
-4. Mark the scripts as executable: `sudo chmod 555 /root/save.sh /root/restore.sh`
 
-### Install the startup vm service ###
+**Make sure to modify the `cd` command to fit your wanted save-state-location!**
+
+### Install the vmfreezer service ###
 1. Add the `vmfreezer.service` file to `/etc/systemd/system`
 2. Add the `save.sh` file to `/root`
 3. Add the `restore.sh` file to `/root`
 4. Set permissons for them `sudo chmod 500 /root/save.sh /root/restore.sh`
-5. DON'T FORGET to modify the scripts to use the correct path to save and restore the vms!
+5. ↑ DON'T FORGET to modify the scripts to use the correct path to save and restore the vms!
 6. Enable the new service with `sudo systemctl enable vmfreezer`
 
 ## Set static IPs for the VMs ##
