@@ -122,7 +122,7 @@ _Otherwise a reboot could take up to several minutes!_
 **[More info (firewalld)](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-firewalld-on-centos-7)**
 
 ## Enable automatic freezing of guests at host reboot ##
-1. Add a new service
+1. Add a new service (e.g. `/etc/systemd/system/vmfreezer.service`)
     ```systemd
     [Unit]
     Description=VMFreezer - saves / restores all running machines of libvirt from / to disk
