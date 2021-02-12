@@ -230,9 +230,10 @@ sudo zfs set sharenfs=on [POOL_NAME]
 ```
 Instead of a simple `on` you could also pass any [NFS option](https://linux.die.net/man/5/exports) to it - here some examples:
 * `rw`/`ro`: Set the write mode - append e.g. `=@192.168.0.1` or `=@192.168.0.1/24` to restrict it to specific clients/networks
-* `root_squash`/`no_root_squash`: Should the root uid remapped to an anonymous request?
-* `all_squash`/`no_all_squash`: Should every client uid remapped to ↓?
+* `root_squash`*/`no_root_squash`: Should the root uid remapped to an anonymous request? Needed when `chown` should work...
+* `all_squash`/`no_all_squash`*: Should every client uid remapped to ↓?
 * `anonuid` & `anongid`: Set the remapping target uid/gui (defaults to the user `nobody`)
+`*` -> Default!
 
 #### Client: Mount it! ####
 After exporting the dataset on the server, query the exact name on the clients by using:
