@@ -191,9 +191,59 @@ _Otherwise a reboot could take up to several minutes!_
 5. DON'T FORGET to modify the scripts to use the correct path to save and restore the vms!
 6. Enable the new service with `sudo systemctl enable vmfreezer`
 
+## Set static IPs for the VMs ##
+...inside any isolated network, hosted by the host itself - just modify the respective network config with `sudo virsh net-edit [LOCALSTORAGENET_NAME]` and add:
+    ```xml
+    <network>
+    ...
+    <dhcp>
+    ...
+    <host mac='52:54:00:6c:3c:01' name='vm1' ip='192.168.122.11'/>
+    <host mac='52:54:00:6c:3c:02' name='vm2' ip='192.168.122.12'/>
+    ...
+    </dhcp>
+    ...
+    </network>
+    ```
+Thanks [Serverfault](https://serverfault.com/questions/627238/kvm-libvirt-how-to-configure-static-guest-ip-addresses-on-the-virtualisation-ho)!
+
 ## Shared folders ##
 
-### KVM ###
+### NFS with ZFS ###
+Make sure (on both client and server) that NFS ist installed already:
+```bash
+sudo apt install nfs-kernel-server
+```
+Also make sure to use for the `[SEVRER_IP]` a ip, which does not utilizes any bridged interface between guest and host. This won't work!
+
+#### Server: Share creation ####
+Enable pool export:
+```bash
+sudo zfs set sharenfs=on [POOL_NAME]
+```
+Instead of a simple `on` you could also pass any [NFS option](https://linux.die.net/man/5/exports) to it - here some examples:
+* `rw`/`ro`: Set the write mode - append e.g. `=@192.168.0.1` or `=@192.168.0.1/24` to restrict it to specific clients/networks
+* `root_squash`/`no_root_squash`: Should the root uid remapped to an anonymous request?
+* `all_squash`/`no_all_squash`: Should every client uid remapped to ↓?
+* `anonuid` & `anongid`: Set the remapping target uid/gui (defaults to the user `nobody`)
+
+#### Client: Mount it! ####
+After exporting the dataset on the server, query the exact name on the clients by using:
+```bash
+showmount --exports [SERVER_IP]
+```
+Then you can mount it for testing purposes directly with:
+```bash
+sudo mount -t nfs [SERVER_IP]:[ZFS_EXPORT_PATH] [TARGET_PATH]
+```
+You may add it into the `/etc/fstab`:
+```
+[SERVER_IP]:[ZFS_EXPORT_PATH] [TARGET_PATH]  nfs      defaults    0       0
+```
+Also here an interesting [NFS option](https://linux.die.net/man/5/nfs):
+* `soft`/`hard`: When hard NFS will retry the connection forever when it fails (freezes the application triggering it; NFS defaults to hard!)
+
+### KVM (P9) ###
 Just add a new mapped shared folder with a new [TARGET_PATH].
 To mount it, just insert following line into the guests `/etc/fstab`:
 ```
@@ -220,7 +270,7 @@ cache=mode	specifies a caching policy.  By default, no caches are used.
                 mmap.  Northing else is cached, like cache=none
 ```
 
-### Samba ###
+### Samba (CIFS) ###
 #### Install server... ####
 `sudo apt install samba`
 
