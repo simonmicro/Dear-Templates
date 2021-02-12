@@ -214,7 +214,7 @@ Thanks [Serverfault](https://serverfault.com/questions/627238/kvm-libvirt-how-to
 Some performance-notes out of the real world:
 * NFS is fast, but is more complex to manage as it is IP authentication based (or you get Kerberos somehow working) 
 * Samba works, but it is complicated to setup any new user as always a corresponding system user is needed... Also special characters break things...
-* P9 just works, but is always slow (small package size -> good directory listing, but bandwith limit by cpu performance; big package size -> painfully slow directoy listing, but good bandwith) - also the caching is funny. Also special characters break things...
+* 9p just works, but is always slow (small package size -> good directory listing, but bandwith limit by cpu performance; big package size -> painfully slow directoy listing, but good bandwith) - also the caching is funny. Also special characters break things...
 
 ### NFS with ZFS ###
 Make sure (on both client and server) that NFS ist installed already:
@@ -251,7 +251,7 @@ You may add it into the `/etc/fstab`:
 Also here an interesting [NFS option](https://linux.die.net/man/5/nfs):
 * `soft`/`hard`: When hard NFS will retry the connection forever when it fails (freezes the application triggering it; NFS defaults to hard!)
 
-### KVM (P9) ###
+### KVM (9p) ###
 Just add a new mapped shared folder with a new [TARGET_PATH].
 To mount it, just insert following line into the guests `/etc/fstab`:
 ```
