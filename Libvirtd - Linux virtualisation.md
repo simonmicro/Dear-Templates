@@ -191,7 +191,7 @@ This are the needed files & scripts:
 2. Add the `save.sh` file to `/root`
 3. Add the `restore.sh` file to `/root`
 4. Set permissons for them `sudo chmod 500 /root/save.sh /root/restore.sh`
-5. ↑ DON'T FORGET to modify the scripts to use the correct path to save and restore the vms!
+5. ↑ DON'T FORGET to modify the scripts to use the correct path to save and restore the vms! Also this service won't be able to (re-)store any vm, which does not support saving anyways (e.g. the ones with shared-folders or UEFI)!
 6. Enable the new service with `sudo systemctl enable vmfreezer`
 
 ## Set static IPs for the VMs ##
