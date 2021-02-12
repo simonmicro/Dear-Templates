@@ -196,18 +196,18 @@ This are the needed files & scripts:
 
 ## Set static IPs for the VMs ##
 ...inside any isolated network, hosted by the host itself - just modify the respective network config with `sudo virsh net-edit [LOCALSTORAGENET_NAME]` and add:
-    ```xml
-    <network>
-    ...
-    <dhcp>
-    ...
-    <host mac='52:54:00:6c:3c:01' name='vm1' ip='192.168.122.11'/>
-    <host mac='52:54:00:6c:3c:02' name='vm2' ip='192.168.122.12'/>
-    ...
-    </dhcp>
-    ...
-    </network>
-    ```
+```xml
+<network>
+...
+<dhcp>
+...
+<host mac='52:54:00:6c:3c:01' name='vm1' ip='192.168.122.11'/>
+<host mac='52:54:00:6c:3c:02' name='vm2' ip='192.168.122.12'/>
+...
+</dhcp>
+...
+</network>
+```
 Thanks [Serverfault](https://serverfault.com/questions/627238/kvm-libvirt-how-to-configure-static-guest-ip-addresses-on-the-virtualisation-ho)!
 
 ## Shared folders ##
