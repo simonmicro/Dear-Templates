@@ -208,6 +208,10 @@ _Otherwise a reboot could take up to several minutes!_
 Thanks [Serverfault](https://serverfault.com/questions/627238/kvm-libvirt-how-to-configure-static-guest-ip-addresses-on-the-virtualisation-ho)!
 
 ## Shared folders ##
+Some performance-notes out of the real world:
+* NFS is fast, but is more complex to manage as it is IP authentication based (or you get Kerberos somehow working) 
+* Samba works, but it is complicated to setup any new user as always a corresponding system user is needed...
+* P9 just works, but is always slow (small package size -> good directory listing, but bandwith limit by cpu performance; big package size -> painfully slow directoy listing, but good bandwith) - also the caching is funny.
 
 ### NFS with ZFS ###
 Make sure (on both client and server) that NFS ist installed already:
