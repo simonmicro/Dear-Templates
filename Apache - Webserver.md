@@ -29,9 +29,20 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
     ServerAdmin webmaster@example.com
 # Where PHP and HTML is located (HTTPS)
     DocumentRoot /var/www/example.com
-# ...or proxy everything from...
-#    ProxyPass / http://localhost:19999/
-#    ProxyPassReverse / http://localhost:19999/
+# ...or proxy everything from (the following is for any custom error pages; make sure to also enable the DocumentRoot directive)...
+#    ProxyPass /_error !
+#    ProxyErrorOverride On
+#    ErrorDocument 404 /_error/404.html
+#    ErrorDocument 500 /_error/500.html
+#    ErrorDocument 502 /_error/502.html
+#    ErrorDocument 503 /_error/503.html
+#    ErrorDocument 504 /_error/504.html
+# ...and now the proxy target from...
+#    ProxyPass / http://localhost:31363/
+#    ProxyPassReverse / http://localhost:31363/
+# ...make also sure to support websockets...
+#    ProxyPass /socket ws://localhost:31363/socket
+#    ProxyPassReverse /socket ws://localhost:31363/socket
 # DON'T inform the proxy target, that an other client has requested the site instead of this server (don't set X-Forward...)
 #    ProxyPreserveHost on
 # Use SSL + stuff
@@ -92,16 +103,16 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 
 ## Default Host ##
 ### THIS FILE NEEDS TO BE NAMED AS 000-default.conf ###
-It also expects to have a `404.html` and a `50x.html` in the default directoy.
+It also expects to have a `404.html` and a `50x.html` inside the `_error` directoy, you could orient your page on [my own](https://gitlab.simonmicro.de/simonmicro/apache-defaults) ones.
 ```apacheconf
 <VirtualHost *:80>
     #Where default site is located (HTTP)
         DocumentRoot /var/www/default
-        ErrorDocument 404 /404.html
-        ErrorDocument 500 /50x.html
-        ErrorDocument 502 /50x.html
-        ErrorDocument 503 /50x.html
-        ErrorDocument 504 /50x.html
+        ErrorDocument 404 /_error/404.html
+        ErrorDocument 500 /_error/500.html
+        ErrorDocument 502 /_error/502.html
+        ErrorDocument 503 /_error/503.html
+        ErrorDocument 504 /_error/504.html
     #Log stuff
         ErrorLog /var/log/apache2/default-http-error.log
         CustomLog /var/log/apache2/default-http-access.log common
@@ -109,11 +120,11 @@ It also expects to have a `404.html` and a `50x.html` in the default directoy.
 <VirtualHost *:443>
     #Where default site is located (HTTPS)
         DocumentRoot /var/www/default
-        ErrorDocument 404 /404.html
-        ErrorDocument 500 /50x.html
-        ErrorDocument 502 /50x.html
-        ErrorDocument 503 /50x.html
-        ErrorDocument 504 /50x.html
+        ErrorDocument 404 /_error/404.html
+        ErrorDocument 500 /_error/500.html
+        ErrorDocument 502 /_error/502.html
+        ErrorDocument 503 /_error/503.html
+        ErrorDocument 504 /_error/504.html
     #Use SSL + stuff
         SSLEngine on									
         SSLCertificateFile /etc/ssl/certs/apache.crt
