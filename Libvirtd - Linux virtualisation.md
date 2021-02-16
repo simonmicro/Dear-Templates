@@ -137,8 +137,8 @@ This are the needed files & scripts:
 
     [Service]
     Type=oneshot
-    #infinity -> make sure we wait for ANY vm!
-    TimeoutSec=infinity
+    # 10 minutes should be enough; increase only if really needed!
+    TimeoutSec=600
     RemainAfterExit=true
     ExecStart=/root/restore.sh
     ExecStop=/root/save.sh
