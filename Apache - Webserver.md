@@ -143,6 +143,12 @@ It also expects to have a `404.html` and a `50x.html` inside the `_error` direct
 # <Directorymatch "^/.*/\.git.*">
     Require all denied
 </Directorymatch>
+
+# And some good practices...
+<IfModule headers_module>
+    header set X-Clacks-Overhead "GNU Terry Pratchett"
+    header set X-Cat: "😸"
+</IfModule>
 ```
 
 ## Simple .htaccess ##
