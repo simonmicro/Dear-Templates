@@ -99,7 +99,11 @@ ifconfig-pool-persist ipp.txt
 # Read client specific settings from...
 client-config-dir /etc/openvpn/ccd
 
-keepalive 10 120
+# The keepalive directive causes ping-like messages to be sent back and forth over
+# the link so that each side knows when the other side has gone down. Ping every 5
+# seconds, assume that remote peer is down if no ping received during a 30 second
+# time period.
+keepalive 6 30
 
 # For extra security beyond that provided by SSL/TLS, create an "HMAC firewall"
 # to help block DoS attacks and UDP port flooding.
