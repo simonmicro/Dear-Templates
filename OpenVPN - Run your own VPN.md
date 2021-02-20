@@ -128,6 +128,17 @@ persist-tun
 # every minute.
 status openvpn-status.log
 
+# Allow older TLS versions to allow the USG to connect
+tls-version-min 1.0
+
+client-to-client
+
+# Enter here the network behind the gateway, which you wan't to route to...
+route 192.168.0.0 255.255.0.0
+
+# Verify the clients keyUsages and extendedKeyUsages
+remote-cert-tls client
+
 # Set the appropriate level of log
 # file verbosity.
 #
@@ -136,14 +147,6 @@ status openvpn-status.log
 # 5 and 6 can help to debug connection problems
 # 9 is extremely verbose
 verb 3
-
-# Allow older TLS versions to allow the USG to connect
-tls-version-min 1.0
-
-client-to-client
-
-# Enter here the network behind the gateway, which you wan't to route to...
-route 192.168.0.0 255.255.0.0
 ```
 
 _NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN:
@@ -276,13 +279,15 @@ persist-tun
 <key>
 [INSERT CONTENT OF [CLIENT_USERNAME].key]
 </key>
-remote-cert-tls server
 ;tls-auth ta.key 1
 <tls-auth>
 [INSERT CONTENT OF ta.key]
 </tls-auth>
 key-direction 1
 cipher AES-256-CBC
+
+# Verify the servers keyUsages and extendedKeyUsages
+remote-cert-tls server
 
 # Set the appropriate level of log
 # file verbosity.
