@@ -35,14 +35,14 @@ echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.conf
 ```
 
 ### Certificates
-Create a new file `/tmp/openssl.cnf` with:
+Create a new file `/tmp/openssl_server.cnf` with:
 ```
 [v3_ca]
 basicConstraints = CA:FALSE
 keyUsage = digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth
 ```
-This is needed for signing CSRs with these enhancements. Use ONLY these `keyUsages`, the USG will fail when more are allowed...
+This is needed for signing CSRs with these enhancements. Use ONLY these `keyUsages`, the USG will fail when more are allowed (`remote-cert-tls`)...
 
 Now create everything needed for the server (when you already have a CA, you may want to adapt this accordingly):
 ```bash
@@ -53,7 +53,7 @@ openssl genrsa -out ca.key 2048 # Generate new private key
 openssl req -new -days 3650 -x509 -key ca.key -out ca.crt -subj '/CN=root-ca'
 openssl genrsa -out server.key 2048
 openssl req -new -key server.key -out server.csr -subj '/CN=server'
-openssl x509 -req -days 3650 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -extensions v3_ca -extfile /tmp/openssl.cnf
+openssl x509 -req -days 3650 -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -extensions v3_ca -extfile /tmp/openssl_server.cnf
 ```
 
 ### OpenVPN server
@@ -232,11 +232,19 @@ sudo systemctl status forward_ports_to_vpn_clients.service
 ## Clients
 
 ### Certificates
+Create a new file `/tmp/openssl_clients.cnf` with:
+```
+[v3_ca]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = clientAuth
+```
+This is needed for signing CSRs with these enhancements. This WILL BE checked by the server, otherwise the clients connection will be rejected (`remote-cert-tls`)...
 Generate the set of certificates for the clients with (make sure to change the names of the files!):
 ```bash
 openssl genrsa -out [CLIENT_USERNAME].key 2048
 openssl req -new -key [CLIENT_USERNAME].key -out [CLIENT_USERNAME].csr -subj '/CN=[CLIENT_USERNAME]'
-openssl x509 -req -days 3650 -in [CLIENT_USERNAME].csr -CA ca.crt -CAkey ca.key -CAcreateserial -out [CLIENT_USERNAME].crt
+openssl x509 -req -days 3650 -in [CLIENT_USERNAME].csr -CA ca.crt -CAkey ca.key -CAcreateserial -out [CLIENT_USERNAME].crt -extensions v3_ca -extfile /tmp/openssl_clients.cnf
 ```
 
 ### Config(s)
