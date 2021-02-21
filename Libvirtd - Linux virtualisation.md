@@ -4,7 +4,7 @@ summary: Server, client, shared folders, freezing at host down-times and much, m
 
 # VIRTUAL MACHINE #
 
-## VM - Bind to a VLAN-tagged intreface ##
+## VM - Bind to a VLAN-tagged interface ##
 1. Create the tagged interface(s - here `42` and `44` for example on `eno1`) on the hosts network configuration `/etc/network/interfaces` - in this example we'll only dhcp on the untagged/parent interface (you could dhcp on them all, but this will confuse your dhcp as the same mac is used everywhere):
     ```
     allow-hotplug eno1
