@@ -258,7 +258,7 @@ proto udp
 
 # The hostname/IP and port of the server. You can have multiple remote
 # entries to load balance between the servers.
-remote jake.simonmicro.de 1194
+remote [VPN_SERVER_HOST] 1194
 
 resolv-retry infinite
 
