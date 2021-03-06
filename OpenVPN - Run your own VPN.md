@@ -149,7 +149,7 @@ remote-cert-tls client
 verb 3
 ```
 
-_NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN:
+_NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN (you'll also may need the `forward_vpn_clients` service below):
 ```
 push "redirect-gateway def1 bypass-dhcp"
 push "dhcp-option DNS 1.1.1.1"
@@ -170,6 +170,56 @@ To extend the configs of the connecting clients add inside the `/etc/openvpn/ccd
 ifconfig-push 10.8.0.2 255.255.255.0
 # Configure the routed network(s) - similar to the server.conf
 iroute 192.168.0.0 255.255.0.0
+```
+
+### Forward as vpn client
+...this iy maybe needed when you plan to allow internet access over your vpn.
+
+Create a new service under `/etc/systemd/system/forward_vpn_clients.service`:
+```systemd
+[Unit]
+Description=Enable forwarding as OpenVPN client(s)
+Requires=openvpn-server@server.service
+
+[Service]
+Type=simple
+RemainAfterExit=true
+Restart=on-failure
+RestartSec=5s
+ExecStart=/root/forward_vpn_clients.sh start
+ExecStopPost=/root/forward_vpn_clients.sh stop
+
+[Install]
+WantedBy=multi-user.target
+```
+
+And the needed script under `/root/forward_vpn_clients.sh`:
+```bash
+#!/bin/bash
+
+start() {
+    # Fail on unclean returns...
+    set -e
+    
+    iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -j MASQUERADE
+}
+
+stop() {
+    # Remove all the previously added rules again (same commands; just with -D instead of -A)...
+    iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -j MASQUERADE
+}
+
+case $1 in
+  start|stop) "$1" ;;
+esac
+```
+
+And enable the new service:
+```bash
+sudo chmod 700 /root/forward_vpn_clients.sh
+sudo systemctl enable forward_vpn_clients.service
+sudo systemctl start forward_vpn_clients.service
+sudo systemctl status forward_vpn_clients.service
 ```
 
 ### Port forwarding rules
