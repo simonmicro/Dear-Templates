@@ -83,3 +83,4 @@ Well, Mailu already comes with its own rate limits, but sadly it also counts suc
         mail_max_userip_connections = 100
     }
     ```
+* You need to flush the queue? Run `postqueue -f` to resend them immediately!
