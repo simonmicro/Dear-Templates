@@ -101,6 +101,24 @@ One or more alarms are useless and can be ignored? Check out the source row at t
     net.core.netdev_budget=600
     ```
 
+# Integrate Windows Machines #
+This uses a collector on the machine, wich is then queried by the Netdata WMI collector.
+To start [download](https://github.com/prometheus-community/windows_exporter/releases) and install on Windows the collector (MSI) using this command:
+```cmd
+msiexec /i [MSI_INSTALLER_PATH] LISTEN_ADDR=[OWN_TRUSTED_NETWORK_IP] LISTEN_PORT=[RANDOM_PORT_NUMBER]
+```
+Then open on the Netdata server the confog to add the collector...
+```bash
+sudo /opt/netdata/etc/netdata/edit-config go.d/wmi.conf
+```
+...and insert these two lines:
+```ini
+jobs:
+  - name: win_machine
+    url: http://[OWN_TRUSTED_NETWORK_IP]:[RANDOM_PORT_NUMBER]/metrics
+```
+Done!
+
 # Nett2Know #
 If you get much dbengine fs errors and can't add any more working instances to the netdata streaming config (the access.log is filled with `CANNOT ACQUIRE HOST`) you should [increase the file descriptor limit](https://github.com/netdata/netdata/blob/master/database/engine/README.md).
 
