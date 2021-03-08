@@ -111,7 +111,7 @@ Then open on the Netdata server the confog to add the collector...
 ```bash
 sudo /opt/netdata/etc/netdata/edit-config go.d/wmi.conf
 ```
-...and insert these two lines:
+...and insert these lines:
 ```ini
 jobs:
   - name: win_machine
