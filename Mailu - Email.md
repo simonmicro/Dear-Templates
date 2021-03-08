@@ -23,7 +23,7 @@ Why Postfix? Because it is dead simple and we don't need any SMTP authentication
     * Relay host is the hostname of the Mailu server (make sure to use IPv4 when you enter a static ip address here)
 2. Change `/etc/aliases` to point `root` to e.g. your user and your user to any email on the Mailu server
 3. Apply the changes with `sudo newaliases`
-4. Change inside `/etc/postfix/main.cf` file the `myhostname` to something like `hostname.localdomain` to fix senderaddress rejected - this can sometimes still fail. In that case allow the affected server ips as relay networks without authentication inside the `mailu.env` file (private ipv4s are not routed, therefore OK)...
+4. Change inside `/etc/postfix/main.cf` file the `myhostname` to something like `hostname.localdomain` to fix sender-address rejected (when you add a FQDN there, Mailu **WILL NOT REWRITE** domains to the servers hostname anymore -> in that case just add the systems hostname) - this can sometimes still fail. In that case allow the affected server ips as relay networks without authentication inside the `mailu.env` file (private ipv4s are not routed, therefore OK)...
 5. Add DKIM, SPF and DMARC - this way you can make sure nobody could impersonate your domains email server (how it works see [here](https://www.youtube.com/watch?v=oEpU-iqBerI))!
 6. Make it more secure (we don't need to forward emails from outside to our smtp server for which we are may whitelisted) - comment inside `/etc/postfix/master.cf` the following line:
     ```
@@ -75,7 +75,7 @@ Well, Mailu already comes with its own rate limits, but sadly it also counts suc
 
 ## Notes ##
 * In case of errors with postfix: `sudo tail -f /var/log/mail.*`
-* If you ever need the install configure assistant again: `sudo dpkg-reconfigure postfix`
+* If you ever need the install configure assistant again: `sudo dpkg-reconfigure postfix` (this will overwrite your changes to any local config file!)
 * If you want to use postfix on the docker host itself, it will need an other port to talk to the front container of Mailu - add a port like this (instead of 25) -> `127.0.0.1:11823:25`. Otherwise postfix will think it would use itself to deliver emails - therefore block any email...
 * Got some problems like [that](https://github.com/Mailu/Mailu/issues/1364)? Add into your mailu path `./mailu/overrides/dovecot.conf` with:
     ```
