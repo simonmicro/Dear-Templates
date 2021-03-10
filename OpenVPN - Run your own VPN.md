@@ -147,6 +147,10 @@ remote-cert-tls client
 # 5 and 6 can help to debug connection problems
 # 9 is extremely verbose
 verb 3
+
+# Also log to a persistent file for auditing purposes (this file will get bigger
+# and bigger, so make sure to clean it now and then)...
+#log-append server.log
 ```
 
 _NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN (you'll also may need the `forward_vpn_clients` service below):
