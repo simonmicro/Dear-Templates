@@ -176,6 +176,13 @@ ifconfig-push 10.8.0.2 255.255.255.0
 iroute 192.168.0.0 255.255.0.0
 ```
 
+### Respect the CAs CRLs
+In case you want to revoke a clients certificate instantly (without haveing them expireing naturally) you have to use CRLs (I already described their creation [here]({{< relref "OpenSSL - Certificates.md" >}})).
+To insturct your OpenVPN server to respect a local copy of such a CRL just add the following:
+```
+crl-verify [PATH_TO_CA_CRL_FILE].crl
+```
+
 ### Forward as vpn client
 ...this iy maybe needed when you plan to allow internet access over your vpn.
 
@@ -298,7 +305,7 @@ Generate the set of certificates for the clients with (make sure to change the n
 ```bash
 openssl genrsa -out [CLIENT_USERNAME].key 2048
 openssl req -new -key [CLIENT_USERNAME].key -out [CLIENT_USERNAME].csr -subj '/CN=[CLIENT_USERNAME]'
-openssl x509 -req -days 3650 -in [CLIENT_USERNAME].csr -CA ca.crt -CAkey ca.key -CAcreateserial -out [CLIENT_USERNAME].crt -extensions v3_ca -extfile /tmp/openssl_clients.cnf
+openssl x509 -req -days 365 -in [CLIENT_USERNAME].csr -CA ca.crt -CAkey ca.key -CAcreateserial -out [CLIENT_USERNAME].crt -extensions v3_ca -extfile /tmp/openssl_clients.cnf
 ```
 
 ### Config(s)
