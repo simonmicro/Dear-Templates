@@ -291,6 +291,8 @@ sudo systemctl status forward_ports_to_vpn_clients.service
 ```
 
 ## Clients
+A little warning beforehand: It seems the Network Manager (commonly used on Ubuntu derivates) tends to assign the imported OpenVPN profile always the default route, which will break any other network communication.
+To circumvent that just set the checkbox to use the network "only for local resources".
 
 ### Certificates
 Create a new file `/tmp/openssl_clients.cnf` with:
