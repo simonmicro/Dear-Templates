@@ -267,14 +267,14 @@ start() {
     iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.32.2:443
 
     # Allow traffic back...
-    iptables -t nat -A POSTROUTING -j MASQUERADE
+    iptables -t nat -A POSTROUTING -j MASQUERADE -o tun0
 }
 
 stop() {
     # Remove all the previously added rules again (same commands; just with -D instead of -A)...
     iptables -t nat -D PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.32.2:80
     iptables -t nat -D PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.32.2:443
-    iptables -t nat -D POSTROUTING -j MASQUERADE
+    iptables -t nat -D POSTROUTING -j MASQUERADE -o tun0
 }
 
 case $1 in
