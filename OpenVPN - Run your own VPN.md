@@ -150,7 +150,10 @@ verb 3
 
 # Also log to a persistent file for auditing purposes (this file will get bigger
 # and bigger, so make sure to clean it now and then)...
-#log-append server.log
+;log-append server.log
+
+# Enable monitoring port for e.g. Netdata on localhost only. Only enable when needed.
+;management 127.0.0.1 7505
 ```
 
 _NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN (you'll also may need the `forward_vpn_clients` service below):
