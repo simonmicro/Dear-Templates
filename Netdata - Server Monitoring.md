@@ -111,8 +111,10 @@ Then open on the Netdata server the confog to add the collector...
 ```bash
 sudo /opt/netdata/etc/netdata/edit-config go.d/wmi.conf
 ```
-...and insert these lines:
+...and insert these lines (`autodetection_retry` enforces retries after unsuccessful connection attempts):
 ```ini
+autodetection_retry: 10
+
 jobs:
   - name: win_machine
     url: http://[OWN_TRUSTED_NETWORK_IP]:[RANDOM_PORT_NUMBER]/metrics
