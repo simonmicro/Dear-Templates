@@ -355,6 +355,10 @@ persist-tun
 key-direction 1
 cipher AES-256-CBC
 
+# For additional security: Do not store anything in RAM (this will may cause
+# multiple password requests during the session)
+auth-nocache
+
 # Verify the servers keyUsages and extendedKeyUsages
 remote-cert-tls server
 
