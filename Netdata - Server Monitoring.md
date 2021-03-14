@@ -107,19 +107,43 @@ To start [download](https://github.com/prometheus-community/windows_exporter/rel
 ```cmd
 msiexec /i [MSI_INSTALLER_PATH] LISTEN_ADDR=[OWN_TRUSTED_NETWORK_IP] LISTEN_PORT=[RANDOM_PORT_NUMBER]
 ```
-Then open on the Netdata server the confog to add the collector...
+Then open on the Netdata server the config to add the collector...
 ```bash
 sudo /opt/netdata/etc/netdata/edit-config go.d/wmi.conf
 ```
 ...and insert these lines (`autodetection_retry` enforces retries after unsuccessful connection attempts):
 ```ini
-autodetection_retry: 10
+autodetection_retry: 30
 
 jobs:
   - name: win_machine
     url: http://[OWN_TRUSTED_NETWORK_IP]:[RANDOM_PORT_NUMBER]/metrics
 ```
 Done!
+
+# Integrate OpenVPN #
+Make sure to enable the management interface on the OpenVPN server beforehand!
+Then open on the Netdata server the config to add the collector...
+```bash
+sudo /opt/netdata/etc/netdata/edit-config go.d/openvpn.conf
+```
+...and insert these lines (`autodetection_retry` enforces retries after unsuccessful connection attempts):
+```ini
+autodetection_retry: 30
+
+jobs:
+  - name: local
+    address: 127.0.0.1:7505
+```
+Then you have to manually enable the openvpn collector (it is disabled by default, as OpenVPN only allows one management interface client):
+```bash
+sudo /opt/netdata/etc/netdata/edit-config go.d.conf
+```
+There you have to find the line...
+```
+#  openvpn: yes
+```
+...and uncomment it. Restart Netdata & done!
 
 # Nett2Know #
 If you get much dbengine fs errors and can't add any more working instances to the netdata streaming config (the access.log is filled with `CANNOT ACQUIRE HOST`) you should [increase the file descriptor limit](https://github.com/netdata/netdata/blob/master/database/engine/README.md).
