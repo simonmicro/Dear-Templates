@@ -59,6 +59,12 @@ openssl x509 -req -days 3650 -in server.csr -CA ca.crt -CAkey ca.key -CAcreatese
 ### OpenVPN server
 Now intall `openvpn` and we prepare the `/etc/openvpn/server/server.conf`:
 ```
+dev tun
+client-to-client
+topology subnet
+server 10.8.0.0 255.255.255.0
+cipher AES-256-CBC
+
 # Which TCP/UDP port should OpenVPN listen on?
 port 1194
 
@@ -67,8 +73,6 @@ proto udp
 
 # When using UDP: Inform clients when the server is going down.
 explicit-exit-notify 1
-
-dev tun
 
 # Server identity & encryption
 ;ca ca.crt
@@ -90,9 +94,6 @@ dev tun
 [INSERT CONTENT OF dh2048.pem]
 </dh>
 
-topology subnet
-server 10.8.0.0 255.255.255.0
-
 # Store the dhcp ips for clients here...
 ifconfig-pool-persist ipp.txt
 
@@ -113,8 +114,6 @@ keepalive 6 30
 </tls-auth>
 key-direction 0
 
-cipher AES-256-CBC
-
 # Give up any special permissions on start (didn't work for me)...
 ;user nobody
 ;group nobody
@@ -131,7 +130,8 @@ status openvpn-status.log
 # Allow older TLS versions to allow the USG to connect
 tls-version-min 1.0
 
-client-to-client
+# Allow multiple connections using the same profile
+;duplicate-cn
 
 # Enter here the network behind a client, which you want to route to (this adds a new route on the server)...
 ;route 192.168.0.0 255.255.0.0
@@ -320,10 +320,9 @@ openssl x509 -req -days 365 -in [CLIENT_USERNAME].csr -CA ca.crt -CAkey ca.key -
 This is the needed config file for every client - I recommend to first create a "test"-client (with a webserver to test the port forwarding stuff) before installing it to the USG!
 ```
 client
-
 dev tun
-
 proto udp
+resolv-retry infinite
 
 # The hostname/IP and port of the server. You can have multiple remote
 # entries to load balance between the servers.
@@ -331,8 +330,6 @@ remote [VPN_SERVER_HOST] 1194
 
 # Allow the server to change its ip/port freely
 float
-
-resolv-retry infinite
 
 # Most clients don't need to bind to a specific local port number.
 nobind
