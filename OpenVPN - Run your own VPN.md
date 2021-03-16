@@ -133,8 +133,11 @@ tls-version-min 1.0
 
 client-to-client
 
-# Enter here the network behind the gateway, which you wan't to route to...
-route 192.168.0.0 255.255.0.0
+# Enter here the network behind a client, which you want to route to (this adds a new route on the server)...
+;route 192.168.0.0 255.255.0.0
+
+# Enter here the network on the vpn server (this adds a new route on the client and can also specified in the ccd configs)...
+;push "route 192.168.0.0 255.255.0.0"
 
 # Verify the clients keyUsages and extendedKeyUsages
 remote-cert-tls client
