@@ -128,7 +128,7 @@ persist-tun
 status openvpn-status.log
 
 # Allow older TLS versions to allow the USG to connect
-tls-version-min 1.0
+;tls-version-min 1.0
 
 # Allow multiple connections using the same profile
 ;duplicate-cn
