@@ -26,8 +26,9 @@ You also may modify the `Unattended-Upgrade::Allowed-Origins` array to only incl
 ## Auto cleanups & more
 Well, just uncomment & modify these in the config (I just recommend this settings):
 ```
-Unattended-Upgrade::Remove-Unused-Dependencies "true";
 Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+Unattended-Upgrade::Remove-Unused-Dependencies "false";
 Unattended-Upgrade::AutoFixInterruptedDpkg "true";
 Unattended-Upgrade::MinimalSteps "true";
 ```
