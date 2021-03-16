@@ -326,6 +326,9 @@ proto udp
 # entries to load balance between the servers.
 remote [VPN_SERVER_HOST] 1194
 
+# Allow the server to change its ip/port freely
+float
+
 resolv-retry infinite
 
 # Most clients don't need to bind to a specific local port number.
