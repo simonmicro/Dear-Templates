@@ -57,7 +57,7 @@ openssl x509 -req -days 3650 -in server.csr -CA ca.crt -CAkey ca.key -CAcreatese
 ```
 
 ### OpenVPN server
-Now intall `openvpn` and we prepare the `/etc/openvpn/server/server.conf`:
+Now intall `openvpn` and we prepare the `/etc/openvpn/server/server.conf` (make sure to modify the `ipp`, `status`, `subnet`, `ccd` and `port` when you plan to deploy multiple instances on one server):
 ```
 dev tun
 client-to-client
