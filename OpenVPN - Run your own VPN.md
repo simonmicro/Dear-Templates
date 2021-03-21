@@ -1,5 +1,5 @@
 ---
-summary: How you can use port forwarding even behind NAT (which is commonly used on mobile networks) and a guide for a classic VPN server for any amount of clients!
+summary: How you can use port forwarding even behind NAT (which is commonly used on mobile networks), including an example for integration into UniFi Gateways and a guide for a classic VPN server for any amount of clients!
 ---
 
 # What is this?
