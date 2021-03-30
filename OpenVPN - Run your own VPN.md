@@ -97,8 +97,8 @@ explicit-exit-notify 1
 # Store the dhcp ips for clients here...
 ifconfig-pool-persist ipp.txt
 
-# Read client specific settings from...
-client-config-dir /etc/openvpn/ccd
+# Read client specific settings from (disabled by default, as the path must exist!)...
+;client-config-dir /etc/openvpn/ccd
 
 # The keepalive directive causes ping-like messages to be sent back and forth over
 # the link so that each side knows when the other side has gone down. Ping every 5
