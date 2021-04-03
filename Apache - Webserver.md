@@ -37,12 +37,12 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 #    ErrorDocument 502 /_error/502.html
 #    ErrorDocument 503 /_error/503.html
 #    ErrorDocument 504 /_error/504.html
-# ...and now the proxy target from...
-#    ProxyPass / http://localhost:31363/
-#    ProxyPassReverse / http://localhost:31363/
 # ...make also sure to support websockets...
 #    ProxyPass /socket ws://localhost:31363/socket
 #    ProxyPassReverse /socket ws://localhost:31363/socket
+# ...and now the proxy target from (note the order of these proxy statements - the first matches will be choosen!)...
+#    ProxyPass / http://localhost:31363/
+#    ProxyPassReverse / http://localhost:31363/
 # DON'T inform the proxy target, that an other client has requested the site instead of this server (don't set X-Forward...)
 #    ProxyPreserveHost on
 # Use SSL + stuff
