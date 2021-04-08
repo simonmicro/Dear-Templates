@@ -25,8 +25,9 @@ openssl rand -hex -out /root/keys/key 32
 zfs create -o encryption=on -o keyformat=hex -o keylocation=file:///root/keys/key [ZFS_POOL]
 ```
 _For following you can use `-O` at `zpool` to pass options to `zfs`, otherwise `-o` is at any `zfs` command just enough._
-And RAID? Of course RAID5 - here some commands (omit the `raidz` part to create a somewhat dangerous RAID0)!
-* Create: `sudo zpool create -f [ZFS_POOL] raidz [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]` <- **Add won't work here, when using RAID5!**
+* Create (RAID0): `sudo zpool create [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]`
+* Create (RAID1): `sudo zpool create [ZFS_POOL] mirror [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]`
+* Create (RAID5): `sudo zpool create -f [ZFS_POOL] mirror [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]` <- **Add won't work here, when using RAID5!**
 * Replace: `sudo zpool replace [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE]` <- **Make sure to offlining first**
 * Remove: `sudo zpool remove [ZFS_POOL] [DEVICE/FILE]`
 
