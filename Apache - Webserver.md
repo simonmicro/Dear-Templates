@@ -39,6 +39,8 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 #    ErrorDocument 504 /_error/504.html
 # ...make also sure to support websockets...
 #    ProxyPass /socket ws://localhost:31363/socket
+# ...with some software you'll may need a regex based pass:
+#    ProxyPass ^/api/(.*)/ws$ ws://localhost:31363/api/$1/ws
 #    ProxyPassReverse /socket ws://localhost:31363/socket
 # ...and now the proxy target from (note the order of these proxy statements - the first matches will be choosen!)...
 #    ProxyPass / http://localhost:31363/
