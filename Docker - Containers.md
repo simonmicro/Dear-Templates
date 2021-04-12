@@ -131,7 +131,7 @@ WantedBy=timers.target
 And the service file `/etc/systemd/system/docker-cleaner.service`:
 ```systemd
 [Unit]
-Description=Logs system statistics to the systemd journal
+Description=Prune docker images, volumes, containers & networks
 Wants=docker-cleaner.timer
 
 [Service]
