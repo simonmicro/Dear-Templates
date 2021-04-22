@@ -246,7 +246,7 @@ sudo mount -t nfs [SERVER_IP]:[ZFS_EXPORT_PATH] [TARGET_PATH]
 ```
 You may add it into the `/etc/fstab`:
 ```
-[SERVER_IP]:[ZFS_EXPORT_PATH] [TARGET_PATH]  nfs      defaults    0       0
+[SERVER_IP]:[ZFS_EXPORT_PATH] [TARGET_PATH]  nfs      defaults,_netdev    0       0
 ```
 Also here an interesting [NFS option](https://linux.die.net/man/5/nfs):
 * `soft`/`hard`: When hard NFS will retry the connection forever when it fails (freezes the application triggering it; NFS defaults to hard!)
@@ -255,7 +255,7 @@ Also here an interesting [NFS option](https://linux.die.net/man/5/nfs):
 Just add a new mapped shared folder with a new [TARGET_PATH].
 To mount it, just insert following line into the guests `/etc/fstab`:
 ```
-[TARGET_PATH]    [LOCAL_PATH]       9p      trans=virtio,version=9p2000.L,msize=262144    0       0
+[TARGET_PATH]    [LOCAL_PATH]       9p      trans=virtio,version=9p2000.L,msize=262144,_netdev    0       0
 ```
 IF you get emergency boot failures - insert the following into `/etc/initramfs-tools/modules`:
 ```
