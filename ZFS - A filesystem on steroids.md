@@ -5,7 +5,7 @@ summary: Install, usage, tips and tricks, encryption, compression & more!
 # Setup on Debian (10) #
 1. Add the "contib" and "non-free" branch to the `/etc/apt/sources.list`
 2. Make sure the header files for your kernel are installed - before installing zfs (zfs will build&install itself before the headers from its dependencies are installed - this WILL FAIL!). The package is commonly named e.g. `linux-headers-amd64`
-3. Install zfs: `sudo apt install zfsutils-linux`
+3. Install zfs: `sudo apt install zfsutils-linux smartmontools spl-dkms`
 4. Reboot or modprobe (`sudo modprobe zfs`) to activate zfs
 
 # Under Debian 10: Upgrade to zfs 0.8+ #
@@ -25,10 +25,11 @@ openssl rand -hex -out /root/keys/key 32
 zfs create -o encryption=on -o keyformat=hex -o keylocation=file:///root/keys/key [ZFS_POOL]
 ```
 _For following you can use `-O` at `zpool` to pass options to `zfs`, otherwise `-o` is at any `zfs` command just enough._
-And RAID? Of course RAID5 - here some commands (omit the `raidz` part to create a somewhat dangerous RAID0)!
-* Create: `sudo zpool create -f [ZFS_POOL] raidz [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]` <- **Add won't work here, when using RAID5!**
-* Replace: `sudo zpool replace [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE]`
-* Detach the failed: `sudo zpool detach [ZFS_POOL] [DEVICE/FILE]` <- **Maybe offlining first**
+* Create (RAID0): `sudo zpool create [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]`
+* Create (RAID1): `sudo zpool create [ZFS_POOL] mirror [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]`
+* Create (RAID5): `sudo zpool create -f [ZFS_POOL] mirror [DEVICE/FILE] [DEVICE/FILE] [DEVICE/FILE]` <- **Add won't work here, when using RAID5!**
+* Replace: `sudo zpool replace [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE]` <- **Make sure to offlining first**
+* Remove: `sudo zpool remove [ZFS_POOL] [DEVICE/FILE]`
 
 # Load all the encryption keys at startup #
 Add the service: `/etc/systemd/system/zfs-load-all-keys.service`

@@ -1,5 +1,5 @@
 ---
-summary: How you can use port forwarding even behind NAT (which is commonly used on mobile networks) and a guide for a classic VPN server for any amount of clients!
+summary: How you can use port forwarding even behind NAT (which is commonly used on mobile networks), including an example for integration into UniFi Gateways and a guide for a classic VPN server for any amount of clients!
 ---
 
 # What is this?
@@ -57,8 +57,14 @@ openssl x509 -req -days 3650 -in server.csr -CA ca.crt -CAkey ca.key -CAcreatese
 ```
 
 ### OpenVPN server
-Now intall `openvpn` and we prepare the `/etc/openvpn/server/server.conf`:
+Now intall `openvpn` and we prepare the `/etc/openvpn/server/server.conf` (make sure to modify the `ipp`, `status`, `subnet`, `ccd` and `port` when you plan to deploy multiple instances on one server):
 ```
+dev tun
+client-to-client
+topology subnet
+server 10.8.0.0 255.255.255.0
+cipher AES-256-CBC
+
 # Which TCP/UDP port should OpenVPN listen on?
 port 1194
 
@@ -67,8 +73,6 @@ proto udp
 
 # When using UDP: Inform clients when the server is going down.
 explicit-exit-notify 1
-
-dev tun
 
 # Server identity & encryption
 ;ca ca.crt
@@ -90,14 +94,11 @@ dev tun
 [INSERT CONTENT OF dh2048.pem]
 </dh>
 
-topology subnet
-server 10.8.0.0 255.255.255.0
-
 # Store the dhcp ips for clients here...
 ifconfig-pool-persist ipp.txt
 
-# Read client specific settings from...
-client-config-dir /etc/openvpn/ccd
+# Read client specific settings from (disabled by default, as the path must exist!)...
+;client-config-dir /etc/openvpn/ccd
 
 # The keepalive directive causes ping-like messages to be sent back and forth over
 # the link so that each side knows when the other side has gone down. Ping every 5
@@ -113,8 +114,6 @@ keepalive 6 30
 </tls-auth>
 key-direction 0
 
-cipher AES-256-CBC
-
 # Give up any special permissions on start (didn't work for me)...
 ;user nobody
 ;group nobody
@@ -129,12 +128,16 @@ persist-tun
 status openvpn-status.log
 
 # Allow older TLS versions to allow the USG to connect
-tls-version-min 1.0
+;tls-version-min 1.0
 
-client-to-client
+# Allow multiple connections using the same profile
+;duplicate-cn
 
-# Enter here the network behind the gateway, which you wan't to route to...
-route 192.168.0.0 255.255.0.0
+# Enter here the network behind a client, which you want to route to (this adds a new route on the server)...
+;route 192.168.0.0 255.255.0.0
+
+# Enter here the network on the vpn server (this adds a new route on the client and can also specified in the ccd configs)...
+;push "route 192.168.0.0 255.255.0.0"
 
 # Verify the clients keyUsages and extendedKeyUsages
 remote-cert-tls client
@@ -147,9 +150,16 @@ remote-cert-tls client
 # 5 and 6 can help to debug connection problems
 # 9 is extremely verbose
 verb 3
+
+# Also log to a persistent file for auditing purposes (this file will get bigger
+# and bigger, so make sure to clean it now and then)...
+;log-append server.log
+
+# Enable monitoring port for e.g. Netdata on localhost only. Only enable when needed.
+;management 127.0.0.1 7505
 ```
 
-_NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN:
+_NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN (you'll also may need the `forward_vpn_clients` service below):
 ```
 push "redirect-gateway def1 bypass-dhcp"
 push "dhcp-option DNS 1.1.1.1"
@@ -170,6 +180,63 @@ To extend the configs of the connecting clients add inside the `/etc/openvpn/ccd
 ifconfig-push 10.8.0.2 255.255.255.0
 # Configure the routed network(s) - similar to the server.conf
 iroute 192.168.0.0 255.255.0.0
+```
+
+### Respect the CAs CRLs
+In case you want to revoke a clients certificate instantly (without haveing them expireing naturally) you have to use CRLs (I already described their creation [here]({{< relref "OpenSSL - Certificates.md" >}})).
+To insturct your OpenVPN server to respect a local copy of such a CRL just add the following:
+```
+crl-verify [PATH_TO_CA_CRL_FILE].crl
+```
+
+### Forward as vpn client
+...this iy maybe needed when you plan to allow internet access over your vpn.
+
+Create a new service under `/etc/systemd/system/forward_vpn_clients.service`:
+```systemd
+[Unit]
+Description=Enable forwarding as OpenVPN client(s)
+Requires=openvpn-server@server.service
+
+[Service]
+Type=simple
+RemainAfterExit=true
+Restart=on-failure
+RestartSec=5s
+ExecStart=/root/forward_vpn_clients.sh start
+ExecStopPost=/root/forward_vpn_clients.sh stop
+
+[Install]
+WantedBy=multi-user.target
+```
+
+And the needed script under `/root/forward_vpn_clients.sh`:
+```bash
+#!/bin/bash
+
+start() {
+    # Fail on unclean returns...
+    set -e
+    
+    iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -j MASQUERADE
+}
+
+stop() {
+    # Remove all the previously added rules again (same commands; just with -D instead of -A)...
+    iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -j MASQUERADE
+}
+
+case $1 in
+  start|stop) "$1" ;;
+esac
+```
+
+And enable the new service:
+```bash
+sudo chmod 700 /root/forward_vpn_clients.sh
+sudo systemctl enable forward_vpn_clients.service
+sudo systemctl start forward_vpn_clients.service
+sudo systemctl status forward_vpn_clients.service
 ```
 
 ### Port forwarding rules
@@ -206,14 +273,14 @@ start() {
     iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.32.2:443
 
     # Allow traffic back...
-    iptables -t nat -A POSTROUTING -j MASQUERADE
+    iptables -t nat -A POSTROUTING -j MASQUERADE -o tun0
 }
 
 stop() {
     # Remove all the previously added rules again (same commands; just with -D instead of -A)...
     iptables -t nat -D PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.32.2:80
     iptables -t nat -D PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.32.2:443
-    iptables -t nat -D POSTROUTING -j MASQUERADE
+    iptables -t nat -D POSTROUTING -j MASQUERADE -o tun0
 }
 
 case $1 in
@@ -230,6 +297,8 @@ sudo systemctl status forward_ports_to_vpn_clients.service
 ```
 
 ## Clients
+A little warning beforehand: It seems the Network Manager (commonly used on Ubuntu derivates) tends to assign the imported OpenVPN profile always the default route, which will break any other network communication.
+To circumvent that just set the checkbox to use the network "only for local resources".
 
 ### Certificates
 Create a new file `/tmp/openssl_clients.cnf` with:
@@ -244,23 +313,23 @@ Generate the set of certificates for the clients with (make sure to change the n
 ```bash
 openssl genrsa -out [CLIENT_USERNAME].key 2048
 openssl req -new -key [CLIENT_USERNAME].key -out [CLIENT_USERNAME].csr -subj '/CN=[CLIENT_USERNAME]'
-openssl x509 -req -days 3650 -in [CLIENT_USERNAME].csr -CA ca.crt -CAkey ca.key -CAcreateserial -out [CLIENT_USERNAME].crt -extensions v3_ca -extfile /tmp/openssl_clients.cnf
+openssl x509 -req -days 365 -in [CLIENT_USERNAME].csr -CA ca.crt -CAkey ca.key -CAcreateserial -out [CLIENT_USERNAME].crt -extensions v3_ca -extfile /tmp/openssl_clients.cnf
 ```
 
 ### Config(s)
 This is the needed config file for every client - I recommend to first create a "test"-client (with a webserver to test the port forwarding stuff) before installing it to the USG!
 ```
 client
-
 dev tun
-
 proto udp
+resolv-retry infinite
 
 # The hostname/IP and port of the server. You can have multiple remote
 # entries to load balance between the servers.
 remote [VPN_SERVER_HOST] 1194
 
-resolv-retry infinite
+# Allow the server to change its ip/port freely
+float
 
 # Most clients don't need to bind to a specific local port number.
 nobind
@@ -293,6 +362,10 @@ persist-tun
 </tls-auth>
 key-direction 1
 cipher AES-256-CBC
+
+# For additional security: Do not store anything in RAM (this will may cause
+# multiple password requests during the session)
+auth-nocache
 
 # Verify the servers keyUsages and extendedKeyUsages
 remote-cert-tls server

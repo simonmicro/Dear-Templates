@@ -1,5 +1,5 @@
 ---
-summary: Own registry and container auto updates!
+summary: Own registry, container auto updates and maintenance stuff!
 ---
 
 # Setup a registry #
@@ -83,7 +83,7 @@ Replace the `[USERNAME_PASSWORD_BASE64]` with the output of `echo -n '[REG_USERN
 For the creds you must add a new user to gitlab wich can see the docker images from the repo...
 Save the new file to a secure location on the vm and write down the absolute path.
 
-## Now start watchtower... ##
+# Start watchtower updater! #
 ```bash
 docker run -d \
     --name watchtower \
@@ -93,13 +93,15 @@ docker run -d \
     -e WATCHTOWER_NOTIFICATION_EMAIL_FROM=[FROM_EMAIL] \
     -e WATCHTOWER_NOTIFICATION_EMAIL_TO=[TO_EMAIL] \
     -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER=[EMAIL_SERVER] \
+    -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PORT=587 \
     -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=[EMAIL_USER_SERVER] \
     -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=[EMAIL_PASS_SERVER] \
     -e WATCHTOWER_NOTIFICATION_EMAIL_DELAY=2 \
-    containrrr/watchtower \
-    --cleanup \
-    --schedule "0 0 4 * * *" \
-    --stop-timeout 360s
+    -e WATCHTOWER_CLEANUP: 'true' \
+    -e WATCHTOWER_SCHEDULE: '0 0 4 * * *' \
+    -e WATCHTOWER_ROLLING_RESTART: 'true' \
+    -e WATCHTOWER_TIMEOUT: '360s' \
+    containrrr/watchtower
 ```
 **Make sure to insert the path to the private registry file!**
 * The credentials part can be omitted, if not needed...
@@ -107,3 +109,42 @@ docker run -d \
 * The watchtower will update all images every day at 4 o'clock
 * It will delete the now unused image tags / versions
 * It will wait 6 minutes until a forceful update to stop the container (using docker stop)
+
+# Automatic pruning #
+Sometimes some old cache containers or images could be left over - as they sometimes get automatically created (depending on your setup) they will use more and more disk space.
+To cirumvent that we can create a new SystemD timer (so it only runs, when docker runs) and set it up to prune any old remains. For that create as first a new timer for systemd:
+
+Create `/etc/systemd/system/docker-cleaner.timer`:
+```systemd
+[Unit]
+Description=Prune docker images, volumes, containers & networks
+Requires=docker-cleaner.service
+
+[Timer]
+Unit=docker-cleaner.service
+OnCalendar=*-*-* 00:00:00
+
+[Install]
+WantedBy=timers.target
+```
+
+And the service file `/etc/systemd/system/docker-cleaner.service`:
+```systemd
+[Unit]
+Description=Prune docker images, volumes, containers & networks
+Wants=docker-cleaner.timer
+
+[Service]
+Type=oneshot
+# MAKE SURE YOU DO NOT USE DOCKERS INTERNAL VOLUMES, as they will be deleted!
+ExecStart=docker system prune -a -f --volumes
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Now you should be ready to go! Activate the service and start it by hand for once (just to make sure it works):
+```bash
+sudo systemctl enable docker-cleaner.timer
+sudo systemctl start docker-cleaner.service
+```

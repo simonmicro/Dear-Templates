@@ -28,7 +28,7 @@ for i in *.mkv;
     do name=`echo ${i%.*}`;
     echo $name;
     # Using the pts has no value fix...
-    ffmpeg -fflags +genpts -i "$i" -vcodec libx265 -crf 28 -map 0 -scodec copy "../reencoded/${name}.mkv";
+    ffmpeg -fflags +genpts -i "$i" -vcodec libx265 -crf 28 -map 0 -scodec copy -acodec copy "../reencoded/${name}.mkv";
     sleep 1
 done
 ```
