@@ -18,8 +18,8 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 # NO HTTP, forward to HTTPS             
     Redirect permanent / https://example.com/
 # Log stuff
-    ErrorLog /var/log/apache2/example.com-http-error.log
-    CustomLog /var/log/apache2/example.com-http-access.log common
+    ErrorLog /var/log/apache2/example.com-error.log
+    CustomLog /var/log/apache2/example.com-access.log combined
 </VirtualHost>
 
 <VirtualHost *:443>
@@ -62,8 +62,8 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 #    SSLCertificateKeyFile /etc/letsencrypt/live/example.com/privkey.pem
 
 # Log stuff
-    ErrorLog /var/log/apache2/example.com-https-error.log
-    CustomLog /var/log/apache2/example.com-https-access.log common
+    ErrorLog /var/log/apache2/example.com-error.log
+    CustomLog /var/log/apache2/example.com-access.log combined
 
 # To allow .htaccess inside the pages root dir
 #    <Directory /var/www/example.com>
@@ -116,8 +116,8 @@ It also expects to have a `404.html` and a `50x.html` inside the `_error` direct
         ErrorDocument 503 /_error/503.html
         ErrorDocument 504 /_error/504.html
     #Log stuff
-        ErrorLog /var/log/apache2/default-http-error.log
-        CustomLog /var/log/apache2/default-http-access.log common
+        ErrorLog /var/log/apache2/default-error.log
+        CustomLog /var/log/apache2/default-access.log combined
 </VirtualHost>
 <VirtualHost *:443>
     #Where default site is located (HTTPS)
@@ -132,8 +132,8 @@ It also expects to have a `404.html` and a `50x.html` inside the `_error` direct
         SSLCertificateFile /etc/ssl/certs/apache.crt
         SSLCertificateKeyFile /etc/ssl/private/apache.key
     #Log stuff
-        ErrorLog /var/log/apache2/default-https-error.log
-        CustomLog /var/log/apache2/default-https-access.log common
+        ErrorLog /var/log/apache2/default-error.log
+        CustomLog /var/log/apache2/default-access.log combined
 </VirtualHost>
 
 # Block access to any .git folder - for more information why and how see...
