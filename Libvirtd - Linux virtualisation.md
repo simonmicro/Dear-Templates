@@ -246,7 +246,7 @@ sudo mount -t nfs [SERVER_IP]:[ZFS_EXPORT_PATH] [TARGET_PATH]
 ```
 You may add it into the `/etc/fstab`:
 ```
-[SERVER_IP]:[ZFS_EXPORT_PATH] [TARGET_PATH]  nfs      defaults,_netdev    0       0
+[SERVER_IP]:[ZFS_EXPORT_PATH] [TARGET_PATH]  nfs      defaults,_netdev,x-systemd.automount,x-systemd.requires=network-online.target    0       0
 ```
 Also here an interesting [NFS option](https://linux.die.net/man/5/nfs):
 * `soft`/`hard`: When hard NFS will retry the connection forever when it fails (freezes the application triggering it; NFS defaults to hard!)
