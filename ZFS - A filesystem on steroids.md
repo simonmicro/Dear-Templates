@@ -10,7 +10,7 @@ summary: Install, usage, tips and tricks, encryption, compression & more!
 
 # Under Debian 10: Upgrade to zfs 0.8+ #
 ...otherwise the encryption won't be there.
-Add `deb http://deb.debian.org/debian buster-backports main` to the sources.list and run `sudo apt update`...
+Add `deb http://deb.debian.org/debian buster-backports main contrib non-free` to the sources.list and run `sudo apt update`. When you plan to upgrade to this version make sure to issue `sudo apt install zfsutils-linux/buster-backports` first.
 
 # Create a pool #
 Create (for device use: _/dev/disk/by-id/..._, **APPEND `-o ashift=12` IF THE DEVICE IS A REAL DISK**):
