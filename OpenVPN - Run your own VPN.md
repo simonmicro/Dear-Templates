@@ -59,7 +59,7 @@ openssl x509 -req -days 3650 -in server.csr -CA ca.crt -CAkey ca.key -CAcreatese
 ### OpenVPN server
 Now intall `openvpn` and we prepare the `/etc/openvpn/server/server.conf` (make sure to modify the `ipp`, `status`, `subnet`, `ccd` and `port` when you plan to deploy multiple instances on one server):
 ```
-dev tun
+dev tun42
 client-to-client
 topology subnet
 server 10.8.0.0 255.255.255.0
@@ -159,7 +159,7 @@ verb 3
 ;management 127.0.0.1 7505
 ```
 
-_NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN (you'll also may need the `forward_vpn_clients` service below):
+_NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN (you'll also may need the `forward_from_vpn_clients` service below):
 ```
 push "redirect-gateway def1 bypass-dhcp"
 push "dhcp-option DNS 1.1.1.1"
@@ -192,38 +192,40 @@ crl-verify [PATH_TO_CA_CRL_FILE].crl
 ### Forward as vpn client
 ...this iy maybe needed when you plan to allow internet access over your vpn.
 
-Create a new service under `/etc/systemd/system/forward_vpn_clients.service`:
+Create a new service under `/etc/systemd/system/forward_from_vpn_clients.service` (**make sure to modify `Requires=` if you use an other name or multiple instances**):
 ```systemd
 [Unit]
-Description=Enable forwarding as OpenVPN client(s)
+Description=Enable NAT-based forwarding of requests from OpenVPN clients
 Requires=openvpn-server@server.service
 
 [Service]
 Type=simple
-RemainAfterExit=true
+RemainAfterExit=yes
 Restart=on-failure
 RestartSec=5s
-ExecStart=/root/forward_vpn_clients.sh start
-ExecStopPost=/root/forward_vpn_clients.sh stop
+ExecStart=/root/forward_from_vpn_clients.sh start
+ExecStopPost=/root/forward_from_vpn_clients.sh stop
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-And the needed script under `/root/forward_vpn_clients.sh`:
+And the needed script under `/root/forward_from_vpn_clients.sh`:
 ```bash
 #!/bin/bash
+set -x
+export VPN_INTERFACE=tun0
 
 start() {
     # Fail on unclean returns...
     set -e
     
-    iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -j MASQUERADE
+    iptables -t nat -A POSTROUTING -i $VPN_INTERFACE -j MASQUERADE
 }
 
 stop() {
     # Remove all the previously added rules again (same commands; just with -D instead of -A)...
-    iptables -t nat -D POSTROUTING -s 10.8.0.0/24 -j MASQUERADE
+    iptables -t nat -D POSTROUTING -i $VPN_INTERFACE -j MASQUERADE
 }
 
 case $1 in
@@ -233,24 +235,24 @@ esac
 
 And enable the new service:
 ```bash
-sudo chmod 700 /root/forward_vpn_clients.sh
-sudo systemctl enable forward_vpn_clients.service
-sudo systemctl start forward_vpn_clients.service
-sudo systemctl status forward_vpn_clients.service
+sudo chmod 700 /root/forward_from_vpn_clients.sh
+sudo systemctl enable forward_from_vpn_clients.service
+sudo systemctl start forward_from_vpn_clients.service
+sudo systemctl status forward_from_vpn_clients.service
 ```
 
 ### Port forwarding rules
 Don't use `iptables-persistent`, it will also try to save `fail2ban` stuff (when installed)...
 
-Create a new service under `/etc/systemd/system/forward_ports_to_vpn_clients.service`:
+Create a new service under `/etc/systemd/system/forward_ports_to_vpn_clients.service` (**make sure to modify `Requires=` if you use an other name or multiple instances**):
 ```systemd
 [Unit]
-Description=Enable port forwarding to OpenVPN client(s)
+Description=Enable host port forwarding to OpenVPN client as servers
 Requires=openvpn-server@server.service
 
 [Service]
 Type=simple
-RemainAfterExit=true
+RemainAfterExit=yes
 Restart=on-failure
 RestartSec=5s
 ExecStart=/root/forward_ports_to_vpn_clients.sh start
@@ -263,6 +265,8 @@ WantedBy=multi-user.target
 And the needed script under `/root/forward_ports_to_vpn_clients.sh`:
 ```bash
 #!/bin/bash
+set -x
+export VPN_INTERFACE=tun0
 
 start() {
     # Fail on unclean returns...
@@ -273,14 +277,14 @@ start() {
     iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.32.2:443
 
     # Allow traffic back...
-    iptables -t nat -A POSTROUTING -j MASQUERADE -o tun0
+    iptables -t nat -A POSTROUTING -j MASQUERADE -o $VPN_INTERFACE
 }
 
 stop() {
     # Remove all the previously added rules again (same commands; just with -D instead of -A)...
     iptables -t nat -D PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.32.2:80
     iptables -t nat -D PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.32.2:443
-    iptables -t nat -D POSTROUTING -j MASQUERADE -o tun0
+    iptables -t nat -D POSTROUTING -j MASQUERADE -o $VPN_INTERFACE
 }
 
 case $1 in
