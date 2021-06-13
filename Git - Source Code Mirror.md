@@ -35,7 +35,7 @@ Run this to configure your profile (omit `--global` for local repo only) - can a
 
 `git rebase [branch]` Should be used after a fetch, this rewinds your commits and applies them after each other to the branch to rebase on. Therefore your commits stay on top of the history, instead of getting merged into their time-based slots (this will also not create a merge commit).
 
-`git pull` Gets the newest commits and apply them. This will also create a new "merge" commit, as it basically fetches and then merges the remote branch.
+`git pull` Gets the newest commits (fetch) and applies them (merge, this will also create a new "merge" commit). _Note_ When you want to rebase instead of merge, just add `--rebase` or execute `git config --global pull.rebase true` - but note, that you can't revert the merge this way anymore (as there is no merge commit to revert)!
 
 `git push` Pushes HEADs branch to remote (ether specify with `origin [branch]` or on master directly it) - use `-f` **ONLY** if _someone_ has killed the repo / pushed to master directly!
 
