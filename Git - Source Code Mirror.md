@@ -97,6 +97,21 @@ Thats it! Whenever you work from now on with e.g. GitLab this huge files will be
 _Note:_ As stated on the GitLab help page the Git LFS authentication does not require you to setup the credentieal store mentioned before:
 > With 8.12 GitLab added LFS support to SSH. The Git LFS communication still goes over HTTP, but now the SSH client passes the correct credentials to the Git LFS client, so no action is required by the user.
 
+# Signed Git #
+As you may know, anyone could issue the `git config user.*` command and therefore commit _as-he-would-be-you_. This is clearly not the best thing, but sometimes neccessary (e.g. while using rebase).
+To clearly mark those impersonating commits, just use gits PGP functionality! And this is how it is done:
+
+1. Create a new key, either use the `seahorse` GUI or run `gpg2 --gen-key` (make sure to install `gnupg2` first).
+2. Get the key id by either using `seahorse` again, or running `gpg2 --list-secret-keys --keyid-format LONG` (the id is behind the `sec rsa.../` part)
+3. Export the public key by running `gpg2 --armor --export [KEY_ID]` - you should upload this now to an public PGP key server, e.g. [openpgp.org](https://keys.openpgp.org/) (this one verifies you are the emails owner and is also used inside Thunderbird). You could also use this key for signing (& encrypting) emails, messages, builds and much more! When you plan to use GitHub or GitLab, make sure to upload your key there aswell, as those systems do not use public key servers to download your public key automatically.
+4. Enable git commit singing by executing `git config --global user.signingkey [KEY_ID]` and try to commit something using `git commit -S`.
+5. When this works, you may enable singing for all your commits from now on by running `git config --global commit.gpgsign true`.
+
+_Note_ You can always add more emails to your key or remove them. Also you can expire your sub-keys as needed, by just using `seahorse` and then re-uploading your key to the keyserver.
+
+**Warning** When you upload your key it is out there for all eternity! The key infrastructure is designed to ensure this! When you ever want to revoke a key you must have your revocation certificate!
+To get it run `gpg2 --output revokce.asc --gen-revoke [KEY_ID]` (`seahorse` can't do this for you) and then upload it as needed.
+
 # Basic .gitignore #
 ...for the most files from me - a more complete list is [here](https://github.com/github/gitignore)...
 ```
