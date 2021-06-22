@@ -110,7 +110,7 @@ To clearly mark those impersonating commits, just use gits PGP functionality! An
 _Note_ You can always add more emails to your key or remove them. Also you can expire your sub-keys as needed, by just using `seahorse` and then re-uploading your key to the keyserver.
 
 **Warning** When you upload your key it is out there for all eternity! The key infrastructure is designed to ensure this! When you ever want to revoke a key you must have your revocation certificate!
-To get it run `gpg2 --output revokce.asc --gen-revoke [KEY_ID]` (`seahorse` can't do this for you) and then upload it as needed.
+To get it run `gpg2 --output revoke.asc --gen-revoke [KEY_ID]` (`seahorse` can't do this for you) and then upload it as needed.
 
 # Basic .gitignore #
 ...for the most files from me - a more complete list is [here](https://github.com/github/gitignore)...
