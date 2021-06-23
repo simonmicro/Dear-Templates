@@ -18,7 +18,7 @@ sudo nano /etc/aliases
 
 ## Email with remote SMTP server ##
 _If you want to use this feature and don't need to authenticate against the SMTP server you should check the lighter `postfix` mailserver out._
-1. Run `sudo dpkg-reconfigure exim4-config` and select `mail sent by smarthost; received via SMTP or fetchmail`
+1. Run `sudo dpkg-reconfigure exim4-config` and select `mail sent by smarthost; no local mail`
 2. Enter at `IP address or host name of the outgoing smarthost` your smtp server like `[SMTP_SERVER_HOST]::[PORT_587]`
 3. Add the credentials to the local config: `sudo nano /etc/exim4/passwd.client`: `[SMTP_SERVER_HOST]:[USERNAME]:[PASSWORD]`
 4. Restart exim4 with `sudo systemctl restart exim4`
