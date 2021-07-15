@@ -217,7 +217,7 @@ Some performance-notes out of the real world:
 * 9p just works, but is always slow (small package size -> good directory listing, but bandwith limit by cpu performance; big package size -> painfully slow directoy listing, but good bandwith) - also the caching is funny. Also special characters break things...
 
 ### NFS with ZFS ###
-Make sure (on both client and server) that NFS ist installed already:
+Make sure (on both client and server) that NFS is installed already:
 ```bash
 sudo apt install nfs-kernel-server
 ```
@@ -233,6 +233,7 @@ Instead of a simple `on` you could also pass any [NFS option](https://linux.die.
 * `root_squash`*/`no_root_squash`: Should the root uid remapped to an anonymous request? Needed when `chown` should work...
 * `all_squash`/`no_all_squash`*: Should every client uid remapped to ↓?
 * `anonuid` & `anongid`: Set the remapping target uid/gui (defaults to the user `nobody`)
+
 `*` -> Default!
 
 #### Client: Mount it! ####
