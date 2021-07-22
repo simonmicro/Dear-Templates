@@ -61,7 +61,7 @@ Edit `~/ansible/hosts` (take a note at the excellent documentation in `/etc/ansi
     ```
 * **define** a **ssh-jump** variable for a specific **host** (the `ProxyCommand` will be executed as the ansible user -> make sure the ansible user can access his own key, also you may omit the `StrictHostKeyChecking` later on):
     ```ini
-    five.example.com ansible_ssh_command_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -i ~/.ssh/ansible -W %h:%p -q [JUMP_HOST_USER]@[JUMP_HOST_URL]"'
+    five.example.com ansible_ssh_common_args='-o StrictHostKeyChecking=no -o ProxyCommand="ssh -i ~/.ssh/ansible -W %h:%p -q [JUMP_HOST_USER]@[JUMP_HOST_URL]"'
     ```
 * **define** **any variable** for a specific host **group**:
     ```ini
