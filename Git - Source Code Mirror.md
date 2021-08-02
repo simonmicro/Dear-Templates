@@ -112,6 +112,11 @@ _Note_ You can always add more emails to your key or remove them. Also you can e
 **Warning** When you upload your key it is out there for all eternity! The key infrastructure is designed to ensure this! When you ever want to revoke a key you must have your revocation certificate!
 To get it run `gpg2 --output revoke.asc --gen-revoke [KEY_ID]` (`seahorse` can't do this for you) and then upload it as needed.
 
+The commits are not getting signed and git only report errors after entering the commit message? Try to execute:
+```bash
+export GPG_TTY=$(tty)
+```
+
 # Basic .gitignore #
 ...for the most files from me - a more complete list is [here](https://github.com/github/gitignore)...
 ```
