@@ -46,4 +46,8 @@ Whoops? You are getting asked for your key password again? Then the SSH-Agent cr
 ```bash
 eval `ssh-agent`
 ```
+And then import your existing key with:
+```bash
+ssh-add
+```
 If this happens multiple times, try to add that line into your `bashrc`.
