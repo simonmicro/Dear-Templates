@@ -216,7 +216,7 @@ else:
     if not args.nocreate:
         cmnd = ['borg', 'create', '-s']
         cmnd += configBackupOptions
-        cmnd += [configDict['target'] + '::' + time.time()]
+        cmnd += [configDict['target'] + '::' + str(time.time())]
         cmnd += configBackupThis
         logger.info('Backup started...')
         createOK = runBorgCommand(cmnd, configDict['tries']['backup'])
