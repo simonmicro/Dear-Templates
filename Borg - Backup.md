@@ -170,7 +170,7 @@ if targetIsRemote:
     os.environ['BORG_RSH'] = 'ssh -i ' + sshKeyPath
     if not os.path.isfile(sshKeyPath):
         logger.critical('SSH key (' + sshKeyPath + ') not available!')
-        exit(3)
+        exit(4)
 os.environ['BORG_KEY_FILE'] = os.path.join(configDirPath, 'BORGKey.bak')
 # I tried to load the file in the BORG_PASSPHRASE variable, but Python does not seem to handle new lines consistently (sometimes they are just becoming spaces)
 os.environ['BORG_PASSCOMMAND'] = 'cat "' + os.path.join(configDirPath, 'BORGKeyPassword.file') + '"'
@@ -234,6 +234,7 @@ else:
         logger.info('Jobs successful finished.')
     else:
         logger.warning('At least one job failed.')
+        exit(5)
 ```
 The last lines should allow your Sieve-Filters to highlight any failed executions easily.
 
