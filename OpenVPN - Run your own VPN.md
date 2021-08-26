@@ -162,6 +162,10 @@ verb 3
 _NOTE_: Append the following to also route the default route and therefore allow internet access over the VPN (you'll also may need the `forward_from_vpn_clients` service below):
 ```
 push "redirect-gateway def1 bypass-dhcp"
+```
+
+_NOTE_: Append the following to also configure the clients dns over the VPN (you'll also may need the `forward_from_vpn_clients` service below):
+```
 push "dhcp-option DNS 1.1.1.1"
 push "dhcp-option DNS 1.0.0.1"
 ```
