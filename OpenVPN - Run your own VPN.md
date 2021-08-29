@@ -412,3 +412,94 @@ Now export the config with `mca-ctrl -t dump-cfg > /tmp/config` and search it fo
 ```
 This part must now be [installed](https://help.ui.com/hc/en-us/articles/215458888-UniFi-How-to-further-customize-USG-configuration-with-config-gateway-json) into the `config.gateway.json` on the controller.
 Also make sure to add some firewall rules to prevent the VM to go on a rampage - just in case...
+
+## Pushing own DNS servers
+...works. Mostly. I know that Windows _should_ work and Android just does. There is a problem with Linux, as OpenVPN is not sure to use either the classic `resolvconf` or the newer Systemd-Resolvd. To solve that the `.ovpn` profile
+must include one of the following two solutions. They are both not perfect (`script-security` - brrr), but until OpenVPN does fix that finally, we have to deal with that on our own.
+
+### Resolvconf
+Just append:
+```
+# This needs some support on the client side (install openresolv) -> https://github.com/StreisandEffect/streisand/issues/1434#issuecomment-417792239
+script-security 2
+up /etc/openvpn/update-resolv-conf
+down /etc/openvpn/update-resolv-conf
+```
+
+### Systemd-Resolvd
+Just append:
+```
+# This needs some support on the client side (install openvpn-systemd-resolved) -> https://askubuntu.com/a/1036209/1065486
+script-security 2
+up /etc/openvpn/update-systemd-resolved
+down /etc/openvpn/update-systemd-resolved
+```
+
+## Policy based routing
+This script can be used in place of the `MASQUERADE` versions above, as those choose their port to do the NAT-ing on in an unpredictable manner (bad if you plan to utilize an external firewall solution).
+
+```python
+#!/usr/bin/python3
+import os
+import sys
+import ipaddress
+
+config = {
+    # Prefix -> (Exit interface, Exit Interface Gateway (defaults to the first ip in the network))
+    '10.8.0.0/24': ('eth0', None),
+    '10.8.12.0/28': ('enp8', '192.168.0.1'),
+}
+policyTableBase = 100
+
+'''
+Policy based routing...
+Step 1: Mark the packages from the network for the routing-policy
+Step 2: Configure SNAT for the target interface, secured based on the source address
+Step 3: Fill the routing-policy-table with the default route for the target interface
+'''
+
+def get_ip_address(ifname):
+    # Returns tuple of (IP, Mask)
+    return os.popen('ip addr show ' + ifname).read().split('inet ')[1].split(' ')[0].split('/')
+
+if sys.argv[1] == 'start':
+    for policyId in range(0, len(config.keys())):
+        srcPrefix = list(config.keys())[policyId]
+        dstInterface, dstGateway = config[list(config.keys())[policyId]]
+
+        os.system('iptables -t mangle -A PREROUTING -s {} -j MARK --set-mark {}'.format(srcPrefix, policyId + policyTableBase))
+        os.system('iptables -t nat -A POSTROUTING -s {} -o {} -j SNAT --to-source {}'.format(srcPrefix, dstInterface, get_ip_address(dstInterface)[0]))
+        # For SNAT debugging try: sudo conntrack -E --event-mask NEW --any-nat
+        os.system('ip route add table {} default via {} dev {}'.format(policyId + policyTableBase, ipaddress.IPv4Network('/'.join(get_ip_address(dstInterface)), False)[1] if dstGateway is None else dstGateway, dstInterface))
+        os.system('ip rule add fwmark {} table {}'.format(policyId + policyTableBase, policyId + policyTableBase))
+        os.system('ip route flush cache') # Trash everything before
+elif sys.argv[1] == 'stop':
+    for policyId in range(0, len(config.keys())):
+        srcPrefix = list(config.keys())[policyId]
+        dstInterface, _ = config[list(config.keys())[policyId]]
+
+        os.system('iptables -t mangle -D PREROUTING -s {} -j MARK --set-mark {}'.format(srcPrefix, policyId + policyTableBase))
+        os.system('iptables -t nat -D POSTROUTING -s {} -o {} -j SNAT --to-source {}'.format(srcPrefix, dstInterface, get_ip_address(dstInterface)[0]))
+        os.system('ip route flush table {}'.format(policyId + policyTableBase))
+        os.system('ip rule delete fwmark {}'.format(policyId + policyTableBase))
+        os.system('ip route flush cache') # Trash everything before
+elif sys.argv[1] == 'status':
+    print('**** Table: mangle')
+    os.system('iptables -t mangle -L PREROUTING -v')
+    print('**** Route Rules:')
+    os.system('ip rule show')
+    for policyId in range(0, len(config.keys())):
+        print('**** Route Table {}:'.format(policyId + policyTableBase))
+        os.system('ip route show table {}'.format(policyId + policyTableBase))
+    print('**** Table: nat')
+    os.system('iptables -t nat -L POSTROUTING -v')
+elif sys.argv[1] == 'add-log':
+    # Are all routing-rules there? Does the NAT-ing work? Is the marking even enabled???
+    for policyId in range(0, len(config.keys())):
+        srcPrefix = list(config.keys())[policyId]
+        dstInterface, _ = config[list(config.keys())[policyId]]
+        os.system('iptables -t nat -I POSTROUTING 1 -s {} -o {} -j LOG --log-prefix "NAT for {}: "'.format(srcPrefix, dstInterface, dstInterface))
+        os.system('iptables -t nat -A POSTROUTING -s {} -o {} -j LOG --log-prefix "NAT FAILED: "'.format(srcPrefix, dstInterface, dstInterface))
+else:
+    print('Unsupported operation.')
+```
