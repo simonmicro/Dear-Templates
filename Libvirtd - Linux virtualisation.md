@@ -122,77 +122,114 @@ _Otherwise a reboot could take up to several minutes!_
 **[More info (firewalld)](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-firewalld-on-centos-7)**
 
 ## Enable automatic freezing of guests at host reboot ##
+Install those
+```bash
+sudo apt-get install -y python3 python3-libvirt
+```
 This are the needed files & scripts:
 
-* Service file `vmfreezer.service`
+* Service file `/etc/systemd/system/libvirtd-guard.service`
     ```systemd
     [Unit]
-    Description=VMFreezer - saves / restores all running machines of libvirt from / to disk
-    Requires=libvirtd.service
-    #libvirt-guests.service is in after, because @shutdown this order is inverse!
-    #Add here the required path (maybe to save the states on external disks) from /etc/fstab (slash must be a dash)
-    #MAYBE add mnt-raid01.mount to wait for a specific mount point...
-    After=network.service libvirtd.service libvirt-guests.service
-    #Before=
+    Description=Save some libvirtd guests to disk or destroy them
+    Wants=libvirtd.service
+    Requires=virt-guest-shutdown.target
+    # libvirt-guests.service is in "After", because during shutdown this order reversed!
+    After=network.target time-sync.target libvirtd.service virt-guest-shutdown.target libvirt-guests.service
 
     [Service]
     Type=oneshot
-    # 10 minutes should be enough; increase only if really needed!
-    TimeoutSec=600
-    RemainAfterExit=true
-    ExecStart=/root/restore.sh
-    ExecStop=/root/save.sh
+    TimeoutStopSec=0
+    RemainAfterExit=yes
+    Environment="PYTHONUNBUFFERED=1"
+    ExecStart=/usr/bin/python3 /root/libvirtd-guard.py start
+    ExecStop=/usr/bin/python3 /root/libvirtd-guard.py stop
 
     [Install]
     WantedBy=multi-user.target
     ```
-* Restore script to `restore.sh`
-    ```bash
-    #!/bin/bash
-    # Restore all guests from saved state and start
+* Main script to `/root/libvirtd-guard.py`
+    ```python3
+    #!/usr/bin/python3
+    import sys
+    import time
+    import logging
+    import libvirt # apt install python3-libvirt
+    import datetime
+    import xml.etree.ElementTree as XML_ET
+    logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-    cd /mnt/
-    echo "Working in `pwd`."
-    ls -1 *.state | \
-    while read GUEST; do
-        echo "Restoring $GUEST..."
-        virsh restore $GUEST --running
-        if [ $? -eq 0 ]; then
-            echo "Removing the old state $GUEST..."
-            rm $GUEST
-        else
-            echo "Start of $GUEST failed. The state will be moved to /tmp/ - so it can manually restored... Eventually..."
-            mv $GUEST /tmp/
-        fi
-        # Now sleep a short period of time to make sure, that e.g. dynamic memory has been populated properly...
-        sleep 5
-    done
+    shutdownTimeout = 300
+
+    if len(sys.argv) < 2:
+        logging.critical('Missing action operator... Try run me with ' + sys.argv[0] + ' start|stop')
+        exit(1)
+
+    if sys.argv[1] == 'start':
+        logging.info('I am just here for the after-party. Doing nothing.')
+    elif sys.argv[1] == 'stop':
+        end = datetime.datetime.now() + datetime.timedelta(seconds=shutdownTimeout)
+        logging.info('Okay - shutdown in progress. Every running virtual machine has now {} seconds (until {}) to shut itself down.'.format(shutdownTimeout, end))
+
+        try:
+            conn = libvirt.open('qemu:///system')
+
+            domainIDs = conn.listDomainsID()
+            if domainIDs == None:
+                raise Exception('Failed to retrive list of domains!')
+
+            # Determine if some VM has the LIBVIRTD_GUARD_SAVEME flag. If yes, this vm will be saved and not shutdowned!
+            vms = {}
+            for domainID in domainIDs:
+                domainHandle = conn.lookupByID(domainID)
+                xmlRoot = XML_ET.fromstring(domainHandle.XMLDesc())
+                xmlDesc = xmlRoot.find('description')
+                vms[domainHandle] = xmlDesc != None and xmlDesc.text.find('LIBVIRTD_GUARD_SAVEME') != -1
+
+            logging.info('Following virtual machines are currently running: {}'.format(', '.join([d.name() for d in vms.keys() if d.isActive()])))
+
+            for domain, saveMe in vms.items():
+                if not saveMe:
+                    logging.info('Sending shutdown signal to ' + domain.name())
+                    domain.shutdown()
+
+            for domain, saveMe in vms.items():
+                if saveMe:
+                    logging.info('Creating a managed save state of ' + domain.name())
+                    domain.managedSave()
+
+            while datetime.datetime.now() < end:
+                stillRunning = [d for d in vms.keys() if d.isActive()]
+                if len(stillRunning) == 0:
+                    break
+                logging.info('Following virtual machines are still running: {}'.format(', '.join([d.name() for d in stillRunning])))
+                logging.info('Sending once again the shutdown signal to them...')
+                for domain in stillRunning:
+                    domain.shutdown()
+                time.sleep(5)
+
+            for domain in vms.keys():
+                if domain.isActive():
+                    logging.info('Destroying ' + domain.name() + ' because it failed to shut down in time!')
+                    domain.destroy()
+
+        except Exception as e:
+            logging.critical('Whoops, something went very wrong: {}'.format(e))
+        if conn != None:
+            conn.close()
+    else:
+        logging.critical('Huh? Unknown action operator!')
+        exit(2)
+    exit(0)
     ```
-* Restore script to `save.sh`
-    ```bash
-    #!/bin/bash
-    # Save (store ram and shutdown) all guests
 
-    cd /mnt/
-    echo "Working in `pwd`."
-    virsh list | `#list of running guest` \
-    tail -n +3 | head -n -1 | sed 's/\ \+/\t/g' | `#strip head and tail, use tab for seperator`\
-    awk '{print($2)}' | \
-    while read GUEST; do
-        echo "Saving $GUEST..."
-        virsh save $GUEST $GUEST.state
-    done
-    ```
+### Install the libvirtd-guard service ###
+1. Add the two files from above
+2. Set permissons for them `sudo chmod 500 /root/libvirtd-guard.py`
+3. Enable the new service with `sudo systemctl enable libvirtd-guard`
 
-**Make sure to modify the `cd` command to fit your wanted save-state-location!**
-
-### Install the vmfreezer service ###
-1. Add the `vmfreezer.service` file to `/etc/systemd/system`
-2. Add the `save.sh` file to `/root`
-3. Add the `restore.sh` file to `/root`
-4. Set permissons for them `sudo chmod 500 /root/save.sh /root/restore.sh`
-5. ↑ DON'T FORGET to modify the scripts to use the correct path to save and restore the vms! Also this service won't be able to (re-)store any vm, which does not support saving anyways (e.g. the ones with shared-folders or UEFI)!
-6. Enable the new service with `sudo systemctl enable vmfreezer`
+### Use it!
+Normally every vritual machine will be just shutdown with the system. But every virtual machine with the text `LIBVIRTD_GUARD_SAVEME` in its description will be saved (and restored during boot, if auto-start is enabled) instead!
 
 ## Set static IPs for the VMs ##
 ...inside any isolated network, hosted by the host itself - just modify the respective network config with `sudo virsh net-edit [LOCALSTORAGENET_NAME]` and add:
