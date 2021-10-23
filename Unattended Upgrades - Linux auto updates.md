@@ -46,3 +46,14 @@ Test with (check for the matching string messages!!!):
 ```bash
 sudo unattended-upgrade --debug --dry-run
 ```
+
+# Activate it
+Contradictionary to the name "unattended-upgrades", the package is NOT active by default! You have to run those commands to really enable unattended upgrades:
+```bash
+sudo dpkg-reconfigure -plow unattended-upgrades
+```
+Or if you are too lazy to select "Yes" - run this non-interactive:
+```bash
+echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | sudo debconf-set-selections
+sudo dpkg-reconfigure -f noninteractive unattended-upgrades
+```
