@@ -87,6 +87,11 @@ Instead of `all` you could also use any other configured group name like `server
 ansible all -a "uname -a"
 ```
 
+# Running arbitrary commands, but not everywhere
+```bash
+ansible 'all:!somegroup' -a "uname -a"
+```
+
 ## As root with password
 ```bash
 ansible all -a "uname -a" --become --ask-become-pass
