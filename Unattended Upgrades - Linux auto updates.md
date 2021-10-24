@@ -54,6 +54,6 @@ sudo dpkg-reconfigure -plow unattended-upgrades
 ```
 Or if you are too lazy to select "Yes" - run this non-interactive:
 ```bash
-echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | sudo debconf-set-selections
+echo "set unattended-upgrades/enable_auto_updates true" | sudo debconf-communicate
 sudo dpkg-reconfigure -f noninteractive unattended-upgrades
 ```
