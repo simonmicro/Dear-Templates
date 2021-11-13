@@ -122,6 +122,11 @@ sudo systemctl enable --now redis-server
 sudo systemctl enable --now pteroq.service
 ```
 
+I would also strongly recommend to install a weekly reboot job, to migitate stuck queue jobs (e.g. after updating the panel some PHP stuff may get stuck):
+```crontab
+@weekly /usr/sbin/reboot
+```
+
 # Install any reverse proxy
 On your (existing) apache reverse proxy vm run:
 ```bash
