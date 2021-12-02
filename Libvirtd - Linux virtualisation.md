@@ -86,12 +86,10 @@ Libvirt has a watchdog feature, which can e.g. reboot a vm on crash - other than
 # SERVER #
 
 ## Setup ##
-1. `sudo apt install libvirt-daemon libvirt-bin qemu-kvm qemu-utils`
-2. `sudo apt install ebtables firewalld dnsmasq`
+1. `sudo apt install libvirt-daemon-system libvirt-clients qemu-kvm qemu-utils`
+2. `sudo apt install ebtables dnsmasq`
 
-## Setup (Debian Jessie+) ##
-The first command should be:
-`sudo apt install libvirt-daemon-system libvirt-clients qemu-kvm qemu-utils`
+_`libvirtd` does not require `firewalld` anymore on Debian 11._
 
 ## Support guest UEFI ##
 `sudo apt install ovmf`
@@ -99,27 +97,6 @@ The first command should be:
 ## Allow a user to control the kvm ##
 1. `sudo addgroup [USER] kvm`
 2. `sudo addgroup [USER] libvirt`
-
-## Firewalld - MAKE SURE TO FIX THAT BUG (if neccessary) ###
-Add/Replace this to `/etc/firewalld/firewalld.conf`
-```ini
-CleanupOnExit=no
-```
-_Otherwise a reboot could take up to several minutes!_
-
-### Useful commands for firewalld ###
-* Configure:
-    * `sudo firewall-cmd --state`
-    * `firewall-cmd --get-active-zones`
-* What default zones is active? `firewall-cmd --get-default-zone`
-* What zones is active on...? `firewall-cmd --get-zone-of-interface [INTERFACE_NAME]`
-* List all services which are known: `firewall-cmd --get-services`
-* Add a service for an zone: `sudo firewall-cmd --permanent --add-service=[SERVICE_NAME] --zone=[ZONE_NAME]`
-* Add a port for an zone: `sudo firewall-cmd --permanent --add-port=[PORT]/tcp --zone=[ZONE_NAME]`
-* Disable firewall COMPLETLY for an interface: `sudo firewall-cmd --permanent --zone=trusted --change-interface=[INTERFACE_NAME]`
-* Disable firewall COMPLETLY for ALL interfaces (permanently only): `sudo firewall-cmd --set-default-zone=trusted`
-
-**[More info (firewalld)](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-firewalld-on-centos-7)**
 
 ## Enable automatic freezing of guests at host reboot ##
 Install those
