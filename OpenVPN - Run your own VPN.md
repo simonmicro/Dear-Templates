@@ -436,7 +436,9 @@ down /etc/openvpn/update-systemd-resolved
 ```
 
 ## Policy based routing
-This script can be used in place of the `MASQUERADE` versions above, as those choose their port to do the NAT-ing on in an unpredictable manner (bad if you plan to utilize an external firewall solution).
+This script can be used in place of the `MASQUERADE` versions above, as using `MASQUERADE` chooses their host-interface to do the NAT-ing in an unpredictable manner (bad if you plan to utilize an external firewall solution).
+So, this script is build to route the requests from the VPN subnets over a specific network interface - note that we specify the default route, so any bad actor will be able to add additonal routes to be send over the vpn tunnel as he wishes.
+This is the reason why I recommend to utilize an external firewall solution in conjunction with this script, as I chose to keep the script as-simple-as-possible and therefore did not added any packet filtering.
 
 ```python
 #!/usr/bin/python3
@@ -445,8 +447,10 @@ import sys
 import ipaddress
 
 config = {
-    # Prefix -> (Exit interface, Exit Interface Gateway (defaults to the first ip in the network))
+    # VPN-Network in CIDR notation -> (Exit interface, Exit Interface Gateway (defaults to the first IP in the network if set to None))
     '10.8.0.0/24': ('eth0', None),
+    '10.8.42.0/24': ('bond0.42', None),
+    '10.8.100.0/24': ('bond0.100', None),
     '10.8.12.0/28': ('enp8', '192.168.0.1'),
 }
 policyTableBase = 100
@@ -486,6 +490,7 @@ elif sys.argv[1] == 'stop':
 elif sys.argv[1] == 'status':
     print('**** Table: mangle')
     os.system('iptables -t mangle -L PREROUTING -v')
+    os.system('iptables -t nat -L PREROUTING -v')
     print('**** Route Rules:')
     os.system('ip rule show')
     for policyId in range(0, len(config.keys())):
@@ -494,7 +499,8 @@ elif sys.argv[1] == 'status':
     print('**** Table: nat')
     os.system('iptables -t nat -L POSTROUTING -v')
 elif sys.argv[1] == 'add-log':
-    # Are all routing-rules there? Does the NAT-ing work? Is the marking even enabled???
+    # Are all routing-rules there? Does the NAT-ing work? Is the marking even enabled??? Add logging hooks to log into "dmesg".
+    # Only use this if you REALLY need it - otherwise try "status" FIRST!
     for policyId in range(0, len(config.keys())):
         srcPrefix = list(config.keys())[policyId]
         dstInterface, _ = config[list(config.keys())[policyId]]
