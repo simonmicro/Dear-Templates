@@ -193,7 +193,7 @@ To insturct your OpenVPN server to respect a local copy of such a CRL just add t
 crl-verify [PATH_TO_CA_CRL_FILE].crl
 ```
 
-### Forward as vpn client
+### Forward as vpn client - MASQUERADE
 ...this iy maybe needed when you plan to allow internet access over your vpn.
 
 Create a new service under `/etc/systemd/system/forward_from_vpn_clients.service` (**make sure to modify `Requires=` if you use an other name or multiple instances**):
@@ -245,7 +245,113 @@ sudo systemctl start forward_from_vpn_clients.service
 sudo systemctl status forward_from_vpn_clients.service
 ```
 
-### Port forwarding rules
+### Forward as vpn client - Policy based routing
+This script can be used in place of the `MASQUERADE` versions above, as using `MASQUERADE` chooses their host-interface to do the NAT-ing in an unpredictable manner (bad if you plan to utilize an external firewall solution).
+So, this script is build to route the requests from the VPN subnets over a specific network interface - note that we specify the default route, so any bad actor will be able to add additonal routes to be send over the vpn tunnel as he wishes.
+This is the reason why I recommend to utilize an external firewall solution in conjunction with this script, as I chose to keep the script as-simple-as-possible and therefore did not added any packet filtering.
+
+Add this to `/root/forward_vpn_clients.py`:
+```python
+#!/usr/bin/python3
+import os
+import sys
+import ipaddress
+
+config = {
+    # VPN-Network in CIDR notation -> (Exit interface, Exit Interface Gateway (defaults to the first IP in the network if set to None))
+    '10.8.0.0/24': ('eth0', None),
+    '10.8.42.0/24': ('bond0.42', None),
+    '10.8.100.0/24': ('bond0.100', None),
+    '10.8.12.0/28': ('enp8', '192.168.0.1'),
+}
+policyTableBase = 100
+
+'''
+Policy based routing...
+Step 1: Mark the packages from the network for the routing-policy
+Step 2: Configure SNAT for the target interface, secured based on the source address
+Step 3: Fill the routing-policy-table with the default route for the target interface
+'''
+
+def get_ip_address(ifname):
+    # Returns tuple of (IP, Mask)
+    return os.popen('ip addr show ' + ifname).read().split('inet ')[1].split(' ')[0].split('/')
+
+if sys.argv[1] == 'start':
+    for policyId in range(0, len(config.keys())):
+        srcPrefix = list(config.keys())[policyId]
+        dstInterface, dstGateway = config[list(config.keys())[policyId]]
+
+        os.system('iptables -t mangle -A PREROUTING -s {} -j MARK --set-mark {}'.format(srcPrefix, policyId + policyTableBase))
+        os.system('iptables -t nat -A POSTROUTING -s {} -o {} -j SNAT --to-source {}'.format(srcPrefix, dstInterface, get_ip_address(dstInterface)[0]))
+        # For SNAT debugging try: sudo conntrack -E --event-mask NEW --any-nat
+        os.system('ip route add table {} default via {} dev {}'.format(policyId + policyTableBase, ipaddress.IPv4Network('/'.join(get_ip_address(dstInterface)), False)[1] if dstGateway is None else dstGateway, dstInterface))
+        os.system('ip rule add fwmark {} table {}'.format(policyId + policyTableBase, policyId + policyTableBase))
+        os.system('ip route flush cache') # Trash everything before
+elif sys.argv[1] == 'stop':
+    for policyId in range(0, len(config.keys())):
+        srcPrefix = list(config.keys())[policyId]
+        dstInterface, _ = config[list(config.keys())[policyId]]
+
+        os.system('iptables -t mangle -D PREROUTING -s {} -j MARK --set-mark {}'.format(srcPrefix, policyId + policyTableBase))
+        os.system('iptables -t nat -D POSTROUTING -s {} -o {} -j SNAT --to-source {}'.format(srcPrefix, dstInterface, get_ip_address(dstInterface)[0]))
+        os.system('ip route flush table {}'.format(policyId + policyTableBase))
+        os.system('ip rule delete fwmark {}'.format(policyId + policyTableBase))
+        os.system('ip route flush cache') # Trash everything before
+elif sys.argv[1] == 'status':
+    print('**** Table: mangle')
+    os.system('iptables -t mangle -L PREROUTING -v')
+    os.system('iptables -t nat -L PREROUTING -v')
+    print('**** Route Rules:')
+    os.system('ip rule show')
+    for policyId in range(0, len(config.keys())):
+        print('**** Route Table {}:'.format(policyId + policyTableBase))
+        os.system('ip route show table {}'.format(policyId + policyTableBase))
+    print('**** Table: nat')
+    os.system('iptables -t nat -L POSTROUTING -v')
+elif sys.argv[1] == 'add-log':
+    # Are all routing-rules there? Does the NAT-ing work? Is the marking even enabled??? Add logging hooks to log into "dmesg".
+    # Only use this if you REALLY need it - otherwise try "status" FIRST!
+    for policyId in range(0, len(config.keys())):
+        srcPrefix = list(config.keys())[policyId]
+        dstInterface, _ = config[list(config.keys())[policyId]]
+        os.system('iptables -t nat -I POSTROUTING 1 -s {} -o {} -j LOG --log-prefix "NAT for {}: "'.format(srcPrefix, dstInterface, dstInterface))
+        os.system('iptables -t nat -A POSTROUTING -s {} -o {} -j LOG --log-prefix "NAT FAILED: "'.format(srcPrefix, dstInterface, dstInterface))
+else:
+    print('Unsupported operation.')
+```
+
+This script will _only mark_ the packages by default - you _have to enable ip forwarding to utilize the installed `SNAT` rules_! For that extend `/etc/systcl.conf` (and reboot the server):
+```ini
+net.ipv4.ip_forward = 1
+```
+
+Add this to `/etc/systemd/system/forward_vpn_clients.service`:
+```systemd
+[Unit]
+Description=Enable forwarding as OpenVPN client(s)
+Requires=openvpn-server@it.service openvpn-server@worker.service
+
+[Service]
+Type=simple
+RemainAfterExit=true
+Restart=on-failure
+RestartSec=5s
+ExecStart=/usr/bin/python3 /root/forward_vpn_clients.py start
+ExecStopPost=/usr/bin/python3 /root/forward_vpn_clients.py stop
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Activate it!
+```bash
+sudo systemctl enable forward_from_vpn_clients.service
+sudo systemctl start forward_from_vpn_clients.service
+sudo systemctl status forward_from_vpn_clients.service
+```
+
+### Port forwarding to vpn clients
 Don't use `iptables-persistent`, it will also try to save `fail2ban` stuff (when installed)...
 
 Create a new service under `/etc/systemd/system/forward_ports_to_vpn_clients.service` (**make sure to modify `Requires=` if you use an other name or multiple instances**):
@@ -414,8 +520,9 @@ This part must now be [installed](https://help.ui.com/hc/en-us/articles/21545888
 Also make sure to add some firewall rules to prevent the VM to go on a rampage - just in case...
 
 ## Pushing own DNS servers
-...works. Mostly. I know that Windows _should_ work and Android just does. There is a problem with Linux, as OpenVPN is not sure to use either the classic `resolvconf` or the newer Systemd-Resolvd. To solve that the `.ovpn` profile
-must include one of the following two solutions. They are both not perfect (`script-security` - brrr), but until OpenVPN does fix that finally, we have to deal with that on our own.
+...works. Mostly. I know that Windows _should_ work and Android just does. There is a problem with Linux, as OpenVPN is not sure to use either the classic `resolvconf` or the newer Systemd-Resolvd. To solve that, the `.ovpn` profile
+must include one of the following two solutions or be loaded using the Network Manager (which somehow always assigns the default route?!). They are both not perfect (`script-security` - brrr), but until OpenVPN does fixes that finally,
+we have to deal with that on our own.
 
 ### Resolvconf
 Just append:
@@ -426,86 +533,11 @@ up /etc/openvpn/update-resolv-conf
 down /etc/openvpn/update-resolv-conf
 ```
 
-### Systemd-Resolvd
+### SystemV
 Just append:
 ```
 # This needs some support on the client side (install openvpn-systemd-resolved) -> https://askubuntu.com/a/1036209/1065486
 script-security 2
 up /etc/openvpn/update-systemd-resolved
 down /etc/openvpn/update-systemd-resolved
-```
-
-## Policy based routing
-This script can be used in place of the `MASQUERADE` versions above, as using `MASQUERADE` chooses their host-interface to do the NAT-ing in an unpredictable manner (bad if you plan to utilize an external firewall solution).
-So, this script is build to route the requests from the VPN subnets over a specific network interface - note that we specify the default route, so any bad actor will be able to add additonal routes to be send over the vpn tunnel as he wishes.
-This is the reason why I recommend to utilize an external firewall solution in conjunction with this script, as I chose to keep the script as-simple-as-possible and therefore did not added any packet filtering.
-
-```python
-#!/usr/bin/python3
-import os
-import sys
-import ipaddress
-
-config = {
-    # VPN-Network in CIDR notation -> (Exit interface, Exit Interface Gateway (defaults to the first IP in the network if set to None))
-    '10.8.0.0/24': ('eth0', None),
-    '10.8.42.0/24': ('bond0.42', None),
-    '10.8.100.0/24': ('bond0.100', None),
-    '10.8.12.0/28': ('enp8', '192.168.0.1'),
-}
-policyTableBase = 100
-
-'''
-Policy based routing...
-Step 1: Mark the packages from the network for the routing-policy
-Step 2: Configure SNAT for the target interface, secured based on the source address
-Step 3: Fill the routing-policy-table with the default route for the target interface
-'''
-
-def get_ip_address(ifname):
-    # Returns tuple of (IP, Mask)
-    return os.popen('ip addr show ' + ifname).read().split('inet ')[1].split(' ')[0].split('/')
-
-if sys.argv[1] == 'start':
-    for policyId in range(0, len(config.keys())):
-        srcPrefix = list(config.keys())[policyId]
-        dstInterface, dstGateway = config[list(config.keys())[policyId]]
-
-        os.system('iptables -t mangle -A PREROUTING -s {} -j MARK --set-mark {}'.format(srcPrefix, policyId + policyTableBase))
-        os.system('iptables -t nat -A POSTROUTING -s {} -o {} -j SNAT --to-source {}'.format(srcPrefix, dstInterface, get_ip_address(dstInterface)[0]))
-        # For SNAT debugging try: sudo conntrack -E --event-mask NEW --any-nat
-        os.system('ip route add table {} default via {} dev {}'.format(policyId + policyTableBase, ipaddress.IPv4Network('/'.join(get_ip_address(dstInterface)), False)[1] if dstGateway is None else dstGateway, dstInterface))
-        os.system('ip rule add fwmark {} table {}'.format(policyId + policyTableBase, policyId + policyTableBase))
-        os.system('ip route flush cache') # Trash everything before
-elif sys.argv[1] == 'stop':
-    for policyId in range(0, len(config.keys())):
-        srcPrefix = list(config.keys())[policyId]
-        dstInterface, _ = config[list(config.keys())[policyId]]
-
-        os.system('iptables -t mangle -D PREROUTING -s {} -j MARK --set-mark {}'.format(srcPrefix, policyId + policyTableBase))
-        os.system('iptables -t nat -D POSTROUTING -s {} -o {} -j SNAT --to-source {}'.format(srcPrefix, dstInterface, get_ip_address(dstInterface)[0]))
-        os.system('ip route flush table {}'.format(policyId + policyTableBase))
-        os.system('ip rule delete fwmark {}'.format(policyId + policyTableBase))
-        os.system('ip route flush cache') # Trash everything before
-elif sys.argv[1] == 'status':
-    print('**** Table: mangle')
-    os.system('iptables -t mangle -L PREROUTING -v')
-    os.system('iptables -t nat -L PREROUTING -v')
-    print('**** Route Rules:')
-    os.system('ip rule show')
-    for policyId in range(0, len(config.keys())):
-        print('**** Route Table {}:'.format(policyId + policyTableBase))
-        os.system('ip route show table {}'.format(policyId + policyTableBase))
-    print('**** Table: nat')
-    os.system('iptables -t nat -L POSTROUTING -v')
-elif sys.argv[1] == 'add-log':
-    # Are all routing-rules there? Does the NAT-ing work? Is the marking even enabled??? Add logging hooks to log into "dmesg".
-    # Only use this if you REALLY need it - otherwise try "status" FIRST!
-    for policyId in range(0, len(config.keys())):
-        srcPrefix = list(config.keys())[policyId]
-        dstInterface, _ = config[list(config.keys())[policyId]]
-        os.system('iptables -t nat -I POSTROUTING 1 -s {} -o {} -j LOG --log-prefix "NAT for {}: "'.format(srcPrefix, dstInterface, dstInterface))
-        os.system('iptables -t nat -A POSTROUTING -s {} -o {} -j LOG --log-prefix "NAT FAILED: "'.format(srcPrefix, dstInterface, dstInterface))
-else:
-    print('Unsupported operation.')
 ```
