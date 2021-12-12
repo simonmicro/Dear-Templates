@@ -46,11 +46,7 @@ Also make sure to configure the following applications:
 
 # Display the UEFI image at boot screen
 Tested on Linux Mint Cinnamon 20 - it may breaks on major system upgrades. To prevent this use the automatic way: Install this script and it will be executed on every upgrade by `apt`.
-1. Create the script hook inside the apt config `/etc/apt/apt.conf.d/80upgradehook` by appending:
-    ```
-    DPkg::Post-Invoke {"/root/update_uefi_image.sh";};
-    ```
-2. Add the simple script to `/root/update_uefi_image.sh` (as root):
+1. Add the simple script to `/etc/kernel/postinst.d/uefi_boot_image.sh` (as root, that is not perfect - but good enough):
     ```bash
     #!/bin/bash
     if [ ! -f /sys/firmware/acpi/bgrt/image ]; then
@@ -85,7 +81,7 @@ Tested on Linux Mint Cinnamon 20 - it may breaks on major system upgrades. To pr
 
     echo "Done."
     ```
-3. Mark it as executeable and secure it:
+2. Mark it as executeable and secure it:
     ```bash
-    sudo chmod 550 /root/update_uefi_image.sh
+    sudo chmod 550 /etc/kernel/postinst.d/uefi_boot_image.sh
     ```
