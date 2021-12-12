@@ -1,23 +1,22 @@
 ---
-summary: The styleguide used to unify the surfaces of all my desktops. It uses Adapta and the Papirus Icon Theme. Also some editor recommendations included.
+summary: The styleguide used to unify the surfaces of all my desktops. It uses Plata and the Papirus Icon Theme. Also some editor recommendations included.
 ---
 
 # Add PPAs
 ```bash
-sudo add-apt-repository ppa:tista/plata-theme # Light theme
-sudo add-apt-repository ppa:tista/adapta # Dark theme
+sudo add-apt-repository ppa:tista/plata-theme # Light & Dark theme
 sudo add-apt-repository ppa:papirus/papirus # Icon theme
 ```
 
 # Install packages
 ```bash
 sudo apt-get update
-sudo apt-get install adapta-gtk-theme adapta-kde plata-theme papirus-icon-theme fonts-roboto fonts-hack
+sudo apt-get install plata-theme papirus-icon-theme fonts-roboto fonts-hack
 ```
 
 # Cinnamon: Automatic daylight rotation
 In Cinnamon there is a new [applet](https://cinnamon-spices.linuxmint.com/applets/view/347), which allows you to switch between light and dark themes automatically.
-To configure it, you should select `Plata-Lumine` and `Adapta-Nokto-Eta` for Light and Dark Mode respectively. For the icon theme switch between `Papirus-Light` and `Papirus-Dark`.
+To configure it, you should select `Plata-Lumine` and `Plata-Noir` for Light and Dark Mode respectively. For the icon theme switch between `Papirus-Light` and `Papirus-Dark`.
 _I also prefer to configure automatic mode switching._
 
 Select `gtk2` inside "Qt5 Settings". Also make sure to select the `Papirus-Dark` icon theme (some icons will be lighter to be better readible on dark backgrounds).
