@@ -87,9 +87,9 @@ Libvirt has a watchdog feature, which can e.g. reboot a vm on crash - other than
 
 ## Setup ##
 1. `sudo apt install libvirt-daemon-system libvirt-clients qemu-kvm qemu-utils`
-2. `sudo apt install ebtables dnsmasq`
+2. `sudo apt install dnsmasq`
 
-_`libvirtd` does not require `firewalld` anymore on Debian 11._
+_`libvirtd` does not require `firewalld` & `ebtables` anymore on Debian 11._
 
 ## Support guest UEFI ##
 `sudo apt install ovmf`
