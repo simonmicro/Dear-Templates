@@ -182,7 +182,8 @@ This are the needed files & scripts:
                 logging.info('Following virtual machines are still running: {}'.format(', '.join([d.name() for d in stillRunning])))
                 logging.info('Sending once again the shutdown signal to them...')
                 for domain in stillRunning:
-                    domain.shutdown()
+                    if domain.isActive():
+                        domain.shutdown()
                 time.sleep(5)
 
             for domain in vms.keys():
@@ -191,7 +192,7 @@ This are the needed files & scripts:
                     domain.destroy()
 
         except Exception as e:
-            logging.critical('Whoops, something went very wrong: {}'.format(e))
+            logging.exception('Whoops, something went very wrong: {}'.format(e))
         if conn != None:
             conn.close()
     else:
