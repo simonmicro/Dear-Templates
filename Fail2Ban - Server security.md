@@ -39,3 +39,5 @@ actionunban = iptables -D DOCKER-USER -s <ip> -j DROP
 
 As you may note there are no `actionstart` and `actionstop` - as we now use the iptables chain `DOCKER-USER`, which is specially designed to be used for stuff like this! This chain is guaranteed to be evaluated _before_ any further internal
 networking for Docker. When you fail to do this you will may note that your rukes are ignored randomly or when you restart your containers!
+
+_In case you need an example - take a look into the Mailu-Template, it has an own section for Fail2Ban application._
