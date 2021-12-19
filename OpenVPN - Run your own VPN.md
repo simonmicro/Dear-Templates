@@ -357,7 +357,7 @@ Don't use `iptables-persistent`, it will also try to save `fail2ban` stuff (when
 Create a new service under `/etc/systemd/system/forward_ports_to_vpn_clients.service` (**make sure to modify `Requires=` if you use an other name or multiple instances**):
 ```systemd
 [Unit]
-Description=Enable host port forwarding to OpenVPN client as servers
+Description=Enable host port forwarding to other systems
 Requires=openvpn-server@server.service
 
 [Service]
@@ -365,46 +365,51 @@ Type=simple
 RemainAfterExit=yes
 Restart=on-failure
 RestartSec=5s
-ExecStart=/root/forward_ports_to_vpn_clients.sh start
-ExecStopPost=/root/forward_ports_to_vpn_clients.sh stop
+ExecStart=/usr/bin/python3 /root/forward_ports_to_vpn_clients.py start
+ExecStopPost=/usr/bin/python3 /root/forward_ports_to_vpn_clients.py stop
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-And the needed script under `/root/forward_ports_to_vpn_clients.sh`:
-```bash
-#!/bin/bash
-set -x
-export VPN_INTERFACE=tun0
+And the needed script under `/root/forward_ports_to_vpn_clients.py`:
+```python
+#!/usr/bin/python3
+import os
+import sys
 
-start() {
-    # Fail on unclean returns...
-    set -e
-
-    # Forward port 80 and 443 to the webserver behind the USG
-    iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.32.2:80
-    iptables -t nat -A PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.32.2:443
-
-    # Allow traffic back...
-    iptables -t nat -A POSTROUTING -j MASQUERADE -o $VPN_INTERFACE
+config = {
+    # Incoming port (any interface) -> (Target IP (may inside own VPN network), Target Port)
+    80: ('192.168.2.14', 80),
+    443: ('192.168.2.14', 443)
 }
 
-stop() {
-    # Remove all the previously added rules again (same commands; just with -D instead of -A)...
-    iptables -t nat -D PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.32.2:80
-    iptables -t nat -D PREROUTING -p tcp --dport 443 -j DNAT --to-destination 192.168.32.2:443
-    iptables -t nat -D POSTROUTING -j MASQUERADE -o $VPN_INTERFACE
-}
+'''
+Manual NAT to VPN clients...
+1. Install DNAT rule(s) to (vpn) IPs
+2. Setup masquerade to allow traffic back from DNAT IP
+'''
 
-case $1 in
-  start|stop) "$1" ;;
-esac
+if sys.argv[1] == 'start':
+    for port, target in config.items():
+        os.system(f'iptables -t nat -A PREROUTING -p tcp --dport {port} -j DNAT --to-destination {target[0]}:{target[1]}')
+        os.system(f'iptables -t nat -A POSTROUTING -d {target[0]} -p tcp --dport {target[1]} -j MASQUERADE')
+elif sys.argv[1] == 'stop':
+    for port, target in config.items():
+        os.system(f'iptables -t nat -D PREROUTING -p tcp --dport {port} -j DNAT --to-destination {target[0]}:{target[1]}')
+        os.system(f'iptables -t nat -D POSTROUTING -d {target[0]} -p tcp --dport {target[1]} -j MASQUERADE')
+        os.system('ip route flush cache') # Trash everything before
+elif sys.argv[1] == 'status':
+    print('**** Table: nat')
+    os.system('iptables -t nat -L PREROUTING -v')
+    os.system('iptables -t nat -L POSTROUTING -v')
+else:
+    print('Unsupported operation.')
+
 ```
 
 And enable the new service:
 ```bash
-sudo chmod 700 /root/forward_ports_to_vpn_clients.sh
 sudo systemctl enable forward_ports_to_vpn_clients.service
 sudo systemctl start forward_ports_to_vpn_clients.service
 sudo systemctl status forward_ports_to_vpn_clients.service
