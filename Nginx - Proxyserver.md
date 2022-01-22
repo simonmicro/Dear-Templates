@@ -10,7 +10,7 @@ This is a simple config file for NGINX. You should note:
 * The HTTPS for `*.example.com` allows at most a 30 second delay / duration at responses. Additionally custom error pages are supported.
 * All HTTPS variants are allowing WebSocket connections.
 
-```nginxconf
+```nginx
 # At first: A good practice...
 add_header X-Clacks-Overhead "GNU Terry Pratchett";
 add_header X-Cat "😸";
