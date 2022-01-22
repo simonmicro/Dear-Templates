@@ -11,6 +11,10 @@ This is a simple config file for NGINX. You should note:
 * All HTTPS variants are allowing WebSocket connections.
 
 ```nginxconf
+# At first: A good practice...
+add_header X-Clacks-Overhead "GNU Terry Pratchett";
+add_header X-Cat "😸";
+
 server {
     listen 80;
 
