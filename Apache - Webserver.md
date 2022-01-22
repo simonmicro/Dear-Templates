@@ -69,38 +69,50 @@ The following are mostly located under `/etc/apache/sites-available` - just copy
 #    <Directory /var/www/example.com>
 #        AllowOverride All
 #    </Directory>
+</VirtualHost>
+```
 
+### Optional sections
+Here some sections, which are not being used often by me. Just so I do not forget them :P
+
+#### Authentication with LetsEncrypt HTTP
+Following is needed, if LetsEncrypt during active authentication (any method) is wanted...
+```apacheconf
+    <Location /.well-known>
+        Require all granted
+    </Location>
+```
+
+#### htpasswd
+```apacheconf
 # To force htpasswd authentication
 # The htpasswd file is created with "sudo htpasswd [-c (ONLY FOR FIRST USER)] /etc/htpasswd [INITIAL_USER]" --- MAKE SURE TO CHOWN THE FILE CORRECTLY!
 # A user is added with "sudo htpasswd /etc/htpasswd [USER]"
 # A user is deleted with "sudo htpasswd -D /etc/htpasswd [USER]"
-#    <Location />
-#        AuthType Basic
-#        AuthName "Authentication Required"
-#        AuthUserFile "/etc/htpasswd"
-#        Require valid-user
-#        Order allow,deny
-#        Allow from all
-#    </Location>
+    <Location />
+        AuthType Basic
+        AuthName "Authentication Required"
+        AuthUserFile "/etc/htpasswd"
+        Require valid-user
+        Order allow,deny
+        Allow from all
+    </Location>
+```
 
+#### LDAP
+```apacheconf
 # To force LDAP authentication
-#    <Location />
-#        AuthType Basic
-#        AuthBasicProvider ldap
-#        AuthName "Authentication Required"
-#        # Connect to the LDAP server anonymously...
-#        AuthLDAPURL ldap://localhost:389/OU=[OU of users],DC=example,DC=com
-#        # LDAP login requirements (s. documantation)...
-#        AuthLDAPGroupAttribute memberUid
-#        AuthLDAPGroupAttributeIsDN off
-#        Require ldap-group CN=[required group],OU=[OU of groups],DC=example,DC=com
-#    </Location>
-
-# Following is needed if lets-encrypt with active auth is wanted...
-#    <Location /.well-known>
-#        Require all granted
-#    </Location>
-</VirtualHost>
+    <Location />
+        AuthType Basic
+        AuthBasicProvider ldap
+        AuthName "Authentication Required"
+        # Connect to the LDAP server anonymously...
+        AuthLDAPURL ldap://localhost:389/OU=[OU of users],DC=example,DC=com
+        # LDAP login requirements (s. documantation)...
+        AuthLDAPGroupAttribute memberUid
+        AuthLDAPGroupAttributeIsDN off
+        Require ldap-group CN=[required group],OU=[OU of groups],DC=example,DC=com
+    </Location>
 ```
 
 ## Default Host ##
