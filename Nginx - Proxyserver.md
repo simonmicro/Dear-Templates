@@ -14,6 +14,7 @@ This is a simple config file for NGINX. You should note:
 # At first: A good practice...
 add_header X-Clacks-Overhead "GNU Terry Pratchett";
 add_header X-Cat "😸";
+client_max_body_size 256M; # Well, the default is somewhat small...
 
 server {
     listen 80;
