@@ -32,7 +32,6 @@ server {
     server_name exception.example.com;
 
     location / {
-        access_log      off;
         proxy_pass http://[REAL_URI];
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP  $remote_addr;
@@ -41,15 +40,17 @@ server {
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
     }
+
+    # Optionally, use the exception rules from the wildcard example also for this...
 }
 
 server {
-    listen 80;
+    listen 80 default_server;
 
     server_name *.example.com;
 
     location / {
-        access_log      off;
+        access_log off;
         proxy_pass http://[REAL_URI];
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP  $remote_addr;
@@ -58,7 +59,7 @@ server {
 }
 
 server {
-    listen 443 ssl default;
+    listen 443 ssl default_server;
 
     ssl_certificate     /certs/cert.pem;
     ssl_certificate_key /certs/privkey.pem;
@@ -66,7 +67,7 @@ server {
     server_name *.example.com;
 
     location / {
-        access_log      off;
+        access_log off;
         proxy_pass https://[REAL_URI];
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP  $remote_addr;
