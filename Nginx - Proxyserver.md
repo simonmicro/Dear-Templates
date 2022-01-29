@@ -48,7 +48,7 @@ server {
     server_name *.example.com; # Note, you can use for "default_server" (like here) the invalid server name "_" instead
 
     location / {
-        access_log off;
+        access_log off; # Do not enable this on every domain. Otherwise it will spam!
         proxy_pass http://[REAL_URI];
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP  $remote_addr;
@@ -64,7 +64,7 @@ server {
     ssl_certificate_key /certs/privkey.pem;
 
     location / {
-        access_log off;
+        access_log off; # Do not enable this on every domain. Otherwise it will spam!
         proxy_pass https://[REAL_URI];
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP  $remote_addr;
@@ -81,6 +81,7 @@ server {
 
     # The following are overrides to provide own error pages
     location /_error {
+        access_log off;
         root /usr/share/nginx/html;
     }
     error_page 404 /_error/404.html;
