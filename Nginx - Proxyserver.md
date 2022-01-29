@@ -18,18 +18,17 @@ client_max_body_size 256M; # Well, the default is somewhat small...
 
 server {
     listen 80;
-
     server_name exception.example.com;
+
     return 301 https://exception.example.com$request_uri;
 }
 
 server {
     listen 443 ssl;
+    server_name exception.example.com;
 
     ssl_certificate     /certs/cert.pem;
     ssl_certificate_key /certs/privkey.pem;
-
-    server_name exception.example.com;
 
     location / {
         proxy_pass http://[REAL_URI];
@@ -46,8 +45,7 @@ server {
 
 server {
     listen 80 default_server;
-
-    server_name *.example.com;
+    server_name *.example.com; # Note, you can use for "default_server" (like here) the invalid server name "_" instead
 
     location / {
         access_log off;
@@ -60,11 +58,10 @@ server {
 
 server {
     listen 443 ssl default_server;
+    server_name *.example.com; # Note, you can use for "default_server" (like here) the invalid server name "_" instead
 
     ssl_certificate     /certs/cert.pem;
     ssl_certificate_key /certs/privkey.pem;
-
-    server_name *.example.com;
 
     location / {
         access_log off;
