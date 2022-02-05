@@ -80,6 +80,11 @@ WantedBy=zfs-mount.service
 
 # Auto snapshotting #
 Make sure `zfs-auto-snapshot` is installed.
+I recommend to also "override" the default policies (and mark the package as hold) to prevent them getting enabled again:
+```bash
+sudo rm -v /etc/cron.d/zfs-auto-snapshot /etc/cron.hourly/zfs-auto-snapshot /etc/cron.daily/zfs-auto-snapshot /etc/cron.weekly/zfs-auto-snapshot /etc/cron.monthly/zfs-auto-snapshot
+sudo apt-mark hold zfs-auto-snapshot # DO NOT FORGET this, otherwise the default schedule will be reenabled!
+```
 Now add to the crontab (`//` stands for all pools)...
 ```
 */10 * * * * /usr/sbin/zfs-auto-snapshot -r -q --label=frequently --keep=30 //
