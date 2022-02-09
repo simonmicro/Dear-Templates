@@ -33,8 +33,8 @@ server {
 
     location / {
         proxy_pass http://[REAL_URI];
+        # Inform target host about proxy client...;
         proxy_set_header Host $host;
-        # Inform target host about proxy client...
         proxy_set_header X-Real-IP  $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
@@ -72,16 +72,13 @@ server {
     location / {
         access_log off; # Do not enable this on every domain. Otherwise it will spam!
         proxy_pass https://[REAL_URI];
-        # Inform target host about proxy client...
+        # Inform target host about proxy client...;
+        proxy_set_header Host $host;
         proxy_set_header X-Real-IP  $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-Protocol $scheme;
         proxy_set_header X-Forwarded-Host $http_host;
-        # Support WebSocket connections...
-        proxy_http_version 1.1; # Default is 1.0
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
         # Wait for x seconds for the uplink...
         proxy_connect_timeout 30;
         proxy_send_timeout 30;
