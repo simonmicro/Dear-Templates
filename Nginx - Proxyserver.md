@@ -9,6 +9,7 @@ This is a simple config file for NGINX. You should note:
 * `*.example.com` is a HTTP/S reverse proxy respectively. 
 * The HTTPS for `*.example.com` allows at most a 30 second delay / duration at responses. Additionally custom error pages are supported.
 * All HTTPS variants are allowing WebSocket connections.
+* In case you have DNS based endpoints... [READ THIS](https://github.com/DmitryFillo/nginx-proxy-pitfalls), it will save you HOURS!
 
 ```nginx
 # At first: A good practice...
