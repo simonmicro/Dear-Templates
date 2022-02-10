@@ -168,12 +168,20 @@ This are the needed files & scripts:
             for domain, saveMe in vms.items():
                 if not saveMe:
                     logging.info('Sending shutdown signal to ' + domain.name())
-                    domain.shutdown()
+                    try:
+                        domain.shutdown()
+                    except:
+                        # In case the domain is already shutdown...
+                        pass
 
             for domain, saveMe in vms.items():
                 if saveMe:
                     logging.info('Creating a managed save state of ' + domain.name())
-                    domain.managedSave()
+                    try:
+                        domain.managedSave()
+                    except:
+                        # In case the domain is already... Saved?
+                        pass
 
             while datetime.datetime.now() < end:
                 stillRunning = [d for d in vms.keys() if d.isActive()]
@@ -183,13 +191,21 @@ This are the needed files & scripts:
                 logging.info('Sending once again the shutdown signal to them...')
                 for domain in stillRunning:
                     if domain.isActive():
-                        domain.shutdown()
+                        try:
+                            domain.shutdown()
+                        except:
+                            # In case the domain is already shutdown since our initial check...
+                            pass
                 time.sleep(5)
 
             for domain in vms.keys():
                 if domain.isActive():
                     logging.info('Destroying ' + domain.name() + ' because it failed to shut down in time!')
-                    domain.destroy()
+                    try:
+                        domain.destroy()
+                    except:
+                        # In case the domain is shutdown on its own (close one)
+                        pass
 
         except Exception as e:
             logging.exception('Whoops, something went very wrong: {}'.format(e))

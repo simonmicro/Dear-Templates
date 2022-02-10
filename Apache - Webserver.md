@@ -189,3 +189,62 @@ Append to `/etc/apache2/apache2.conf`
 ServerSignature Off
 ServerTokens Prod
 ```
+
+
+
+
+
+
+
+
+
+
+#
+# Replace test.internal.simonmicro.de with your test-domain
+# 
+
+# Answer by default with the failure site - add this to all services to lock down (and then modify the listen ips as below)
+<VirtualHost *:80>
+    ServerName test.internal.simonmicro.de
+    DocumentRoot /var/www/default/_vpn/failure
+    ErrorLog /var/log/apache2/test.internal.simonmicro.de-error.log
+    CustomLog /var/log/apache2/test.internal.simonmicro.de-access.log combined
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName test.internal.simonmicro.de
+    DocumentRoot /var/www/default/_vpn/failure
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/test.internal.simonmicro.de/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/test.internal.simonmicro.de/privkey.pem
+    ErrorLog /var/log/apache2/test.internal.simonmicro.de-error.log
+    CustomLog /var/log/apache2/test.internal.simonmicro.de-access.log combined
+</VirtualHost>
+
+# Modify the restricted services to be only avalable on the ip specified below - otherwise there is no need to add the hosts below to any other service
+<VirtualHost 10.142.32.12:80>
+    ServerName test.internal.simonmicro.de
+    DocumentRoot /var/www/default/_vpn/success
+    ErrorLog /var/log/apache2/test.internal.simonmicro.de-error.log
+    CustomLog /var/log/apache2/test.internal.simonmicro.de-access.log combined
+</VirtualHost>
+
+<VirtualHost 10.142.32.12:443>
+    ServerName test.internal.simonmicro.de
+    DocumentRoot /var/www/default/_vpn/success
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/test.internal.simonmicro.de/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/test.internal.simonmicro.de/privkey.pem
+    ErrorLog /var/log/apache2/test.internal.simonmicro.de-error.log
+    CustomLog /var/log/apache2/test.internal.simonmicro.de-access.log combined
+</VirtualHost>
+
+# This is only needed once - you may leave it here and do not add it to any other service
+<Directory /var/www/default/_vpn>
+    AllowOverride All
+</Directory>
+
+
+
+
+ttl orig domain as low as possible
