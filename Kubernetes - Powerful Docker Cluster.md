@@ -35,7 +35,7 @@ metadata:
   name: service-with-external-ip
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: external-service-ip
   namespace: service-with-external-ip
