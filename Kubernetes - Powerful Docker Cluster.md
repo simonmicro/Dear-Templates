@@ -2,7 +2,9 @@
 summary: Kubenetes services with external fixed ips using keepalived
 ---
 
-# Desicion flowchart
+# Exposed Services
+
+## Desicion flowchart
 ```
 Does the Deployment needs to be reachible on any port?
 -> Yes. Proceed.
@@ -25,6 +27,7 @@ Does the Deployment needs to be reachible on an other port by external clients w
 -> No. Done.
 ```
 
+## YAML
 This is the example configuration YAML-file. It will spin up a NGINX instance, which just replies the clients IP to test the transparency.
 Keep in mind to change the external service ip (`192.168.0.100`) and incoming interface it should be assigned to (`enp6s0`), as well as the external port (`8080`).
 
@@ -123,4 +126,54 @@ spec:
         - name: backend-config-volume
           configMap:
             name: backend-config
+```
+
+# Path serializer
+In case you need a config map, which describes a whole folder...
+
+```python
+import os, re, sys, subprocess
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--volume', type=str, required=True, help='Name of volume and target YAML path')
+parser.add_argument('--dir', type=str, required=True, help='Which path sould be serialized?')
+parser.add_argument('--mountPath', type=str, required=True, help='Where should the serialized data go?')
+args = parser.parse_args()
+
+def makeSimplePath(p):
+    return re.sub(r'-+', '-', re.sub(r'[^a-z0-9]', '-', p.lower()))
+  
+dirs = [args.dir]
+for p,d,f in os.walk(args.dir):
+    for dd in d:
+        dirs.append(os.path.join(p, dd))
+
+maps = []
+for dd in dirs:
+    print('Serializing path: ' + dd)
+    maps.append([dd, subprocess.check_output(['kubectl', 'create', 'configmap', args.volume + '-files-' + makeSimplePath(dd), '--from-file=' + dd, '-o', 'yaml', '--dry-run=client'], ).decode()])
+
+with open(args.volume + '.yml', 'w') as f:
+    f.write(f'# This file was generated using: {" ".join(sys.argv)}\n')
+    f.write('---\n')
+    for m in maps:
+        f.write(m[1])
+        f.write('---\n')
+
+print('Now append this to your YAML...')
+print('volumeMounts:')
+print(f'# Warning: All volumes beginning with "{args.volume}-files-" are generated automatically. Do not touch them!')
+for m in maps:
+    print('- name: ' + args.volume + '-files-' + makeSimplePath(m[0]) + '-volume')
+    print('  mountPath: ' + os.path.join(args.mountPath, os.path.relpath(m[0], args.dir)))
+    print('  readOnly: true')
+
+print()
+print('volumes:')
+print(f'# Warning: All volumes beginning with "{args.volume}-files-" are generated automatically. Do not touch them!')
+for m in maps:
+    print('- name: ' + args.volume + '-files-' + makeSimplePath(m[0]) + '-volume')
+    print('  configMap:')
+    print('    name: ' + args.volume + '-files-' + makeSimplePath(m[0]))
 ```
