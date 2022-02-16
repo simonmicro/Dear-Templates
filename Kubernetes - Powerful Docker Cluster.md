@@ -53,7 +53,7 @@ spec:
     spec:
       hostNetwork: true
       containers:
-      - name: external-service-ip
+      - name: keepalived
         image: arcts/keepalived
         securityContext:
           capabilities:
@@ -80,7 +80,6 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 80
-  externalTrafficPolicy: Local
   externalIPs:
     - 192.168.0.100
 ---
@@ -127,6 +126,25 @@ spec:
           configMap:
             name: backend-config
 ```
+
+## In the Future...
+...maybe this will work with `externalTrafficPolicy: Local`, as at some point Kubernetes will may support `requiredDuringSchedulingRequiredDuringExecution`.
+This would allow `keepalived` to only run on pods on which the deployment is executed. An example affinity would look like this:
+
+```yaml
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingRequiredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - nextcloud-media
+            topologyKey: kubernetes.io/hostname
+```
+
+Currently with `requiredDuringSchedulingIgnoredDuringExecution` this won't work, as the `keepalived` instance is not moved in case the deployment gets evicted.
 
 # Path serializer
 In case you need a config map, which describes a whole folder...
