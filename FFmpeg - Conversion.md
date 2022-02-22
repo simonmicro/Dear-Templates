@@ -9,6 +9,7 @@ _Note:_ Without proper reencoding the filesize will stay the same and some devic
 This just reencodes the files (reduce size)...
 ```bash
 #!/bin/bash
+set -xe
 mkdir -p ../reencoded/
 for i in *.mp4;
     do name=`echo ${i%.*}`;
@@ -23,6 +24,7 @@ done
 This just reencodes the files (reduce size) - same as for mp4 (but keeps all audio tracks and subtitle metadata)!
 ```bash
 #!/bin/bash
+set -xe
 mkdir -p ../reencoded/
 for i in *.mkv;
     do name=`echo ${i%.*}`;
@@ -39,6 +41,7 @@ done
 This just copies the data without proper reencoding - some devices don't like the results...
 ```bash
 #!/bin/bash
+set -xe
 mkdir -p ./converted/
 for i in *.avi;
     do name=`echo ${i%.*}`;
@@ -52,6 +55,7 @@ done
 ## MKV to MP4 ##
 ```bash
 #!/bin/bash
+set -xe
 mkdir -p ./converted/
 for i in *.mkv;
     do name=`echo ${i%.*}`;
@@ -65,6 +69,7 @@ done
 This just copies the data without proper reencoding - some devices don't like the results...
 ```bash
 #!/bin/bash
+set -xe
 mkdir -p ./converted/
 for i in *.mkv;
     do name=`echo ${i%.*}`;
@@ -80,6 +85,7 @@ done
 This normalizes to 0db - NOTE that the parent folder is used since we dont change the audio format and therefore we would loop for a infinite time...
 ```bash
 #!/bin/bash
+set -xe
 mkdir -p ../normalized/
 for i in *.mp3;
     do name=`echo ${i%.*}`;
@@ -92,6 +98,7 @@ done
 ## FLAC to MP3 ##
 ```bash
 #!/bin/bash
+set -xe
 mkdir -p ./converted/
 for i in *.flac;
     do name=`echo ${i%.*}`;
