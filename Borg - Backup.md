@@ -89,6 +89,7 @@ target: 'ssh://server/./subdir'
 options:
   backup: '-C lzma,9'
   cleanup: '--lock-wait 60'
+  check: ''
 cleanup:
   daily: 7
   weekly: 4
@@ -97,6 +98,7 @@ cleanup:
 tries:
   backup: 3
   cleanup: 3
+  check: 3
 ```
 
 ## Finally the script...
@@ -120,7 +122,8 @@ parser.add_argument('--config', help='Set the configuration directory name (loca
 parser.add_argument('--shell', help='Execute a shell with all environment variables set.', action='store_true')
 parser.add_argument('--debug', help='Debug mode!', action='store_true')
 parser.add_argument('--nocreate', help='Skip archive creation.', action='store_true')
-parser.add_argument('--nocleanup', help='Skip archive cleanup.', action='store_true')
+parser.add_argument('--nocleanup', help='Skip repository cleanup.', action='store_true')
+parser.add_argument('--nocheck', help='Skip repository checks.', action='store_true')
 parser.add_argument('--progress', help='Show progress...', action='store_true')
 args = parser.parse_args()
 
@@ -145,12 +148,15 @@ with open(configFilePath, 'r') as configFile:
 configBackupThis = [os.path.expandvars(x) for x in configDict['backup']]
 configBackupOptions = configDict['options']['backup'].split(' ') if configDict['options']['backup'] != '' else []
 configCleanupOptions = configDict['options']['cleanup'].split(' ') if configDict['options']['cleanup'] != '' else []
+configCheckOptions = configDict['options']['check'].split(' ') if configDict['options']['check'] != '' else []
 if args.progress:
     configBackupOptions.append('-p')
     configCleanupOptions.append('-p')
+    configCheckOptions.append('-p')
 if args.progress or args.debug:
     configBackupOptions.append('-v')
     configCleanupOptions.append('-v')
+    configCheckOptions.append('-v')
 
 # Make sure every backup target exists
 if not args.nocreate:
@@ -230,7 +236,16 @@ else:
         logger.info('Cleanup started...')
         cleanOK = runBorgCommand(cmnd, configDict['tries']['cleanup'])
 
-    if createOK and cleanOK:
+    # Check (max-duration requires borgbackup version >= 1.2.0)
+    checkOK = args.nocheck
+    if not args.nocheck:
+        cmnd = ['borg', 'check', '--max-duration=' + str(60 * 60)] # Run archive checks for up to one hour
+        cmnd += configCheckOptions
+        cmnd += [configDict['target']]
+        logger.info('Cleanup started...')
+        checkOK = runBorgCommand(cmnd, configDict['tries']['check'])
+
+    if createOK and cleanOK and checkOK:
         logger.info('Jobs successful finished.')
     else:
         logger.warning('At least one job failed.')
