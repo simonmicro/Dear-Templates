@@ -86,17 +86,14 @@ Libvirt has a watchdog feature, which can e.g. reboot a vm on crash - other than
 # SERVER #
 
 ## Setup ##
-1. `sudo apt install libvirt-daemon-system libvirt-clients qemu-kvm qemu-utils`
+1. `sudo apt install libvirt-daemon-system libvirt-clients qemu-kvm qemu-utils ovmf`
 2. `sudo apt install dnsmasq`
 
-_`libvirtd` does not require `firewalld` & `ebtables` anymore on Debian 11._
-
-## Support guest UEFI ##
-`sudo apt install ovmf`
+_`libvirtd` does not require `firewalld` and `ebtables` (or explicit `ovmf`) anymore on Debian 11._
 
 ## Allow a user to control the kvm ##
-1. `sudo addgroup [USER] kvm`
-2. `sudo addgroup [USER] libvirt`
+1. `sudo adduser [USER] kvm`
+2. `sudo adduser [USER] libvirt`
 
 ## Enable automatic freezing of guests at host reboot ##
 Install those
