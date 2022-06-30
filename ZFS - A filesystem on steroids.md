@@ -31,6 +31,12 @@ _For following you can use `-O` at `zpool` to pass options to `zfs`, otherwise `
 * Replace: `sudo zpool replace [ZFS_POOL] [DEVICE/FILE] [DEVICE/FILE]` <- **Make sure to offlining first**
 * Remove: `sudo zpool remove [ZFS_POOL] [DEVICE/FILE]`
 
+## A Note for SSDs
+...make sure to enable trimming:
+```bash
+sudo zpool set autotrim=on [ZFS_POOL]
+```
+
 # Load all the encryption keys at startup #
 Add the service: `/etc/systemd/system/zfs-load-all-keys.service`
 ```systemd
