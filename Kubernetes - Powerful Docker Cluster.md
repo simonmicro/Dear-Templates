@@ -2,6 +2,166 @@
 summary: Kubenetes services with external fixed ips using keepalived
 ---
 
+# Terms
+* `volume`: A target for data storage - can be anything e.g. NFS, local disk, etc.
+* `service`: Describes what ports are reachible how on which deployment / container
+* `deployment`: Describes a set of `containers` that are deployed on a single host - commonly represented by a pod in kubernetes
+* `pod`: "namespace for `containers`" - similar to a docker-compose stack
+* `node`: physical / vm machine with a set of `pods`
+* `container`: Similar to a docker container
+
+# Setup
+## Minicube
+...good for first trys. It installs `kubectl` and `kubeadm` with a single node inside a "vm".
+
+## Bare metal install (setup both client+server)
+
+### Install (all machines)
+-> https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+
+```bash
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl
+sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+```
+
+#### `kubeadm` with all dependencies
+```bash
+sudo apt-get install -y kubelet kubeadm kubectl docker.io
+sudo apt-mark hold kubelet kubeadm kubectl # Freeze packages to prevent accidantial updates
+```
+
+#### Fix `cgroup` driver
+-> https://phoenixnap.com/kb/how-to-install-kubernetes-on-a-bare-metal-server
+
+```bash
+sudo bash
+cat > /etc/docker/daemon.json <<EOF
+{
+"exec-opts": ["native.cgroupdriver=systemd"],
+"log-driver": "json-file",
+"log-opts": {
+"max-size": "100m"
+},
+"storage-driver": "overlay2"
+}
+EOF
+```
+
+### Create a cluster!
+```bash
+sudo kubeadm init --pod-network-cidr=10.111.0.0/16 --apiserver-advertise-address [CLUSTER_MASTER_IP]
+```
+
+You must then run these commands to retrive the kubeconfig file and token.
+```bash
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+#### Install networking add-on
+Using Flannel as network addon (no `sudo` anymore!) - more information is available [here](https://github.com/flannel-io/flannel/tree/master/Documentation):
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+```
+
+Changed the configmap `kube-flannel-cfg` inside namespace `kube-system` and set `net-conf.json` to:
+```
+{
+  "Network": "10.111.0.0/16",
+  "EnableIPv6": false,
+  "Backend": {
+    "Type": "vxlan",
+    "GBP": true,
+    "DirectRouting": true
+  }
+}
+```
+It would be interesting to use other backends - like Wireguard at some point. This is especially needed in distributed setups.
+
+#### Install metrics collector
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/components.yaml
+```
+You see this error in the logs? https://github.com/kubernetes-sigs/metrics-server/issues/196
+Solve it by introducing [certificates into the cluster](https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/#kubelet-serving-certs):
+
+```bash
+export EDITOR=nano
+kubectl edit configmap/kubelet-config-1.23 -n kube-system
+```
+
+Make sure to run from time to time:
+```bash
+sudo kubeadm certs check-expiration
+sudo kubeadm certs renew all
+```
+
+### Join workers
+```bash
+sudo kubeadm join [CLUSTER_MASTER_IP]:6443 --token 2ze2pr.a0z1IhfA3kdacqd7 --discovery-token-ca-cert-hash sha256:62e03606c3e4fee86bd016915283e8761a30a5b6b93219faad7547c5eca71c29
+```
+You can get the command again using this: https://stackoverflow.com/a/71137163/11664229
+
+## Extend certificate names
+This is needed if you plan to connect to your masters using e.g. their CNAMEs instead of their IP addresses (required by the Lens IDE).
+
+-> https://blog.scottlowe.org/2019/07/30/adding-a-name-to-kubernetes-api-server-certificate/
+
+## Helm
+-> https://helm.sh/docs/intro/install/#from-apt-debianubuntu
+
+## Unbalanced cluster
+The problem is described there: https://itnext.io/keep-you-kubernetes-cluster-balanced-the-secret-to-high-availability-17edf60d9cb7
+
+Add it to your cluster:
+```bash
+helm repo add descheduler https://kubernetes-sigs.github.io/descheduler/
+helm install descheduler --namespace kube-system descheduler/descheduler
+```
+
+Now upgrade the release as you wish using the [`values.yml`](https://github.com/kubernetes-sigs/descheduler/blob/master/charts/descheduler/values.yaml).
+
+## keel.sh
+This is useful for automatic updates of pods (and their container images).
+-> https://keel.sh
+
+# Dashboard?!
+If you really want it... There you go:
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml
+kubectl proxy --address='0.0.0.0' --accept-hosts='.*'
+```
+
+## Create new admin user
+Add to new file `dashboard-adminuser.yaml`:
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+```
+
+### Apply
+```bash
+kubectl apply -f dashboard-adminuser.yaml
+kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:kubernetes-dashboard
+```
+
+### Password?
+```bash
+kubectl -n kubernetes-dashboard get secret $(kubectl -n kubernetes-dashboard get sa/admin-user -o jsonpath="{.secrets[0].name}") -o go-template="{{.data.token | base64decode}}"
+# OR
+kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep kubernetes-dashboard | cut -d " " -f1)
+```
+
+
 # Exposed Services
 
 ## Desicion flowchart
@@ -145,7 +305,7 @@ This would allow `keepalived` to only run on pods on which the deployment is exe
             topologyKey: kubernetes.io/hostname
 ```
 
-Currently with `requiredDuringSchedulingIgnoredDuringExecution` this won't work, as the `keepalived` instance is not moved in case the deployment gets evicted.
+Currently with `requiredDuringSchedulingIgnoredDuringExecution` this won't work, as the `keepalived` instance is not moved in case the deployment gets evicted. If you really need this take a look into the `descheduler` project...
 
 # Path serializer
 In case you need a config map, which describes a whole folder...
