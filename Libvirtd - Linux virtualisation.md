@@ -109,15 +109,19 @@ This are the needed files & scripts:
     Wants=libvirtd.service
     Requires=virt-guest-shutdown.target
     # libvirt-guests.service is in "After", because during shutdown this order reversed!
-    After=network.target time-sync.target libvirtd.service virt-guest-shutdown.target libvirt-guests.service
+    After=network.target
+    After=time-sync.target
+    After=libvirtd.service
+    After=virt-guest-shutdown.target
+    After=libvirt-guests.service
 
     [Service]
     Type=oneshot
     TimeoutStopSec=0
     RemainAfterExit=yes
-    Environment="PYTHONUNBUFFERED=1"
-    ExecStart=/usr/bin/python3 /root/libvirtd-guard.py start
-    ExecStop=/usr/bin/python3 /root/libvirtd-guard.py stop
+    StandardOutput=journal+console
+    ExecStart=/usr/bin/python3 -u /root/libvirtd-guard.py --plymouth start
+    ExecStop=/usr/bin/python3 -u /root/libvirtd-guard.py --plymouth stop
 
     [Install]
     WantedBy=multi-user.target
@@ -125,93 +129,136 @@ This are the needed files & scripts:
 * Main script to `/root/libvirtd-guard.py`
     ```python3
     #!/usr/bin/python3
-    import sys
-    import time
-    import logging
+    import sys, time, logging, datetime, argparse, subprocess
     import libvirt # apt install python3-libvirt
-    import datetime
     import xml.etree.ElementTree as XML_ET
     logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-    shutdownTimeout = 300
+    parser = argparse.ArgumentParser()
+    parser.add_argument('action', help='Perform the tasks for the "start" or "stop" action')
+    parser.add_argument('--dry-run', help='Do not really shutdown or save anyone', action='store_true')
+    parser.add_argument('--plymouth', help='Enable plymouth splash screen integration (shows progress there during the action)', action='store_true')
+    parser.add_argument('--timeout', help='How long should we wait for machines to shutdown on their own?', type=int, default=300)
+    parser.add_argument('--reminder-interval', help='How long until the shudown signal is repeated?', type=int, default=5)
+    args = parser.parse_args()
 
-    if len(sys.argv) < 2:
-        logging.critical('Missing action operator... Try run me with ' + sys.argv[0] + ' start|stop')
-        exit(1)
+    needToHideMessages = False
+    showPlymouthWarning = True
+    def log(msg):
+        global showPlymouthWarning, needToHideMessages
+        logging.info(msg)
+        if args.plymouth:
+            msg = msg.replace('"', '\\"')
+            try:
+                subprocess.run(['plymouth', 'display-message', '--text', msg], timeout=2).check_returncode()
+                needToHideMessages = True
+            except subprocess.CalledProcessError as e:
+                if showPlymouthWarning:
+                    logging.warning(f'Failed to display message on plymouth ({e.returncode})!')
+                    showPlymouthWarning = False
+            except subprocess.TimeoutExpired:
+                logging.warning('Timeout while displaying message on plymouth!')
 
-    if sys.argv[1] == 'start':
-        logging.info('I am just here for the after-party. Doing nothing.')
-    elif sys.argv[1] == 'stop':
-        end = datetime.datetime.now() + datetime.timedelta(seconds=shutdownTimeout)
-        logging.info('Okay - shutdown in progress. Every running virtual machine has now {} seconds (until {}) to shut itself down.'.format(shutdownTimeout, end))
+    try:
+        if args.action == 'start':
+            logging.info('I am just here for the after-party! Doing nothing.')
+        elif args.action == 'stop':
+            end = datetime.datetime.now() + datetime.timedelta(seconds=args.timeout)
+            log(f'Every running virtual machine has now {args.timeout} seconds (until {end}) to shut itself down.')
 
-        try:
             conn = libvirt.open('qemu:///system')
+            if conn is None:
+                raise RuntimeError('Failed to connect to libvirt!')
 
             domainIDs = conn.listDomainsID()
-            if domainIDs == None:
-                raise Exception('Failed to retrive list of domains!')
+            if domainIDs is None:
+                raise RuntimeError('Failed to retrieve list of domains!')
 
             # Determine if some VM has the LIBVIRTD_GUARD_SAVEME flag. If yes, this vm will be saved and not shutdowned!
-            vms = {}
+            vms = []
+            vmsToSave = []
+            vmsToShutdown = []
             for domainID in domainIDs:
                 domainHandle = conn.lookupByID(domainID)
                 xmlRoot = XML_ET.fromstring(domainHandle.XMLDesc())
                 xmlDesc = xmlRoot.find('description')
-                vms[domainHandle] = xmlDesc != None and xmlDesc.text.find('LIBVIRTD_GUARD_SAVEME') != -1
+                save = xmlDesc != None and xmlDesc.text.find('LIBVIRTD_GUARD_SAVEME') != -1
+                vms.append(domainHandle)
+                if save:
+                    vmsToSave.append(domainHandle)
+                else:
+                    vmsToShutdown.append(domainHandle)
 
-            logging.info('Following virtual machines are currently running: {}'.format(', '.join([d.name() for d in vms.keys() if d.isActive()])))
+            log(f'Following virtual machines are currently running: {", ".join([d.name() for d in vms if d.isActive()])}')
 
-            for domain, saveMe in vms.items():
-                if not saveMe:
-                    logging.info('Sending shutdown signal to ' + domain.name())
-                    try:
+            for domain in vmsToShutdown:
+                log(f'Sending shutdown signal to {domain.name()}...')
+                try:
+                    if not args.dry_run:
                         domain.shutdown()
-                    except:
-                        # In case the domain is already shutdown...
-                        pass
+                except Exception as e:
+                    # In case the domain is already shutdown...
+                    logging.exception(f'Failed to shutdown {domain.name()}!')
 
-            for domain, saveMe in vms.items():
-                if saveMe:
-                    logging.info('Creating a managed save state of ' + domain.name())
-                    try:
+            for domain in vmsToSave:
+                log(f'Creating a managed save state of {domain.name()}...')
+                try:
+                    if not args.dry_run:
                         domain.managedSave()
-                    except:
-                        # In case the domain is already... Saved?
-                        pass
+                except Exception as e:
+                    # In case the domain is already... Saved?
+                    logging.exception(f'Failed to save {domain.name()}!')
+                    if not args.dry_run:
+                        domain.shutdown()
 
             while datetime.datetime.now() < end:
-                stillRunning = [d for d in vms.keys() if d.isActive()]
+                stillRunning = [d for d in vmsToShutdown if d.isActive()]
                 if len(stillRunning) == 0:
                     break
-                logging.info('Following virtual machines are still running: {}'.format(', '.join([d.name() for d in stillRunning])))
-                logging.info('Sending once again the shutdown signal to them...')
+                log(f'Following virtual machines are still running ({(end - datetime.datetime.now()).seconds + 1}s): {", ".join([d.name() for d in stillRunning])}')
                 for domain in stillRunning:
                     if domain.isActive():
                         try:
-                            domain.shutdown()
-                        except:
+                            if not args.dry_run:
+                                domain.shutdown()
+                        except Exception as e:
                             # In case the domain is already shutdown since our initial check...
-                            pass
-                time.sleep(5)
+                            logging.exception(f'Failed to shutdown {domain.name()}!')
+                time.sleep(args.reminder_interval)
 
-            for domain in vms.keys():
+            for domain in vms:
                 if domain.isActive():
-                    logging.info('Destroying ' + domain.name() + ' because it failed to shut down in time!')
+                    log(f'Destroying {domain.name()}, because it failed to shutdown in time!')
                     try:
-                        domain.destroy()
-                    except:
+                        if not args.dry_run:
+                            domain.destroy()
+                    except Exception as e:
                         # In case the domain is shutdown on its own (close one)
-                        pass
+                        logging.exception(f'Failed to destroy {domain.name()}!')
 
-        except Exception as e:
-            logging.exception('Whoops, something went very wrong: {}'.format(e))
-        if conn != None:
-            conn.close()
-    else:
-        logging.critical('Huh? Unknown action operator!')
-        exit(2)
-    exit(0)
+            if conn != None:
+                conn.close()
+
+            log('Okay - all virtual machines destroyed.')
+        else:
+            logging.critical('Huh? Unknown action operator!')
+            sys.exit(1)
+
+    except Exception as e:
+        logging.exception(f'Whoops, something went very wrong: {e}')
+        sys.exit(2)
+    except:
+        logging.exception('Whoops, something went very wrong?!')
+        sys.exit(3)
+
+    if needToHideMessages:
+        try:
+            # Not using hide-message, as some screens just ignore that?!
+            subprocess.run(['plymouth', 'display-message', '--text', ''], timeout=2)
+        except subprocess.CalledProcessError as e:
+            logging.warning(f'Error while hiding message on plymouth ({e.returncode})!')
+        except subprocess.TimeoutExpired:
+            logging.warning('Timeout while hiding message on plymouth!')
     ```
 
 ### Install the libvirtd-guard service ###
