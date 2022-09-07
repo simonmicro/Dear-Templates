@@ -105,12 +105,7 @@ tries:
 ...place it somewhere into the home folder - just make sure only the user can read and execute it (`chmod 700`)!
 ```python
 #!/usr/bin/python3
-import os
-import yaml
-import time
-import logging
-import argparse
-import subprocess
+import os, sys, yaml, time, logging, argparse, subprocess
 logger = logging.getLogger(__name__)
 
 # Base variables
@@ -120,11 +115,12 @@ configDirPath = os.path.join(os.path.expanduser('~'), 'backup_scripts')
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', help='Set the configuration directory name (located at ' + configDirPath + ').', type=str, required=True)
 parser.add_argument('--shell', help='Execute a shell with all environment variables set.', action='store_true')
-parser.add_argument('--debug', help='Debug mode!', action='store_true')
+parser.add_argument('--debug', help='Debug mode! Also add "-v" o the borg-command.', action='store_true')
+parser.add_argument('--output', help='Do not capture the borg-command outputs.', action='store_true')
 parser.add_argument('--nocreate', help='Skip archive creation.', action='store_true')
 parser.add_argument('--nocleanup', help='Skip repository cleanup.', action='store_true')
 parser.add_argument('--nocheck', help='Skip repository checks.', action='store_true')
-parser.add_argument('--progress', help='Show progress...', action='store_true')
+parser.add_argument('--progress', help='Show progress by adding "-p" o the borg-command.', action='store_true')
 args = parser.parse_args()
 
 if args.debug:
@@ -132,17 +128,20 @@ if args.debug:
 else:
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
+if args.debug and args.progress and not args.shell and not args.output:
+    logging.warning('Please note, that you won\'t see any progress (even in "--debug" mode) as the output is still captured. Use "--output" instead.')
+
 # Make sure config dir is available
 configDirPath = os.path.join(configDirPath, args.config)
 if not os.path.isdir(configDirPath):
     logger.critical('Config dir (' + configDirPath + ') not available!')
-    exit(1)
+    sys.exit(1)
 
 # Read config vars
 configFilePath = os.path.join(configDirPath, 'config.yaml')
 if not os.path.isfile(configFilePath):
     logger.critical('Config file (' + configFilePath + ') not available!')
-    exit(2)
+    sys.exit(2)
 with open(configFilePath, 'r') as configFile:
     configDict = yaml.safe_load(configFile)
 configBackupThis = [os.path.expandvars(x) for x in configDict['backup']]
@@ -153,7 +152,7 @@ if args.progress:
     configBackupOptions.append('-p')
     configCleanupOptions.append('-p')
     configCheckOptions.append('-p')
-if args.progress or args.debug:
+if args.debug:
     configBackupOptions.append('-v')
     configCleanupOptions.append('-v')
     configCheckOptions.append('-v')
@@ -166,7 +165,7 @@ if not args.nocreate:
                 logger.warning('Backup path (' + p + ') not available!')
             else:
                 logger.critical('Backup path (' + p + ') not available!')
-                exit(3)
+                sys.exit(3)
 
 # Prepare environment variables
 os.environ['THIS_TARGET'] = configDict['target']
@@ -176,7 +175,7 @@ if targetIsRemote:
     os.environ['BORG_RSH'] = 'ssh -i ' + sshKeyPath
     if not os.path.isfile(sshKeyPath):
         logger.critical('SSH key (' + sshKeyPath + ') not available!')
-        exit(4)
+        sys.exit(4)
 os.environ['BORG_KEY_FILE'] = os.path.join(configDirPath, 'BORGKey.bak')
 # I tried to load the file in the BORG_PASSPHRASE variable, but Python does not seem to handle new lines consistently (sometimes they are just becoming spaces)
 os.environ['BORG_PASSCOMMAND'] = 'cat "' + os.path.join(configDirPath, 'BORGKeyPassword.file') + '"'
@@ -202,7 +201,10 @@ else:
     def runBorgCommand(cmnd, tries):
         for tryNum in range(1, tries+1):
             logger.debug(cmnd)
-            proc = subprocess.Popen(cmnd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            if args.output:
+                proc = subprocess.Popen(cmnd)
+            else:
+                proc = subprocess.Popen(cmnd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
             stdout, _ = proc.communicate()
             if proc.returncode != 0:
                 # Whoops!
@@ -211,7 +213,8 @@ else:
                 time.sleep(10)
             else:
                 logger.debug(proc.returncode)
-                logger.info(stdout)
+                if not args.output:
+                    logger.info(stdout)
                 break
         if tryNum == tries:
             logger.error('Cleanup failed.')
@@ -249,7 +252,7 @@ else:
         logger.info('Jobs successful finished.')
     else:
         logger.warning('At least one job failed.')
-        exit(5)
+        sys.exit(5)
 ```
 The last lines should allow your Sieve-Filters to highlight any failed executions easily.
 
