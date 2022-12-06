@@ -29,7 +29,7 @@ class Task:
             return True # Oh, we already finished that file
         if self.retries > 0:
             if justCopy:
-                cmnd = ['ffmpeg', '-i', self.inF, '-codec', '-fflags', '+genpts', 'copy', self.out]
+                cmnd = ['ffmpeg', '-fflags', '+genpts', '-i', self.inF, '-codec', 'copy', self.out]
             else:
                 cmnd = ['ffmpeg', '-i', self.inF, '-fflags', '+genpts', '-vcodec', 'libx265', '-crf', '28', '-map', '0', '-scodec', 'copy', '-acodec', 'copy', self.out]
             print('Running (' + str(self.retries) + '): ' + ' '.join(cmnd))
