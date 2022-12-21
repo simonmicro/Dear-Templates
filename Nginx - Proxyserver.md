@@ -16,6 +16,7 @@ This is a simple config file for NGINX. You should note:
 add_header X-Clacks-Overhead "GNU Terry Pratchett";
 add_header X-Cat "😸";
 client_max_body_size 256M; # Well, the default is somewhat small...
+client_body_buffer_size 32M; # If the client body is greater than this it will be buffered by a file, which also causes warnings - the default is too small...
 server_tokens off; # Nobody must know what potential security problems you have!
 
 server {
