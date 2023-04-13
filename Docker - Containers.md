@@ -123,6 +123,7 @@ Requires=docker-cleaner.service
 [Timer]
 Unit=docker-cleaner.service
 OnCalendar=*-*-* 00:00:00
+RandomizedDelaySec=3600
 
 [Install]
 WantedBy=timers.target
