@@ -75,6 +75,7 @@ while len(queue):
             print('Retrying...')
         else:
             results.append((False, task))
+    print(f'Progress: {len(queue)} remaining, {len(results)} processed')
 
 # Print results
 print()
