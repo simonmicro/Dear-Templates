@@ -206,7 +206,7 @@ else:
             else:
                 proc = subprocess.Popen(cmnd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
             stdout, _ = proc.communicate()
-            if proc.returncode != 0:
+            if proc.returncode >= 2: # 0 = OK, 1 = warnings, 2+ = bad
                 # Whoops!
                 logger.error('Something went wrong (try {} out of {}):'.format(tryNum, tries))
                 logger.error(stdout)
