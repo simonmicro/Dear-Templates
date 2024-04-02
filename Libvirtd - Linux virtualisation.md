@@ -114,6 +114,7 @@ This are the needed files & scripts:
     After=libvirtd.service
     After=virt-guest-shutdown.target
     After=libvirt-guests.service
+    After=nfs-server.service
 
     [Service]
     Type=oneshot
