@@ -4,7 +4,7 @@
 ![last-commit](https://img.shields.io/github/last-commit/simonmicro/dear-templates/master)
 
 This is a collection of little guides and notes about servers, services, programs and problems - mostly on Linux.
-Tthey are designed to give a quick and dirty overview about a topic and some details about setting it up or get a
+They are designed to give a quick and dirty overview about a topic and some details about setting it up or get a
 specific thing running. Sometimes they also include notes about workarounds or tips and tricks - all that good stuff!
 What ever you intend to do with them, have fun and make sure to share this repo, if it helped you! 😊
 
