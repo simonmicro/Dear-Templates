@@ -7,7 +7,7 @@ _Note:_ Without proper reencoding the filesize will stay the same and some devic
 
 As `ffmpeg` is not always the most stable program, I recommend to use this script for conversion:
 ```python
-import os, subprocess
+import os, sys, subprocess
 
 # Config
 inFolder = '.'
@@ -16,6 +16,7 @@ outFolder = './out'
 outExtension = 'mkv' # If you change this, you must also change the ffmpeg command (e.g. if subtitles can't be preserved)
 retries = 10
 justCopy = False # Copy files without re-encoding
+sendMail = True # At the end send a notify email, only useful if you receive the email somehow
 
 # Script
 class Task:
@@ -23,7 +24,7 @@ class Task:
         self.inF = inFile
         self.out = outFile
         self.retries = retries
-    
+
     def run(self) -> bool:
         if os.path.isfile(self.out):
             return True # Oh, we already finished that file
@@ -79,8 +80,15 @@ while len(queue):
 
 # Print results
 print()
+ok = 0
 for r in results:
+    if r[0]:
+        ok += 1
     print(f'{"OK" if r[0] else "!!"}: {r[1].inF} -> {r[1].out}')
+
+# Send email about results
+if sendMail:
+    os.system(f"echo '{ok} passed of {len(results)}' | mail -s '{sys.argv[0]} finished' $USER")
 ```
 
 # Audio #
