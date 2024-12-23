@@ -33,9 +33,9 @@ class Task:
                 cmnd = ['ffmpeg', '-fflags', '+genpts', '-i', self.inF, '-codec', 'copy', self.out]
             else:
                 cmnd = ['ffmpeg', '-i', self.inF, '-fflags', '+genpts', '-vcodec', 'libx265', '-crf', '28', '-map', '0', '-scodec', 'copy', '-acodec', 'copy', self.out]
-            print('Running (' + str(self.retries) + '): ' + ' '.join(cmnd))
+            print('#### Running (' + str(self.retries) + '): ' + ' '.join(cmnd))
             res = subprocess.run(cmnd).returncode
-            print('Done with code ' + str(res) + '...')
+            print('#### Done with code ' + str(res) + '...')
         else:
             return False
         if res == 0:
@@ -73,22 +73,26 @@ while len(queue):
             pass
         if task.retries > 0:
             queue.append(task)
-            print('Retrying...')
+            print('#### Retrying...')
         else:
             results.append((False, task))
-    print(f'Progress: {len(queue)} remaining, {len(results)} processed')
+    print(f'#### Progress: {len(queue)} remaining, {len(results)} processed')
 
 # Print results
-print()
+resultStr = f"{ok} out of {len(results)} passed\n\n"
 ok = 0
 for r in results:
     if r[0]:
         ok += 1
-    print(f'{"OK" if r[0] else "!!"}: {r[1].inF} -> {r[1].out}')
+    resultStr += f'{"OK" if r[0] else "!!"}: {r[1].inF} -> {r[1].out}\n'
+resultStr = resultStr.strip()
+print('####')
+print(resultStr)
 
 # Send email about results
 if sendMail:
-    os.system(f"echo '{ok} passed of {len(results)}' | mail -s '{sys.argv[0]} finished' $USER")
+    resultStrEscaped = resultStr.replace("'", "_")
+    os.system(f"echo '{resultStrEscaped}' | mail -s '{sys.argv[0]} finished {ok} out of {len(results)}' $USER")
 ```
 
 # Audio #
