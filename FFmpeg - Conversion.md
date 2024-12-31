@@ -79,13 +79,13 @@ while len(queue):
     print(f'#### Progress: {len(queue)} remaining, {len(results)} processed')
 
 # Print results
-resultStr = f"{ok} out of {len(results)} passed\n\n"
+resultStr = ""
 ok = 0
 for r in results:
     if r[0]:
         ok += 1
     resultStr += f'{"OK" if r[0] else "!!"}: {r[1].inF} -> {r[1].out}\n'
-resultStr = resultStr.strip()
+resultStr = f"{ok} out of {len(results)} passed\n\n" + resultStr.strip()
 print('####')
 print(resultStr)
 
