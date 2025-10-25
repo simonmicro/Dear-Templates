@@ -14,6 +14,7 @@ inFolder = '.'
 inExtensions = ['mkv', 'avi', 'mp4', 'flv', 'mov']
 outFolder = './out'
 outExtension = 'mkv' # If you change this, you must also change the ffmpeg command (e.g. if subtitles can't be preserved)
+outFlatten = False # Strip the relative path of the original file and instead just place it directly into the output folder
 retries = 10
 justCopy = False # Copy files without re-encoding
 sendMail = True # At the end send a notify email, only useful if you receive the email somehow
@@ -26,6 +27,7 @@ class Task:
         self.retries = retries
 
     def run(self) -> bool:
+        os.makedirs(os.path.split(self.out)[0], exist_ok=True) # Precreate the (relative) output folder
         if os.path.isfile(self.out):
             return True # Oh, we already finished that file
         if self.retries > 0:
@@ -55,7 +57,10 @@ for path, dirs, files in os.walk(inFolder):
         ext = ext.lstrip('.')
         if ext.lower() in inExtensions:
             inFile = os.path.join(path, file)
-            outFile = os.path.join(outFolder, name + '.' + outExtension)
+            if outFlatten:
+                outFile = os.path.join(outFolder, name + '.' + outExtension)
+            else:
+                outFile = os.path.join(outFolder, path, name + '.' + outExtension)
             queue.append(Task(inFile, outFile))
 
 # Run
